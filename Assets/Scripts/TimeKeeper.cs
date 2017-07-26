@@ -25,9 +25,9 @@ public class TimeKeeper : MonoBehaviour
     static AudioSource music; //for performance optimisation (o.w. audio.time ...etc is sufficient)
 
     static int currentPart;
-    static int currentRegionID;
+    public int currentRegionID;
     static string currentRegionContent;
-    static int currentBar;
+    public int currentBar;
     static int currentBeat;
 
     static int BPM;
@@ -35,7 +35,7 @@ public class TimeKeeper : MonoBehaviour
 
     static int loopBackToBar;
 
-    static int fastForwardToBar;
+    public int fastForwardToBar;
     static int fastForwardSpeed;
     static bool doFastForward; // Fast forward the clip for easy debugging.
 
