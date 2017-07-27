@@ -22,13 +22,13 @@ using UnityEngine;
 public class TimeKeeper : MonoBehaviour
 {
 
-    static AudioSource music; //for performance optimisation (o.w. audio.time ...etc is sufficient)
+    public AudioSource music; //for performance optimisation (o.w. audio.time ...etc is sufficient)
 
-    static int currentPart;
+    public int currentPart;
     public int currentRegionID;
-    static string currentRegionContent;
+    public string currentRegionContent;
     public int currentBar;
-    static int currentBeat;
+    public int currentBeat;
 
     static int BPM;
     static double beatDuration;
