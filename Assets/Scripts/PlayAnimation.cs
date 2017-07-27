@@ -24,7 +24,7 @@ public class PlayAnimation : MonoBehaviour
     Transform newSun;
     Transform newPlanet;
 
-    static Transform sun;
+    public Transform sun;
     static Transform planet;
 
     static TimeKeeper timeKeeper;
