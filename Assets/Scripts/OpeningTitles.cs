@@ -21,7 +21,7 @@ using UnityEngine;
 
 public class OpeningTitles : MonoBehaviour
 {
-    Transform newPlanet;
+    public Transform newPlanet;
     static Transform planet;
 
     class Title
@@ -111,7 +111,7 @@ public class OpeningTitles : MonoBehaviour
 
         for (int i = 0; i < title.word.Length; i++) { // i traces every word in the title
             for (int j = 0; j < title.word[i].code.Length; j++) { // j traces every slot in the letter			
-                if (title.word[i].code[j].Equals(" "))
+                if (title.word[i].code[j].ToString() != " ")
                 {
                     rowLength = title.word[i].code.Length / title.word[i].letterHeight; // current row length. code.length/letterHeight gives the length of rows in the word. 
                     currentRow = (int)(j / rowLength); // the current row. "row" increases 1 with every row of particle slots. Every 25 times for j for the word GUNEY
