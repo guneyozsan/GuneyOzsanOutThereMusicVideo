@@ -182,7 +182,6 @@ GameObject:
   m_Component:
   - component: {fileID: 184312933}
   - component: {fileID: 184312934}
-  - component: {fileID: 184312935}
   m_Layer: 0
   m_Name: Directional light
   m_TagString: Untagged
@@ -239,18 +238,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &184312935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 184312932}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8147249fabf14664ab3b74fb13fd87bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
 --- !u!1 &204063246
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +314,6 @@ GameObject:
   - component: {fileID: 1210266820}
   - component: {fileID: 1210266822}
   - component: {fileID: 1210266823}
-  - component: {fileID: 1210266821}
   m_Layer: 0
   m_Name: Camera 1
   m_TagString: MainCamera
@@ -384,22 +370,6 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
---- !u!114 &1210266821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1210266818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 885b1972ad11a921d000d37b8d76c639, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  distance: 200
-  height: 0
-  heightDamping: 0
-  rotationDamping: 0
 --- !u!92 &1210266822
 Behaviour:
   m_ObjectHideFlags: 0
@@ -423,11 +393,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1368347918}
   - component: {fileID: 1368347919}
-  - component: {fileID: 1368347920}
-  - component: {fileID: 1368347923}
   - component: {fileID: 1368347924}
-  - component: {fileID: 1368347921}
+  - component: {fileID: 1368347923}
   - component: {fileID: 1368347922}
+  - component: {fileID: 1368347921}
+  - component: {fileID: 1368347920}
   m_Layer: 0
   m_Name: Master
   m_TagString: Untagged
@@ -459,7 +429,62 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1368347917}
   m_Enabled: 1
---- !u!82 &1368347920
+--- !u!114 &1368347920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1368347917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0e0b75168ae9743a481fd6acab5c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
+--- !u!114 &1368347921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1368347917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a79ccf60fd05d4aa55ba645f13ff49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newSun: {fileID: 400000, guid: 8b1f3da1ad7f8c5418f95bafdc7078e5, type: 2}
+  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
+  sun: {fileID: 0}
+--- !u!114 &1368347922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1368347917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c3343ab5a1122340ba11203423828c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  music: {fileID: 0}
+  currentPart: 0
+  currentRegionID: 0
+  currentRegionContent: 
+  currentBar: 0
+  currentBeat: 0
+  fastForwardToBar: 0
+--- !u!114 &1368347923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1368347917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45112382adf96ec4b9c50be2fa4cc572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!82 &1368347924
 AudioSource:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -539,51 +564,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &1368347921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1368347917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99ca9cee2273be4479ccacd3d2c95f60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newSun: {fileID: 400000, guid: 8b1f3da1ad7f8c5418f95bafdc7078e5, type: 2}
-  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
-  testScript: {fileID: 0}
---- !u!114 &1368347922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1368347917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8147249fabf14664ab3b74fb13fd87bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
---- !u!114 &1368347923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1368347917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 854d9940be8610a45a117111e162c9a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1368347924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1368347917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 381b713daa09abc4795406a072e88285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
