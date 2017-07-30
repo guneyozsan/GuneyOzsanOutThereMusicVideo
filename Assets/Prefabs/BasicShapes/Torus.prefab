@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6400000}
   - component: {fileID: 5400000}
   m_Layer: 0
-  m_Name: Docado
+  m_Name: Torus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.4686804, y: 1.2554729, z: -30.622871}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -39,13 +39,13 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: dc4c9a782aa3fb34384a26212f12764c, type: 2}
+  - {fileID: 2100000, guid: 985ee878c863b8143a2582fac3e26c0a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -70,7 +70,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Mesh: {fileID: 4300000, guid: 9ea899d719e64a846ae3860b3e2aec93, type: 3}
+  m_Mesh: {fileID: 4300000, guid: d7010c72cbef91e45919abd9094ba4c8, type: 3}
 --- !u!54 &5400000
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -78,14 +78,14 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Mass: 500
+  m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 2
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!64 &6400000
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -94,12 +94,12 @@ MeshCollider:
   m_GameObject: {fileID: 100000}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Convex: 0
   m_InflateMesh: 0
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 9ea899d719e64a846ae3860b3e2aec93, type: 3}
+  m_Mesh: {fileID: 4300000, guid: d7010c72cbef91e45919abd9094ba4c8, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
