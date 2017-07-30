@@ -123,22 +123,22 @@ public class OpeningTitles : MonoBehaviour
 
                     planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x, y, 0), Quaternion.identity);
                     planet.parent = transform;
-                    planet.GetComponent<Attraction>().target = targetAssign;
+                    planet.GetComponent<Gravity>().target = targetAssign;
                     planet.tag = "Planet";
 
                     planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x + title.word[i].particleSpacing, y, 0), Quaternion.identity);
                     planet.parent = transform;
-                    planet.GetComponent<Attraction>().target = targetAssign;
+                    planet.GetComponent<Gravity>().target = targetAssign;
                     planet.tag = "Planet";
 
                     planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x, y - title.word[i].particleSpacing, 0), Quaternion.identity);
                     planet.parent = transform;
-                    planet.GetComponent<Attraction>().target = targetAssign;
+                    planet.GetComponent<Gravity>().target = targetAssign;
                     planet.tag = "Planet";
 
                     planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x + title.word[i].particleSpacing, y - title.word[i].particleSpacing, 0), Quaternion.identity);
                     planet.parent = transform;
-                    planet.GetComponent<Attraction>().target = targetAssign;
+                    planet.GetComponent<Gravity>().target = targetAssign;
                     planet.tag = "Planet";
                 }
             }

@@ -30,7 +30,7 @@ public class PlayAnimation : MonoBehaviour
     static Sequencer sequencer;
     static int compareBar;
 
-    Attraction testScript;
+    Gravity testScript;
 
 
 
@@ -113,7 +113,7 @@ public class PlayAnimation : MonoBehaviour
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Attraction>();
+                testScript = planet.GetComponent<Gravity>();
                 testScript.forceMultiplier = gravityForce;
             }
         }
@@ -121,7 +121,7 @@ public class PlayAnimation : MonoBehaviour
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Attraction>();
+                testScript = planet.GetComponent<Gravity>();
                 testScript.forceMultiplier = antiGravityForce;
             }
         }
@@ -133,7 +133,7 @@ public class PlayAnimation : MonoBehaviour
     {
         foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
         {
-            testScript = planet.GetComponent<Attraction>();
+            testScript = planet.GetComponent<Gravity>();
             testScript.forceMultiplier = antiGravityForce;
         }
     }

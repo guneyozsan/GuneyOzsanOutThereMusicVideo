@@ -17,30 +17,28 @@
 
 // Definition of the Gravity and other attraction forces. Controlled by adjusting the "forceMultipler" variable at PlayAnimation.js.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attraction : MonoBehaviour
+public class Gravity : MonoBehaviour
 {
+    Rigidbody body;
+
+    [NonSerialized]
     public Transform target;
-    public int forceMultiplier;
+    [NonSerialized]
+    public int forceMultiplier = 0;
 
-
-
-	void Start ()
+    void Start()
     {
-	    forceMultiplier = 0;
+        body = GetComponent<Rigidbody>();
     }
-
-
 
     void Update ()
     {
-	    GetComponent<Rigidbody>().AddForce(forceMultiplier * (transform.position - target.position) / Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
-
-        // My first experiment. Leaving it here for reference.
-        // rigidbody.AddForce(0 * (Vector3.zero - transform.position) / Mathf.Pow(Vector3.Distance(Vector3.zero, transform.position), 2)); 
+        body.AddForce(forceMultiplier * (transform.position - target.position) / Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
     }
 
 }
