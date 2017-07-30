@@ -36,10 +36,10 @@ public class DebugGUI : MonoBehaviour {
         GUI.Label(
             new Rect(10, 10, 200, 100),
             "Bar:   " + sequencer.currentBar + ":" + sequencer.currentBeat
-            + "      Time:   " + ((int)sequencer.music.time * 1000) + Environment.NewLine
+            + "      Time:   " + (int)(sequencer.music.time * 1000) + " ms" + Environment.NewLine
             + "-------------------------------------------" + Environment.NewLine
             + "Part:       " + sequencer.currentPart + Environment.NewLine
-            + "Region:   " + sequencer.currentRegionID + Environment.NewLine
+            + "Region:   " + sequencer.currentRegionId + Environment.NewLine
             + sequencer.currentRegionContent
         );
     }
