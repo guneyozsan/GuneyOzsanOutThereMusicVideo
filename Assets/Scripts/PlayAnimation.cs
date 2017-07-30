@@ -27,7 +27,7 @@ public class PlayAnimation : MonoBehaviour
     public Transform sun;
     static Transform planet;
 
-    static TimeKeeper timeKeeper;
+    static Sequencer sequencer;
     static int compareBar;
 
     Attraction testScript;
@@ -58,8 +58,8 @@ public class PlayAnimation : MonoBehaviour
 
     void Start()
     {
-        timeKeeper = GetComponent<TimeKeeper>();
-        compareBar = timeKeeper.fastForwardToBar;
+        sequencer = GetComponent<Sequencer>();
+        compareBar = sequencer.fastForwardToBar;
     }
 
 
@@ -70,35 +70,35 @@ public class PlayAnimation : MonoBehaviour
 
         sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
 
-        if (timeKeeper.currentRegionID == 2 && compareBar != timeKeeper.currentBar)
+        if (sequencer.currentRegionID == 2 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, 10, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 3 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionID == 3 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 4 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionID == 4 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID >= 5 && timeKeeper.currentRegionID <= 8 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionID >= 5 && sequencer.currentRegionID <= 8 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, -300, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID >= 10 && timeKeeper.currentRegionID <= 24 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionID >= 10 && sequencer.currentRegionID <= 24 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(1, -300, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 9 || timeKeeper.currentRegionID == 25)
+        else if (sequencer.currentRegionID == 9 || sequencer.currentRegionID == 25)
         {
             TurnOffAnimation(0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
             sun.GetComponent<Collider>().enabled = false;
             sun.GetComponent<Renderer>().enabled = false;
             sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);

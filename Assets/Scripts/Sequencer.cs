@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeKeeper : MonoBehaviour
+public class Sequencer : MonoBehaviour
 {
 
     public AudioSource music; //for performance optimisation (o.w. audio.time ...etc is sufficient)
