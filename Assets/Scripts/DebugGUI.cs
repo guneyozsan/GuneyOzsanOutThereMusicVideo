@@ -16,14 +16,15 @@
 // ---------------------------------------------------------------------
 
 // Displays the current time, measure and song part for tracking our place in the song and debugging.
-
+# if UNITY_EDITOR || DEVELOPMENT_BUILD
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyGUI : MonoBehaviour {
+public class DebugGUI : MonoBehaviour {
 
-    static TimeKeeper timeKeeper;
+    TimeKeeper timeKeeper;
 
     void Start()
     {
@@ -34,13 +35,13 @@ public class MyGUI : MonoBehaviour {
     {
         GUI.Label(
             new Rect(10, 10, 200, 100),
-            "Bar:   " + timeKeeper.currentBar.ToString()
-            + ":" + timeKeeper.currentBeat.ToString()
-            + "      Time:   " + (timeKeeper.music.time * 1000).ToString() + "                                 "
-            + "-------------------------------------------       "
-            + "Part:       " + timeKeeper.currentPart.ToString() + "                                 "
-            + "Region:   " + timeKeeper.currentRegionID.ToString() + "                                 "
+            "Bar:   " + timeKeeper.currentBar + ":" + timeKeeper.currentBeat
+            + "      Time:   " + ((int)timeKeeper.music.time * 1000) + Environment.NewLine
+            + "-------------------------------------------" + Environment.NewLine
+            + "Part:       " + timeKeeper.currentPart + Environment.NewLine
+            + "Region:   " + timeKeeper.currentRegionID + Environment.NewLine
             + timeKeeper.currentRegionContent
         );
     }
 }
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
