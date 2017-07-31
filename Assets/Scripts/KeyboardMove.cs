@@ -17,19 +17,27 @@
 
 // Displays the current time, measure and song part for tracking our place in the song and debugging.
 
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeyboardMove : MonoBehaviour {
+public class KeyboardMove : MonoBehaviour
+{
 
     float speed = 6f;
 
     Vector3 moveDirection = Vector3.zero;
-	
-	void Update () {
-        CharacterController controller = GetComponent<CharacterController>();
+    CharacterController controller;
 
+
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+    }
+
+    void Update ()
+    {
         moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
@@ -37,3 +45,4 @@ public class KeyboardMove : MonoBehaviour {
         transform.Translate(moveDirection);
     }
 }
+*/
