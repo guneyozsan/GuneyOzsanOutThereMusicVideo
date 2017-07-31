@@ -70,32 +70,32 @@ public class PlayAnimation : MonoBehaviour
 
         sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
 
-        if (sequencer.currentRegionID == 2 && compareBar != sequencer.currentBar)
+        if (sequencer.currentRegionId == 2 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, 10, 0);
             compareBar = sequencer.currentBar;
         }
-        else if (sequencer.currentRegionID == 3 && compareBar != sequencer.currentBar)
+        else if (sequencer.currentRegionId == 3 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
             compareBar = sequencer.currentBar;
         }
-        else if (sequencer.currentRegionID == 4 && compareBar != sequencer.currentBar)
+        else if (sequencer.currentRegionId == 4 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
             compareBar = sequencer.currentBar;
         }
-        else if (sequencer.currentRegionID >= 5 && sequencer.currentRegionID <= 8 && compareBar != sequencer.currentBar)
+        else if (sequencer.currentRegionId >= 5 && sequencer.currentRegionId <= 8 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, -300, 0);
             compareBar = sequencer.currentBar;
         }
-        else if (sequencer.currentRegionID >= 10 && sequencer.currentRegionID <= 24 && compareBar != sequencer.currentBar)
+        else if (sequencer.currentRegionId >= 10 && sequencer.currentRegionId <= 24 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(1, -300, 0);
             compareBar = sequencer.currentBar;
         }
-        else if (sequencer.currentRegionID == 9 || sequencer.currentRegionID == 25)
+        else if (sequencer.currentRegionId == 9 || sequencer.currentRegionId == 25)
         {
             TurnOffAnimation(0);
             compareBar = sequencer.currentBar;

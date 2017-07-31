@@ -16,7 +16,7 @@
 // ---------------------------------------------------------------------
 
 // Displays the current time, measure and song part for tracking our place in the song and debugging.
-# if UNITY_EDITOR || DEVELOPMENT_BUILD
+# if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,12 +36,12 @@ public class DebugGUI : MonoBehaviour {
         GUI.Label(
             new Rect(10, 10, 200, 100),
             "Bar:   " + sequencer.currentBar + ":" + sequencer.currentBeat
-            + "      Time:   " + (int)(sequencer.music.time * 1000) + " ms" + Environment.NewLine
+            + "      Time:   " + (int)(sequencer.musicDebug.time * 1000) + " ms" + Environment.NewLine
             + "-------------------------------------------" + Environment.NewLine
             + "Part:       " + sequencer.currentPart + Environment.NewLine
             + "Region:   " + sequencer.currentRegionId + Environment.NewLine
-            + sequencer.currentRegionContent
+            + sequencer.currentRegionDescription
         );
     }
 }
-#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+#endif // UNITY_EDITOR
