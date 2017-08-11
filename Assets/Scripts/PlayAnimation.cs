@@ -22,7 +22,6 @@ using UnityEngine;
 public class PlayAnimation : MonoBehaviour
 {
     public Transform newSun;
-    public Transform newPlanet;
 
     public Transform sun;
     static Transform planet;

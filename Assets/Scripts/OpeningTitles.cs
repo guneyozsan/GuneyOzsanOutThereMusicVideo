@@ -21,128 +21,137 @@ using UnityEngine;
 
 public class OpeningTitles : MonoBehaviour
 {
-    public Transform newPlanet;
-    static Transform planet;
+    [SerializeField]
+    Transform planetesimalPrefab;
+    Transform planetesimal;
 
-    class Title
-    {
-        public Word[] word; // titles are made of words
-	    public int numberOfWords; // number of words in the title
-    }
+    Word[] openingTitles;
 
     class Word
     {
-        public string code; // the letter written in 1's and 0's
-	    public Vector3 position; // position of the word in 3d space
-        public int letterHeight; // letter height and width in particle slots
-        public int letterWidth;
-        public float slotGapSize; // space between each particle slot
-        public float particleSpacing; // space between each particle in a single slot
+	    public Vector3 location; // position of the word in 3d space
+        public int verticalParticleSlotsPerLetter; // letter height and width in particle slots
+        public int horizontalParticleSlotsPerLetter;
+        public int horizontalParticlesPerSlot;
+        public int verticalParticlesPerSlot;
+        public float slotPadding; // space between each particle slot
+        public float particlePadding; // space between each particle in a single slot
+        public string code; // the letters written in empty and non-empty characters.
+                            // code should fit the parameters for particle slots per letter.
     }
 
 
     void Start () {
-        // initialize the title
-        Title title = new Title();
-        title.numberOfWords = 4; // total number of words in the title
-        title.word = new Word[title.numberOfWords]; // create word array of the title
+        openingTitles = InitializeOpeningTitles();
+        
+        Transform gravityTarget = GetComponent<PlayAnimation>().sun;
 
-        // initialize the word GUNEY
-        title.word[0] = new Word();
-        title.word[0].position = new Vector3(-62f, 15f, 4.6f); // Position of the word
-        title.word[0].letterWidth = 5; // number of particle slots
-        title.word[0].letterHeight = 5; // number of particle slots	
-        title.word[0].slotGapSize = 2; // space between each particle slot
-        title.word[0].particleSpacing = 0.96f; // space between each particle in a single slot
-        title.word[0].code = "88888" + "8   8" + "8   8" + "88888" + "8   8" +
-                                "8    " + "8   8" + "88  8" + "8    " + "8   8" +
-                                "8  88" + "8   8" + "8 8 8" + "8888 " + " 8 8 " +
-                                "8   8" + "8   8" + "8  88" + "8    " + "  8  " +
-                                "88888" + "88888" + "8   8" + "88888" + "  8  ";
+        Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
-        // initialize the word GUNEY
-        title.word[1] = new Word();
-        title.word[1].position = new Vector3(10f, 15f, 4.6f); // Position of the word
-        title.word[1].letterWidth = 5; // number of particle slots
-        title.word[1].letterHeight = 5; // number of particle slots	
-        title.word[1].slotGapSize = 2; // space between each particle slot
-        title.word[1].particleSpacing = 0.96f; // space between each particle in a single slot
-        title.word[1].code = "88888" + "88888" + " 8888" + "  8  " + "8   8" +
-                                "8   8" + "   8 " + "8    " + " 8 8 " + "88  8" +
-                                "8   8" + "  8  " + " 888 " + " 888 " + "8 8 8" +
-                                "8   8" + " 8   " + "    8" + "8   8" + "8  88" +
-                                "88888" + "88888" + "8888 " + "8   8" + "8   8";
+        for (int i = 0; i < openingTitles.Length; i++) {
+            float rowLength = openingTitles[i].code.Length / openingTitles[i].verticalParticleSlotsPerLetter;
+            float slotPadding = openingTitles[i].slotPadding;
+            int horizontalParticleSlotsPerLetter = openingTitles[i].horizontalParticleSlotsPerLetter;
 
-        // initialize the word GUNEY
-        title.word[2] = new Word();
-        title.word[2].position = new Vector3(-50f, 0f, 4.6f); // Position of the word
-        title.word[2].letterWidth = 5; // number of particle slots
-        title.word[2].letterHeight = 5; // number of particle slots	
-        title.word[2].slotGapSize = 2; // space between each particle slot
-        title.word[2].particleSpacing = 0.96f; // space between each particle in a single slot
-        title.word[2].code = "88888" + "8   8" + "88888" +
-                                "8   8" + "8   8" + "  8  " +
-                                "8   8" + "8   8" + "  8  " +
-                                "8   8" + "8   8" + "  8  " +
-                                "88888" + "88888" + "  8  ";
-
-        // initialize the word GUNEY
-        title.word[3] = new Word();
-        title.word[3].position = new Vector3(-2f, 0f, 4.6f); // Position of the word
-        title.word[3].letterWidth = 5; // number of particle slots
-        title.word[3].letterHeight = 5; // number of particle slots	
-        title.word[3].slotGapSize = 2; // space between each particle slot
-        title.word[3].particleSpacing = 0.96f; // space between each particle in a single slot
-        title.word[3].code = "88888" + "8   8" + "88888" + "8888 " + "88888" +
-                                "  8  " + "8   8" + "8    " + "8   8" + "8    " +
-                                "  8  " + "88888" + "8888 " + "8888 " + "8888 " +
-                                "  8  " + "8   8" + "8    " + "8 8  " + "8    " +
-                                "  8  " + "8   8" + "88888" + "8  8 " + "88888";
-        Transform targetAssign = GetComponent<PlayAnimation>().sun;
-
-        // temporary variables for the x-y axises
-        float x;
-        float y;
-
-        float putSpaceBetweenLetters;
-        float offsetLineToParagraphIndent; // functions like the return key.
-        float rowLength; // current row length. 
-        float currentRow; // indicates the row number
-
-        for (int i = 0; i < title.word.Length; i++) { // i traces every word in the title
-            for (int j = 0; j < title.word[i].code.Length; j++) { // j traces every slot in the letter			
-                if (title.word[i].code[j].ToString() != " ")
+            for (int j = 0; j < openingTitles[i].code.Length; j++) { 
+                if (openingTitles[i].code[j].ToString() != " ")
                 {
-                    rowLength = title.word[i].code.Length / title.word[i].letterHeight; // current row length. code.length/letterHeight gives the length of rows in the word. 
-                    currentRow = (int)(j / rowLength); // the current row. "row" increases 1 with every row of particle slots. Every 25 times for j for the word GUNEY
-                    y = -1 * title.word[i].slotGapSize * currentRow;
+                    float currentRow = Mathf.FloorToInt(j / rowLength);
+                    float y = -1 * slotPadding * currentRow;
 
-                    putSpaceBetweenLetters = title.word[i].slotGapSize * (int)(j / title.word[i].letterWidth); // puts space between letters
-                    offsetLineToParagraphIndent = -1 * currentRow * (title.word[i].slotGapSize) * (rowLength + rowLength / title.word[i].letterWidth); // functions like the return key. offsets each line of particle slots back to paragraph indent. This is because the word is coded as a single string.
-                    x = title.word[i].slotGapSize * j + putSpaceBetweenLetters + offsetLineToParagraphIndent;
+                    // Puts space between letters
+                    float letterPadding = slotPadding * (j / horizontalParticleSlotsPerLetter);
 
-                    planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x, y, 0), Quaternion.identity);
-                    planet.parent = transform;
-                    planet.GetComponent<Gravity>().target = targetAssign;
-                    planet.tag = "Planet";
+                    // Because the word is coded as a single string, this offsets each line of particle slots back to paragraph indent. 
+                    float offsetLineToParagraphIndent = -1 * currentRow * slotPadding * (rowLength + rowLength / horizontalParticleSlotsPerLetter);
 
-                    planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x + title.word[i].particleSpacing, y, 0), Quaternion.identity);
-                    planet.parent = transform;
-                    planet.GetComponent<Gravity>().target = targetAssign;
-                    planet.tag = "Planet";
+                    float x = slotPadding * j + letterPadding + offsetLineToParagraphIndent;
 
-                    planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x, y - title.word[i].particleSpacing, 0), Quaternion.identity);
-                    planet.parent = transform;
-                    planet.GetComponent<Gravity>().target = targetAssign;
-                    planet.tag = "Planet";
-
-                    planet = Instantiate(newPlanet, title.word[i].position + new Vector3(x + title.word[i].particleSpacing, y - title.word[i].particleSpacing, 0), Quaternion.identity);
-                    planet.parent = transform;
-                    planet.GetComponent<Gravity>().target = targetAssign;
-                    planet.tag = "Planet";
+                    for (int k = 0; k < openingTitles[i].horizontalParticlesPerSlot; k++)
+                    {
+                        for (int l = 0; l < openingTitles[i].verticalParticlesPerSlot; l++)
+                        {
+                            planetesimal = Instantiate(planetesimalPrefab, openingTitles[i].location + new Vector3(x + k * openingTitles[i].particlePadding, y - l * openingTitles[i].particlePadding, 0), Quaternion.identity, planetesimalParent);
+                            planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
+                            planetesimal.tag = "Planet";
+                        }
+                    }
                 }
             }
         }
+    }
+
+
+
+    Word[] InitializeOpeningTitles()
+    {
+        Word[] openingTitles = new Word[4];
+
+        openingTitles[0] = new Word()
+        {
+            location = new Vector3(-62f, 15f, 4.6f),
+            horizontalParticleSlotsPerLetter = 5,
+            verticalParticleSlotsPerLetter = 5,
+            horizontalParticlesPerSlot = 2,
+            verticalParticlesPerSlot = 2,
+            slotPadding = 2,
+            particlePadding = 0.96f,
+            code =  "88888" + "8   8" + "8   8" + "88888" + "8   8" +
+                    "8    " + "8   8" + "88  8" + "8    " + "8   8" +
+                    "8  88" + "8   8" + "8 8 8" + "8888 " + " 8 8 " +
+                    "8   8" + "8   8" + "8  88" + "8    " + "  8  " +
+                    "88888" + "88888" + "8   8" + "88888" + "  8  "
+        };
+
+        openingTitles[1] = new Word()
+        {
+            location = new Vector3(10f, 15f, 4.6f),
+            horizontalParticleSlotsPerLetter = 5,
+            verticalParticleSlotsPerLetter = 5,
+            horizontalParticlesPerSlot = 2,
+            verticalParticlesPerSlot = 2,
+            slotPadding = 2,
+            particlePadding = 0.96f,
+            code =  "88888" + "88888" + " 8888" + "  8  " + "8   8" +
+                    "8   8" + "   8 " + "8    " + " 8 8 " + "88  8" +
+                    "8   8" + "  8  " + " 888 " + " 888 " + "8 8 8" +
+                    "8   8" + " 8   " + "    8" + "8   8" + "8  88" +
+                    "88888" + "88888" + "8888 " + "8   8" + "8   8"
+        };
+
+        openingTitles[2] = new Word()
+        {
+            location = new Vector3(-50f, 0f, 4.6f),
+            horizontalParticleSlotsPerLetter = 5,
+            verticalParticleSlotsPerLetter = 5,
+            horizontalParticlesPerSlot = 2,
+            verticalParticlesPerSlot = 2,
+            slotPadding = 2,
+            particlePadding = 0.96f,
+            code =  "88888" + "8   8" + "88888" +
+                    "8   8" + "8   8" + "  8  " +
+                    "8   8" + "8   8" + "  8  " +
+                    "8   8" + "8   8" + "  8  " +
+                    "88888" + "88888" + "  8  "
+        };
+
+        openingTitles[3] = new Word()
+        {
+            location = new Vector3(-2f, 0f, 4.6f),
+            horizontalParticleSlotsPerLetter = 5,
+            verticalParticleSlotsPerLetter = 5,
+            horizontalParticlesPerSlot = 2,
+            verticalParticlesPerSlot = 2,
+            slotPadding = 2,
+            particlePadding = 0.96f,
+            code =  "88888" + "8   8" + "88888" + "8888 " + "88888" +
+                    "  8  " + "8   8" + "8    " + "8   8" + "8    " +
+                    "  8  " + "88888" + "8888 " + "8888 " + "8888 " +
+                    "  8  " + "8   8" + "8    " + "8 8  " + "8    " +
+                    "  8  " + "8   8" + "88888" + "8  8 " + "88888"
+        };
+
+        return openingTitles;
     }
 	
 }

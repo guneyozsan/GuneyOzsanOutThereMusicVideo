@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0e0b75168ae9743a481fd6acab5c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
+  planetesimalPrefab: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
 --- !u!114 &1368347921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,7 +495,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newSun: {fileID: 400000, guid: 8b1f3da1ad7f8c5418f95bafdc7078e5, type: 2}
-  newPlanet: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
   sun: {fileID: 0}
 --- !u!114 &1368347922
 MonoBehaviour:
@@ -508,12 +507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3343ab5a1122340ba11203423828c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: {fileID: 0}
-  currentPart: 0
-  currentRegionID: 0
-  currentRegionContent: 
-  currentBar: 0
-  currentBeat: 0
   fastForwardToBar: 0
 --- !u!114 &1368347923
 MonoBehaviour:

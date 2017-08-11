@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5400000}
   - component: {fileID: 114109005215857388}
   m_Layer: 0
-  m_Name: CubePlanet
+  m_Name: CubicPlanetesimal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,4 +121,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e849063c1032fd3428df4852d5a41f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 5400000}

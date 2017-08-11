@@ -26,8 +26,7 @@ public class Gravity : MonoBehaviour
 {
     Rigidbody body;
 
-    [NonSerialized]
-    public Transform target;
+    Transform target;
     [NonSerialized]
     public int forceMultiplier = 0;
 
@@ -41,4 +40,8 @@ public class Gravity : MonoBehaviour
         body.AddForce(forceMultiplier * (transform.position - target.position) / Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
     }
 
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
 }
