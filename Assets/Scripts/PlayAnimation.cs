@@ -29,7 +29,7 @@ public class PlayAnimation : MonoBehaviour
     static Sequencer sequencer;
     static int compareBar;
 
-    Gravity testScript;
+    Gravity gravity;
 
 
 
@@ -39,18 +39,6 @@ public class PlayAnimation : MonoBehaviour
         sun.localScale = new Vector3(5, 5, 5);
         sun.parent = transform;
         sun.tag = "Sun";
-
-        //Camera.main.GetComponent(SmoothFollow).target = sun;
-        //Instantiate (planet, sun.transform.position + Vector3(10, 0, 0), Quaternion.identity);
-
-        /*
-            for (var i : int = 0; i < 1000; i++) {
-                planet = Instantiate (newPlanet, Vector3(2*i, 0, 0), Quaternion.identity);
-                planet.parent = transform;
-                planet.GetComponent(Attraction).target = sun;
-                planet.rigidbody.velocity = Vector3(0,0,.2);
-            }
-        */
     }
 
 
@@ -65,8 +53,6 @@ public class PlayAnimation : MonoBehaviour
 
     void Update()
     {
-        //sun.transform.RotateAround (Vector3.zero, Vector3.up, 20 * Time.deltaTime);
-
         sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
 
         if (sequencer.currentRegionId == 2 && compareBar != sequencer.currentBar)
@@ -112,16 +98,16 @@ public class PlayAnimation : MonoBehaviour
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Gravity>();
-                testScript.forceMultiplier = gravityForce;
+                gravity = planet.GetComponent<Gravity>();
+                gravity.forceMultiplier = gravityForce;
             }
         }
         else
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Gravity>();
-                testScript.forceMultiplier = antiGravityForce;
+                gravity = planet.GetComponent<Gravity>();
+                gravity.forceMultiplier = antiGravityForce;
             }
         }
     }
@@ -132,8 +118,8 @@ public class PlayAnimation : MonoBehaviour
     {
         foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
         {
-            testScript = planet.GetComponent<Gravity>();
-            testScript.forceMultiplier = antiGravityForce;
+            gravity = planet.GetComponent<Gravity>();
+            gravity.forceMultiplier = antiGravityForce;
         }
     }
 }
