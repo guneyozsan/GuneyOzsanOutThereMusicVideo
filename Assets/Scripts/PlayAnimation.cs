@@ -37,7 +37,6 @@ public class PlayAnimation : MonoBehaviour
     {
         sun = Instantiate(newSun, new Vector3(0, 0, 13), Quaternion.identity);
         sun.localScale = new Vector3(5, 5, 5);
-        sun.parent = transform;
         sun.tag = "Sun";
     }
 
