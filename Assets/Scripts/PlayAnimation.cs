@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,11 +24,11 @@ public class PlayAnimation : MonoBehaviour
 {
     public Transform newSun;
 
+    [NonSerialized]
     public Transform sun;
-    static Transform planet;
 
-    static Sequencer sequencer;
-    static int compareBar;
+    Sequencer sequencer;
+    int compareBar;
 
     Gravity gravity;
 
@@ -38,6 +39,9 @@ public class PlayAnimation : MonoBehaviour
         sun = Instantiate(newSun, new Vector3(0, 0, 13), Quaternion.identity);
         sun.localScale = new Vector3(5, 5, 5);
         sun.tag = "Sun";
+#if UNITY_EDITOR
+        sun.name = "PyramidSun";
+#endif
     }
 
 
