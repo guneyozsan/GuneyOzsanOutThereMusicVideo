@@ -25,36 +25,89 @@ public class OpeningTitles : MonoBehaviour
     Transform planetesimalPrefab;
     Transform planetesimal;
 
-    Word[] openingTitles;
+    Title openingTitles;
 
-    class Word
+
+
+    class Title
     {
-	    public Vector3 location; // position of the word in 3d space
-        public int verticalParticleSlotsPerLetter; // letter height and width in particle slots
-        public int horizontalParticleSlotsPerLetter;
-        public int horizontalParticlesPerSlot;
-        public int verticalParticlesPerSlot;
-        public float slotPadding; // space between each particle slot
-        public float particlePadding; // space between each particle in a single slot
-        public string code; // the letters written in empty and non-empty characters.
-                            // code should fit the parameters for particle slots per letter.
+        private Word[] words;
+
+        public Title(int wordCount)
+        {
+            words = new Word[wordCount];
+        }
+
+        public Word this[int index]
+        {
+            get
+            {
+                return words[index];
+            }
+            set
+            {
+                words[index] = value;
+            }
+        }
+
+        public int Length
+        {
+            get
+            {
+                return words.Length;
+            }
+        }
     }
 
 
+
+    class Word
+    {
+	    public Vector3 Location { get; private set; } // position of the word in 3d space
+        public int VerticalParticleSlotsPerLetter { get; private set; } // letter height and width in particle slots
+        public int HorizontalParticleSlotsPerLetter { get; private set; }
+        public int HorizontalParticlesPerSlot { get; private set; }
+        public int VerticalParticlesPerSlot { get; private set; }
+        public float SlotPadding { get; private set; } // space between each particle slot
+        public float ParticlePadding { get; private set; } // space between each particle in a single slot
+        public string Code { get; private set; } // the letters written in empty and non-empty characters.
+                                                  // code should fit the parameters for particle slots per letter.
+
+        public Word(Vector3 location,
+            int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter, 
+            int horizontalParticlesPerSlot, int verticalParticlesPerSlot, 
+            int slotPadding, float particlePadding,
+            string code)
+        {
+            Location = location;
+            VerticalParticleSlotsPerLetter = verticalParticleSlotsPerLetter;
+            HorizontalParticleSlotsPerLetter = horizontalParticleSlotsPerLetter;
+            HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
+            VerticalParticlesPerSlot = verticalParticlesPerSlot;
+            SlotPadding = slotPadding;
+            ParticlePadding = particlePadding;
+            Code = code;
+        }
+    }
+
+
+
     void Start () {
-        openingTitles = InitializeOpeningTitles();
-        
+        openingTitles = SetOpeningTitles();
+
         Transform gravityTarget = GetComponent<PlayAnimation>().sun;
 
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
-        for (int i = 0; i < openingTitles.Length; i++) {
-            float rowLength = openingTitles[i].code.Length / openingTitles[i].verticalParticleSlotsPerLetter;
-            float slotPadding = openingTitles[i].slotPadding;
-            int horizontalParticleSlotsPerLetter = openingTitles[i].horizontalParticleSlotsPerLetter;
+        for (int i = 0; i < openingTitles.Length; i++)
+        {
+            float rowLength = openingTitles[i].Code.Length / openingTitles[i].VerticalParticleSlotsPerLetter;
+            float slotPadding = openingTitles[i].SlotPadding;
+            int horizontalParticleSlotsPerLetter = openingTitles[i].HorizontalParticleSlotsPerLetter;
 
-            for (int j = 0; j < openingTitles[i].code.Length; j++) { 
-                if (openingTitles[i].code[j].ToString() != " ")
+            for (int j = 0; j < openingTitles[i].Code.Length; j++)
+            {
+                if (openingTitles[i].Code[j].ToString() != " ")
                 {
                     float currentRow = Mathf.FloorToInt(j / rowLength);
                     float y = -1 * slotPadding * currentRow;
@@ -67,11 +120,11 @@ public class OpeningTitles : MonoBehaviour
 
                     float x = slotPadding * j + letterPadding + offsetLineToParagraphIndent;
 
-                    for (int k = 0; k < openingTitles[i].horizontalParticlesPerSlot; k++)
+                    for (int k = 0; k < openingTitles[i].HorizontalParticlesPerSlot; k++)
                     {
-                        for (int l = 0; l < openingTitles[i].verticalParticlesPerSlot; l++)
+                        for (int l = 0; l < openingTitles[i].VerticalParticlesPerSlot; l++)
                         {
-                            planetesimal = Instantiate(planetesimalPrefab, openingTitles[i].location + new Vector3(x + k * openingTitles[i].particlePadding, y - l * openingTitles[i].particlePadding, 0), Quaternion.identity, planetesimalParent);
+                            planetesimal = Instantiate(planetesimalPrefab, openingTitles[i].Location + new Vector3(x + k * openingTitles[i].ParticlePadding, y - l * openingTitles[i].ParticlePadding, 0), Quaternion.identity, planetesimalParent);
                             planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
                             planetesimal.tag = "Planet";
                         }
@@ -80,76 +133,44 @@ public class OpeningTitles : MonoBehaviour
             }
         }
     }
+    
 
 
-
-    Word[] InitializeOpeningTitles()
+    Title SetOpeningTitles()
     {
-        Word[] openingTitles = new Word[4];
+        Title openingTitles = new Title(4);
 
-        openingTitles[0] = new Word()
-        {
-            location = new Vector3(-62f, 15f, 4.6f),
-            horizontalParticleSlotsPerLetter = 5,
-            verticalParticleSlotsPerLetter = 5,
-            horizontalParticlesPerSlot = 2,
-            verticalParticlesPerSlot = 2,
-            slotPadding = 2,
-            particlePadding = 0.96f,
-            code =  "88888" + "8   8" + "8   8" + "88888" + "8   8" +
-                    "8    " + "8   8" + "88  8" + "8    " + "8   8" +
-                    "8  88" + "8   8" + "8 8 8" + "8888 " + " 8 8 " +
-                    "8   8" + "8   8" + "8  88" + "8    " + "  8  " +
-                    "88888" + "88888" + "8   8" + "88888" + "  8  "
-        };
+        openingTitles[0] = new Word(new Vector3(-62f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
+            "88888" + "8   8" + "8   8" + "88888" + "8   8" +
+            "8    " + "8   8" + "88  8" + "8    " + "8   8" +
+            "8  88" + "8   8" + "8 8 8" + "8888 " + " 8 8 " +
+            "8   8" + "8   8" + "8  88" + "8    " + "  8  " +
+            "88888" + "88888" + "8   8" + "88888" + "  8  "
+            );
 
-        openingTitles[1] = new Word()
-        {
-            location = new Vector3(10f, 15f, 4.6f),
-            horizontalParticleSlotsPerLetter = 5,
-            verticalParticleSlotsPerLetter = 5,
-            horizontalParticlesPerSlot = 2,
-            verticalParticlesPerSlot = 2,
-            slotPadding = 2,
-            particlePadding = 0.96f,
-            code =  "88888" + "88888" + " 8888" + "  8  " + "8   8" +
-                    "8   8" + "   8 " + "8    " + " 8 8 " + "88  8" +
-                    "8   8" + "  8  " + " 888 " + " 888 " + "8 8 8" +
-                    "8   8" + " 8   " + "    8" + "8   8" + "8  88" +
-                    "88888" + "88888" + "8888 " + "8   8" + "8   8"
-        };
+        openingTitles[1] = new Word(new Vector3(10f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
+            "88888" + "88888" + " 8888" + "  8  " + "8   8" +
+            "8   8" + "   8 " + "8    " + " 8 8 " + "88  8" +
+            "8   8" + "  8  " + " 888 " + " 888 " + "8 8 8" +
+            "8   8" + " 8   " + "    8" + "8   8" + "8  88" +
+            "88888" + "88888" + "8888 " + "8   8" + "8   8"
+            );
 
-        openingTitles[2] = new Word()
-        {
-            location = new Vector3(-50f, 0f, 4.6f),
-            horizontalParticleSlotsPerLetter = 5,
-            verticalParticleSlotsPerLetter = 5,
-            horizontalParticlesPerSlot = 2,
-            verticalParticlesPerSlot = 2,
-            slotPadding = 2,
-            particlePadding = 0.96f,
-            code =  "88888" + "8   8" + "88888" +
-                    "8   8" + "8   8" + "  8  " +
-                    "8   8" + "8   8" + "  8  " +
-                    "8   8" + "8   8" + "  8  " +
-                    "88888" + "88888" + "  8  "
-        };
+        openingTitles[2] = new Word(new Vector3(-50f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
+            "88888" + "8   8" + "88888" +
+            "8   8" + "8   8" + "  8  " +
+            "8   8" + "8   8" + "  8  " +
+            "8   8" + "8   8" + "  8  " +
+            "88888" + "88888" + "  8  "
+            );
 
-        openingTitles[3] = new Word()
-        {
-            location = new Vector3(-2f, 0f, 4.6f),
-            horizontalParticleSlotsPerLetter = 5,
-            verticalParticleSlotsPerLetter = 5,
-            horizontalParticlesPerSlot = 2,
-            verticalParticlesPerSlot = 2,
-            slotPadding = 2,
-            particlePadding = 0.96f,
-            code =  "88888" + "8   8" + "88888" + "8888 " + "88888" +
-                    "  8  " + "8   8" + "8    " + "8   8" + "8    " +
-                    "  8  " + "88888" + "8888 " + "8888 " + "8888 " +
-                    "  8  " + "8   8" + "8    " + "8 8  " + "8    " +
-                    "  8  " + "8   8" + "88888" + "8  8 " + "88888"
-        };
+        openingTitles[3] = new Word(new Vector3(-2f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
+            "88888" + "8   8" + "88888" + "8888 " + "88888" +
+            "  8  " + "8   8" + "8    " + "8   8" + "8    " +
+            "  8  " + "88888" + "8888 " + "8888 " + "8888 " +
+            "  8  " + "8   8" + "8    " + "8 8  " + "8    " +
+            "  8  " + "8   8" + "88888" + "8  8 " + "88888"
+            );
 
         return openingTitles;
     }
