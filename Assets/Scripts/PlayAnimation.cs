@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,15 +23,14 @@ using UnityEngine;
 public class PlayAnimation : MonoBehaviour
 {
     public Transform newSun;
-    public Transform newPlanet;
 
+    [NonSerialized]
     public Transform sun;
-    static Transform planet;
 
-    static TimeKeeper timeKeeper;
-    static int compareBar;
+    Sequencer sequencer;
+    int compareBar;
 
-    Attraction testScript;
+    Gravity gravity;
 
 
 
@@ -38,67 +38,55 @@ public class PlayAnimation : MonoBehaviour
     {
         sun = Instantiate(newSun, new Vector3(0, 0, 13), Quaternion.identity);
         sun.localScale = new Vector3(5, 5, 5);
-        sun.parent = transform;
         sun.tag = "Sun";
-
-        //Camera.main.GetComponent(SmoothFollow).target = sun;
-        //Instantiate (planet, sun.transform.position + Vector3(10, 0, 0), Quaternion.identity);
-
-        /*
-            for (var i : int = 0; i < 1000; i++) {
-                planet = Instantiate (newPlanet, Vector3(2*i, 0, 0), Quaternion.identity);
-                planet.parent = transform;
-                planet.GetComponent(Attraction).target = sun;
-                planet.rigidbody.velocity = Vector3(0,0,.2);
-            }
-        */
+#if UNITY_EDITOR
+        sun.name = "PyramidSun";
+#endif
     }
 
 
 
     void Start()
     {
-        timeKeeper = GetComponent<TimeKeeper>();
-        compareBar = timeKeeper.fastForwardToBar;
+        sequencer = GetComponent<Sequencer>();
+        compareBar = sequencer.fastForwardToBar;
     }
 
 
 
     void Update()
     {
-        //sun.transform.RotateAround (Vector3.zero, Vector3.up, 20 * Time.deltaTime);
-
         sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
 
-        if (timeKeeper.currentRegionID == 2 && compareBar != timeKeeper.currentBar)
+        if (sequencer.currentRegionId == 2 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, 10, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 3 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionId == 3 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 4 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionId == 4 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID >= 5 && timeKeeper.currentRegionID <= 8 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionId >= 5 && sequencer.currentRegionId <= 8 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(0, -300, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID >= 10 && timeKeeper.currentRegionID <= 24 && compareBar != timeKeeper.currentBar)
+        else if (sequencer.currentRegionId >= 10 && sequencer.currentRegionId <= 24 && compareBar != sequencer.currentBar)
         {
             SwitchAnimation(1, -300, 0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
         }
-        else if (timeKeeper.currentRegionID == 9 || timeKeeper.currentRegionID == 25)
+        else if (sequencer.currentRegionId == 9 || sequencer.currentRegionId == 25)
         {
             TurnOffAnimation(0);
-            compareBar = timeKeeper.currentBar;
+            compareBar = sequencer.currentBar;
             sun.GetComponent<Collider>().enabled = false;
             sun.GetComponent<Renderer>().enabled = false;
             sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);
@@ -113,16 +101,16 @@ public class PlayAnimation : MonoBehaviour
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Attraction>();
-                testScript.forceMultiplier = gravityForce;
+                gravity = planet.GetComponent<Gravity>();
+                gravity.forceMultiplier = gravityForce;
             }
         }
         else
         {
             foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
             {
-                testScript = planet.GetComponent<Attraction>();
-                testScript.forceMultiplier = antiGravityForce;
+                gravity = planet.GetComponent<Gravity>();
+                gravity.forceMultiplier = antiGravityForce;
             }
         }
     }
@@ -133,8 +121,8 @@ public class PlayAnimation : MonoBehaviour
     {
         foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
         {
-            testScript = planet.GetComponent<Attraction>();
-            testScript.forceMultiplier = antiGravityForce;
+            gravity = planet.GetComponent<Gravity>();
+            gravity.forceMultiplier = antiGravityForce;
         }
     }
 }

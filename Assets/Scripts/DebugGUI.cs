@@ -16,31 +16,32 @@
 // ---------------------------------------------------------------------
 
 // Displays the current time, measure and song part for tracking our place in the song and debugging.
-
+# if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyGUI : MonoBehaviour {
+public class DebugGUI : MonoBehaviour {
 
-    static TimeKeeper timeKeeper;
+    Sequencer sequencer;
 
     void Start()
     {
-        timeKeeper = GetComponent<TimeKeeper>();
+        sequencer = GetComponent<Sequencer>();
     }
 
     void OnGUI()
     {
         GUI.Label(
             new Rect(10, 10, 200, 100),
-            "Bar:   " + timeKeeper.currentBar.ToString()
-            + ":" + timeKeeper.currentBeat.ToString()
-            + "      Time:   " + (timeKeeper.music.time * 1000).ToString() + "                                 "
-            + "-------------------------------------------       "
-            + "Part:       " + timeKeeper.currentPart.ToString() + "                                 "
-            + "Region:   " + timeKeeper.currentRegionID.ToString() + "                                 "
-            + timeKeeper.currentRegionContent
+            "Bar:   " + sequencer.currentBar + ":" + sequencer.currentBeat
+            + "      Time:   " + (int)(sequencer.musicDebug.time * 1000) + " ms" + Environment.NewLine
+            + "-------------------------------------------" + Environment.NewLine
+            + "Part:       " + sequencer.currentPart + Environment.NewLine
+            + "Region:   " + sequencer.currentRegionId + Environment.NewLine
+            + sequencer.currentRegionDescription
         );
     }
 }
+#endif // UNITY_EDITOR
