@@ -1,4 +1,4 @@
-// Guney Ozsan - Out There (Music Video) - Demo style real time music video made with Unity 3D.
+﻿// Guney Ozsan - Out There (Music Video) - Real time music video in demoscene style for Unity 3D.
 // Copyright (C) 2017 Guney Ozsan
 
 // This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,31 @@
 
 // Definition of the Gravity and other attraction forces. Controlled by adjusting the "forceMultipler" variable at PlayAnimation.js.
 
-#pragma strict
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-var target : Transform;
-var forceMultiplier : int;
+public class Gravity : MonoBehaviour
+{
+    Rigidbody body;
 
-function Start () {
-	forceMultiplier = 0;
-}
+    Transform target;
+    [NonSerialized]
+    public int forceMultiplier = 0;
 
-function Update () {
-	 GetComponent.<Rigidbody>().AddForce (forceMultiplier * (transform.position - target.position)/Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
-	 
-	 // My first trial. Left here for reference purposes.
-	 // rigidbody.AddForce (0 * (Vector3.zero - transform.position)/Mathf.Pow(Vector3.Distance(Vector3.zero, transform.position), 2)); 
+    void Start()
+    {
+        body = GetComponent<Rigidbody>();
+    }
+
+    void Update ()
+    {
+        body.AddForce(forceMultiplier * (transform.position - target.position) / Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
+    }
+
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
 }
