@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OpeningTitles : MonoBehaviour
+public class Titles : MonoBehaviour
 {
     [SerializeField]
     Transform planetesimalPrefab;
