@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,7 +72,8 @@ public class Titles : MonoBehaviour
         public float SlotPadding { get; private set; } // space between each particle slot
         public float ParticlePadding { get; private set; } // space between each particle in a single slot
         public string Code { get; private set; } // the letters written in empty and non-empty characters.
-                                                  // code should fit the parameters for particle slots per letter.
+                                                 // code should fit the parameters for particle slots per letter.
+        Letter[] letters;
 
         public Word(Vector3 location,
             int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter, 
@@ -87,7 +89,204 @@ public class Titles : MonoBehaviour
             SlotPadding = slotPadding;
             ParticlePadding = particlePadding;
             Code = code;
+
+            /*
+            letters = new Letter[Code.Length];
+
+            for (int i = 0; i < letters.Length; i++)
+            {
+                letters[i] = new Letter(Code[i]);
+            }
+            */
         }
+    }
+
+
+
+    class Letter
+    {
+        public bool[,] Pixels { get; private set; }
+
+        public Letter (char letter)
+        {
+            Pixels = new bool[letters[letter][0].Length, letters[letter].Length];
+
+            for (int i = 0; i < letters[letter].Length; i++)
+            {
+                for (int j = 0; j < letters[letter][i].Length; j++)
+                {
+                    if (Char.IsWhiteSpace(letters[letter][i][j]))
+                    {
+                        Pixels[i, j] = false;
+                    }
+                    else
+                    {
+                        Pixels[i, j] = true;
+                    }
+                    print(Pixels[i, j]);
+                }
+            }
+        }
+
+        Dictionary<char, string[]> letters = new Dictionary<char, string[]>
+        {
+            { 'A', new string[] {
+                "  0  ",
+                " 0 0 ",
+                " 000 ",
+                "0   0",
+                "0   0"} },
+            { 'B', new string[] {
+                "0000 ",
+                "0   0",
+                "0000 ",
+                "0   0",
+                "0000 "} },
+            { 'C', new string[] {
+                " 0000",
+                "0    ",
+                "0    ",
+                "0    ",
+                " 0000"} },
+            { 'D', new string[] {
+                "0000 ",
+                "0   0",
+                "0   0",
+                "0   0",
+                "0000 "} },
+            { 'E', new string[] {
+                "00000",
+                "0    ",
+                "0000 ",
+                "0    ",
+                "00000"} },
+            { 'F', new string[] {
+                "00000",
+                "0    ",
+                "0000 ",
+                "0    ",
+                "0    "} },
+            { 'G', new string[] {
+                "00000",
+                "0    ",
+                "0  00",
+                "0   0",
+                "00000"} },
+            { 'H', new string[] {
+                "0   0",
+                "0   0",
+                "00000",
+                "0   0",
+                "0   0"} },
+            { 'I', new string[] {
+                "00000",
+                "  0  ",
+                "  0  ",
+                "  0  ",
+                "00000"} },
+            { 'J', new string[] {
+                "00000",
+                "  0  ",
+                "  0  ",
+                "  0  ",
+                "00   "} },
+            { 'K', new string[] {
+                "0   0",
+                "0  0 ",
+                "000  ",
+                "0  0 ",
+                "0   0"} },
+            { 'L', new string[] {
+                "0    ",
+                "0    ",
+                "0    ",
+                "0    ",
+                "00000"} },
+            { 'M', new string[] {
+                "0   0",
+                "00 00",
+                "0 0 0",
+                "0   0",
+                "0   0"} },
+            { 'N', new string[] {
+                "0   0",
+                "00  0",
+                "0 0 0",
+                "0  00",
+                "0   0"} },
+            { 'O', new string[] {
+                " 000 ",
+                "0   0",
+                "0   0",
+                "0   0",
+                " 000 "} },
+            { 'P', new string[] {
+                "0000 ",
+                "0   0",
+                "0000 ",
+                "0    ",
+                "0    "} },
+            { 'Q', new string[] {
+                " 000 ",
+                "0   0",
+                "0 0 0",
+                "0  00",
+                " 0000"} },
+            { 'R', new string[] {
+                "0000 ",
+                "0   0",
+                "0000 ",
+                "0  0 ",
+                "0   0"} },
+            { 'S', new string[] {
+                " 0000",
+                "0    ",
+                " 000 ",
+                "    0",
+                "0000 "} },
+            { 'T', new string[] {
+                "00000",
+                "  0  ",
+                "  0  ",
+                "  0  ",
+                "  0  "} },
+            { 'U', new string[] {
+                "0   0",
+                "0   0",
+                "0   0",
+                "0   0",
+                " 000 "} },
+            { 'V', new string[] {
+                "0   0",
+                "0   0",
+                " 0 0 ",
+                " 0 0 ",
+                "  0  "} },
+            { 'W', new string[] {
+                "0   0",
+                "0   0",
+                "0 0 0",
+                "00 00",
+                "0   0"}  },
+            { 'X', new string[] {
+                "0   0",
+                " 0 0 ",
+                "  0  ",
+                " 0 0 ",
+                "0   0"} },
+            { 'Y', new string[] {
+                "0   0",
+                " 0 0 ",
+                "  0  ",
+                "  0  ",
+                "  0  "} },
+            { 'Z', new string[] {
+                "00000",
+                "   0 ",
+                "  0  ",
+                " 0   ",
+                "00000"}  }
+        };
     }
 
 
