@@ -26,8 +26,6 @@ public class Titles : MonoBehaviour
     Transform planetesimalPrefab;
     Transform planetesimal;
 
-    Title openingTitles;
-
 
 
     class Title
@@ -56,6 +54,27 @@ public class Titles : MonoBehaviour
             get
             {
                 return words.Length;
+            }
+        }
+
+        public int ParticleCount
+        {
+            get
+            {
+                int particleCount = 0;
+
+                for (int i = 0; i < words.Length; i++)
+                {
+                    int particlesPerSlot = words[i].HorizontalParticlesPerSlot * words[i].VerticalParticlesPerSlot;
+
+                    for (int j = 0; j < words[i].Length; j++)
+                    {
+                        particleCount += particlesPerSlot * words[i][j].OccupiedSlotsCount;
+                    }
+
+                }
+
+                return particleCount;
             }
         }
     }
@@ -90,14 +109,32 @@ public class Titles : MonoBehaviour
             ParticlePadding = particlePadding;
             Code = code;
 
-            /*
             letters = new Letter[Code.Length];
 
             for (int i = 0; i < letters.Length; i++)
             {
                 letters[i] = new Letter(Code[i]);
             }
-            */
+        }
+
+        public Letter this[int index]
+        {
+            get
+            {
+                return letters[index];
+            }
+            set
+            {
+                letters[index] = value;
+            }
+        }
+
+        public int Length
+        {
+            get
+            {
+                return letters.Length;
+            }
         }
     }
 
@@ -105,11 +142,15 @@ public class Titles : MonoBehaviour
 
     class Letter
     {
-        public bool[,] Pixels { get; private set; }
+        public bool[,] Slots { get; private set; }
+
+        int occupiedSlotsCount;
 
         public Letter (char letter)
         {
-            Pixels = new bool[letters[letter][0].Length, letters[letter].Length];
+            Slots = new bool[letters[letter][0].Length, letters[letter].Length];
+
+            occupiedSlotsCount = 0;
 
             for (int i = 0; i < letters[letter].Length; i++)
             {
@@ -117,16 +158,28 @@ public class Titles : MonoBehaviour
                 {
                     if (Char.IsWhiteSpace(letters[letter][i][j]))
                     {
-                        Pixels[i, j] = false;
+                        Slots[i, j] = false;
                     }
                     else
                     {
-                        Pixels[i, j] = true;
+                        Slots[i, j] = true;
+                        occupiedSlotsCount++;
                     }
-                    print(Pixels[i, j]);
                 }
             }
         }
+
+
+
+        public int OccupiedSlotsCount
+        {
+            get
+            {
+                return occupiedSlotsCount;
+            }
+        }
+
+
 
         Dictionary<char, string[]> letters = new Dictionary<char, string[]>
         {
@@ -292,42 +345,73 @@ public class Titles : MonoBehaviour
 
 
     void Start () {
-        openingTitles = SetOpeningTitles();
+        Title openingTitles = SetOpeningTitles();
 
         Transform gravityTarget = GetComponent<PlayAnimation>().sun;
 
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
-        for (int i = 0; i < openingTitles.Length; i++)
+        //for (int i = 0; i < openingTitles.Length; i++)
+        //{
+        //    int particlesPerSlot = openingTitles[i].HorizontalParticlesPerSlot * openingTitles[i].VerticalParticlesPerSlot;
+        //    for (int j = 0; j < openingTitles[i].Length; j++)
+        //    {
+        //        openingTitleParticleCount += particlesPerSlot * openingTitles[i][j].OccupiedSlotsCount;
+        //    }
+
+
+        //    float rowLength = openingTitles[i].Code.Length / openingTitles[i].VerticalParticleSlotsPerLetter;
+        //    float slotPadding = openingTitles[i].SlotPadding;
+        //    int horizontalParticleSlotsPerLetter = openingTitles[i].HorizontalParticleSlotsPerLetter;
+
+        //    for (int j = 0; j < openingTitles[i].Code.Length; j++)
+        //    {
+        //        if (openingTitles[i].Code[j].ToString() != " ")
+        //        {
+        //            float currentRow = Mathf.FloorToInt(j / rowLength);
+        //            float y = -1 * slotPadding * currentRow;
+
+        //            // Puts space between letters
+        //            float letterPadding = slotPadding * (j / horizontalParticleSlotsPerLetter);
+
+        //            // Because the word is coded as a single string, this offsets each line of particle slots back to paragraph indent. 
+        //            float offsetLineToParagraphIndent = -1 * currentRow * slotPadding * (rowLength + rowLength / horizontalParticleSlotsPerLetter);
+
+        //            float x = slotPadding * j + letterPadding + offsetLineToParagraphIndent;
+
+        //            for (int k = 0; k < openingTitles[i].HorizontalParticlesPerSlot; k++)
+        //            {
+        //                for (int l = 0; l < openingTitles[i].VerticalParticlesPerSlot; l++)
+        //                {
+        //                    planetesimal = Instantiate(planetesimalPrefab, openingTitles[i].Location + new Vector3(x + k * openingTitles[i].ParticlePadding, y - l * openingTitles[i].ParticlePadding, 0), Quaternion.identity, planetesimalParent);
+        //                    planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
+        //                    planetesimal.tag = "Planet";
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
+        int cubeSideLength = MathUtility.ClosestCubeRoot(openingTitles.ParticleCount, true);
+
+        float particlePadding = 0.998f;
+        float alignmentAdjustment = cubeSideLength / 2;
+
+        for (int i = 0; i < cubeSideLength; i++)
         {
-            float rowLength = openingTitles[i].Code.Length / openingTitles[i].VerticalParticleSlotsPerLetter;
-            float slotPadding = openingTitles[i].SlotPadding;
-            int horizontalParticleSlotsPerLetter = openingTitles[i].HorizontalParticleSlotsPerLetter;
+            float x = i * particlePadding - alignmentAdjustment;
 
-            for (int j = 0; j < openingTitles[i].Code.Length; j++)
+            for (int j = 0; j < cubeSideLength; j++)
             {
-                if (openingTitles[i].Code[j].ToString() != " ")
+                float y = j * particlePadding - alignmentAdjustment;
+
+                for (int k = 0; k < cubeSideLength; k++)
                 {
-                    float currentRow = Mathf.FloorToInt(j / rowLength);
-                    float y = -1 * slotPadding * currentRow;
+                    float z = k * particlePadding - alignmentAdjustment;
 
-                    // Puts space between letters
-                    float letterPadding = slotPadding * (j / horizontalParticleSlotsPerLetter);
-
-                    // Because the word is coded as a single string, this offsets each line of particle slots back to paragraph indent. 
-                    float offsetLineToParagraphIndent = -1 * currentRow * slotPadding * (rowLength + rowLength / horizontalParticleSlotsPerLetter);
-
-                    float x = slotPadding * j + letterPadding + offsetLineToParagraphIndent;
-
-                    for (int k = 0; k < openingTitles[i].HorizontalParticlesPerSlot; k++)
-                    {
-                        for (int l = 0; l < openingTitles[i].VerticalParticlesPerSlot; l++)
-                        {
-                            planetesimal = Instantiate(planetesimalPrefab, openingTitles[i].Location + new Vector3(x + k * openingTitles[i].ParticlePadding, y - l * openingTitles[i].ParticlePadding, 0), Quaternion.identity, planetesimalParent);
-                            planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
-                            planetesimal.tag = "Planet";
-                        }
-                    }
+                    planetesimal = Instantiate(planetesimalPrefab, new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
+                    planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
+                    planetesimal.tag = "Planet";
                 }
             }
         }
@@ -339,37 +423,10 @@ public class Titles : MonoBehaviour
     {
         Title openingTitles = new Title(4);
 
-        openingTitles[0] = new Word(new Vector3(-62f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
-            "88888" + "8   8" + "8   8" + "88888" + "8   8" +
-            "8    " + "8   8" + "88  8" + "8    " + "8   8" +
-            "8  88" + "8   8" + "8 8 8" + "8888 " + " 8 8 " +
-            "8   8" + "8   8" + "8  88" + "8    " + "  8  " +
-            "88888" + "88888" + "8   8" + "88888" + "  8  "
-            );
-
-        openingTitles[1] = new Word(new Vector3(10f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
-            "88888" + "88888" + " 8888" + "  8  " + "8   8" +
-            "8   8" + "   8 " + "8    " + " 8 8 " + "88  8" +
-            "8   8" + "  8  " + " 888 " + " 888 " + "8 8 8" +
-            "8   8" + " 8   " + "    8" + "8   8" + "8  88" +
-            "88888" + "88888" + "8888 " + "8   8" + "8   8"
-            );
-
-        openingTitles[2] = new Word(new Vector3(-50f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
-            "88888" + "8   8" + "88888" +
-            "8   8" + "8   8" + "  8  " +
-            "8   8" + "8   8" + "  8  " +
-            "8   8" + "8   8" + "  8  " +
-            "88888" + "88888" + "  8  "
-            );
-
-        openingTitles[3] = new Word(new Vector3(-2f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f,
-            "88888" + "8   8" + "88888" + "8888 " + "88888" +
-            "  8  " + "8   8" + "8    " + "8   8" + "8    " +
-            "  8  " + "88888" + "8888 " + "8888 " + "8888 " +
-            "  8  " + "8   8" + "8    " + "8 8  " + "8    " +
-            "  8  " + "8   8" + "88888" + "8  8 " + "88888"
-            );
+        openingTitles[0] = new Word(new Vector3(-62f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "GUNEY");
+        openingTitles[1] = new Word(new Vector3(10f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "OZSAN");
+        openingTitles[2] = new Word(new Vector3(-50f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "OUT");
+        openingTitles[3] = new Word(new Vector3(-2f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "THERE");
 
         return openingTitles;
     }
