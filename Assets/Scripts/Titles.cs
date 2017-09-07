@@ -410,7 +410,7 @@ public class Titles : MonoBehaviour
                     float z = k * particlePadding - alignmentAdjustment;
 
                     planetesimal = Instantiate(planetesimalPrefab, new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
-                    planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget);
+                    planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget.position);
                     planetesimal.tag = "Planet";
                 }
             }
