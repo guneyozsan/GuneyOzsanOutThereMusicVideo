@@ -411,7 +411,7 @@ public class Titles : MonoBehaviour
 
                     planetesimal = Instantiate(planetesimalPrefab, new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
                     planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget.position);
-                    planetesimal.tag = "Planet";
+                    Space.planetesimals.Add(planetesimal);
                 }
             }
         }
