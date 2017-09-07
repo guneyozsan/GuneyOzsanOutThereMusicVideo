@@ -31,19 +31,7 @@ public class PlayAnimation : MonoBehaviour
     int compareBar;
 
     Gravity gravity;
-
-
-
-    void Awake()
-    {
-        sun = Instantiate(newSun, new Vector3(0, 0, 13), Quaternion.identity);
-        sun.localScale = new Vector3(5, 5, 5);
-        sun.tag = "Sun";
-#if UNITY_EDITOR
-        sun.name = "PyramidSun";
-#endif
-    }
-
+    
 
 
     void Start()
@@ -56,10 +44,16 @@ public class PlayAnimation : MonoBehaviour
 
     void Update()
     {
-        sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
+        //sun.transform.Rotate(0, 50 * Time.deltaTime, 0);
 
         if (sequencer.currentRegionId == 2 && compareBar != sequencer.currentBar)
         {
+            sun = Instantiate(newSun, new Vector3(0, 0, 0), Quaternion.identity);
+            sun.localScale = new Vector3(5, 5, 5);
+            sun.tag = "Sun";
+#if UNITY_EDITOR
+            sun.name = "PyramidSun";
+#endif
             SwitchAnimation(0, 10, 0);
             compareBar = sequencer.currentBar;
         }

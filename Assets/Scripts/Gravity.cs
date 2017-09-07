@@ -37,7 +37,7 @@ public class Gravity : MonoBehaviour
 
     void Update ()
     {
-        body.AddForce(forceMultiplier * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
+        //body.AddForce(forceMultiplier * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
     }
 
     public void SetTarget(Vector3 target)

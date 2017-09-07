@@ -394,7 +394,7 @@ public class Titles : MonoBehaviour
 
         int cubeSideLength = MathUtility.ClosestCubeRoot(openingTitles.ParticleCount, true);
 
-        float particlePadding = 0.998f;
+        float particlePadding = 1f;
         float alignmentAdjustment = cubeSideLength / 2;
 
         for (int i = 0; i < cubeSideLength; i++)
@@ -410,7 +410,7 @@ public class Titles : MonoBehaviour
                     float z = k * particlePadding - alignmentAdjustment;
 
                     planetesimal = Instantiate(planetesimalPrefab, new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
-                    planetesimal.GetComponent<Gravity>().SetTarget(gravityTarget.position);
+                    planetesimal.GetComponent<Gravity>().SetTarget(Vector3.zero);
                     Space.planetesimals.Add(planetesimal);
                 }
             }
