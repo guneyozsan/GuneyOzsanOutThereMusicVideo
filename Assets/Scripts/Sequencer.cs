@@ -24,25 +24,19 @@ public class Sequencer : MonoBehaviour
 {
     AudioSource music;
 #if UNITY_EDITOR
-    [NonSerialized]
-    public AudioSource musicDebug;
+    public static AudioSource MusicDebug { get; private set; }
 #endif
 
-    [NonSerialized]
-    public int currentRegionId;
+    public static int CurrentRegionId { get; private set; }
 #if UNITY_EDITOR
-    [NonSerialized]
-    public CurrentPart currentPart;
-    [NonSerialized]
-    public string currentRegionDescription;
+    public static Part CurrentPart { get; private set; }
+    public static string CurrentRegionDescription { get; private set; }
 
-    public enum CurrentPart { Intro, Part1Probe, Part2Approach };
+    public enum Part { Intro, Part1Probe, Part2Approach };
 
-    [NonSerialized]
-    public int currentBeat;
+    public static int CurrentBeat { get; private set; }
 #endif
-    [NonSerialized]
-    public int currentBar;
+    public static int CurrentBar { get; private set; }
 
     int BPM;
     double beatDuration;
@@ -71,11 +65,11 @@ public class Sequencer : MonoBehaviour
         music.time = 0;
         music.Play();
 #if UNITY_EDITOR
-        musicDebug = music;
+        MusicDebug = music;
 #endif
 
-        currentBar = 1;
-        currentBeat = 1;
+        CurrentBar = 1;
+        CurrentBeat = 1;
     }
 
 
@@ -112,7 +106,7 @@ public class Sequencer : MonoBehaviour
     {
         throw new NotImplementedException();
         //Debug.Log(Time.timeScale + " " + doFastForward);
-        if (currentBar < fastForwardToBar && Time.timeScale != fastForwardSpeed)
+        if (CurrentBar < fastForwardToBar && Time.timeScale != fastForwardSpeed)
         {
             Time.timeScale = fastForwardSpeed;
         }
@@ -129,202 +123,202 @@ public class Sequencer : MonoBehaviour
     {
         if (music.time < 9.350)
         {
-            currentRegionId = 1;
+            CurrentRegionId = 1;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Intro;
-            currentRegionDescription = "wind intro";
+            CurrentPart = Part.Intro;
+            CurrentRegionDescription = "wind intro";
 #endif
         }
         else if (music.time < 15.584)
         {
-            currentRegionId = 2;
+            CurrentRegionId = 2;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "explosion";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "explosion";
 #endif
         }
         else if (music.time < 21.818)
         {
-            currentRegionId = 3;
+            CurrentRegionId = 3;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "ping sound!";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "ping sound!";
 #endif
         }
         else if (music.time < 46.753)
         {
-            currentRegionId = 4;
+            CurrentRegionId = 4;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "musical base";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "musical base";
 #endif
         }
         else if (music.time < 96.623)
         {
-            currentRegionId = 5;
+            CurrentRegionId = 5;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "melody";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "melody";
 #endif
         }
         else if (music.time < 121.558)
         {
-            currentRegionId = 6;
+            CurrentRegionId = 6;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "bass";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "bass";
 #endif
         }
         else if (music.time < 146.493)
         {
-            currentRegionId = 7;
+            CurrentRegionId = 7;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "hihat and full bass";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "hihat and full bass";
 #endif
         }
         else if (music.time < 171.428)
         {
-            currentRegionId = 8;
+            CurrentRegionId = 8;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "bass syncopation";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "bass syncopation";
 #endif
         }
         else if (music.time < 183.896)
         {
-            currentRegionId = 9;
+            CurrentRegionId = 9;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 to 2 bridge";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 to 2 bridge";
 #endif
         }
         else if (music.time < 233.766)
         {
-            currentRegionId = 10;
+            CurrentRegionId = 10;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "A: musical base";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "A: musical base";
 #endif
         }
         else if (music.time < 258.701)
         {
-            currentRegionId = 11;
+            CurrentRegionId = 11;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "A: melody";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "A: melody";
 #endif
         }
         else if (music.time < 283.636)
         {
-            currentRegionId = 12;
+            CurrentRegionId = 12;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "AB bridge";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "AB bridge";
 #endif
         }
         else if (music.time < 308.571)
         {
-            currentRegionId = 13;
+            CurrentRegionId = 13;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "B: musical base";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "B: musical base";
 #endif
         }
         else if (music.time < 333.506)
         {
-            currentRegionId = 14;
+            CurrentRegionId = 14;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "B: melody";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "B: melody";
 #endif
         }
         else if (music.time < 358.441)
         {
-            currentRegionId = 15;
+            CurrentRegionId = 15;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "AB bridge";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "AB bridge";
 #endif
         }
         else if (music.time < 383.376)
         {
-            currentRegionId = 16;
+            CurrentRegionId = 16;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "B: melody";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "B: melody";
 #endif
         }
         else if (music.time < 408.311)
         {
-            currentRegionId = 17;
+            CurrentRegionId = 17;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "AB bridge";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "AB bridge";
 #endif
         }
         else if (music.time < 433.246)
         {
-            currentRegionId = 18;
+            CurrentRegionId = 18;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "A: melody";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "A: melody";
 #endif
         }
         else if (music.time < 458.181)
         {
-            currentRegionId = 19;
+            CurrentRegionId = 19;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "AB bridge";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "AB bridge";
 #endif
         }
         else if (music.time < 483.116)
         {
-            currentRegionId = 20;
+            CurrentRegionId = 20;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part2Approach;
-            currentRegionDescription = "Part 2 to 1 bridge";
+            CurrentPart = Part.Part2Approach;
+            CurrentRegionDescription = "Part 2 to 1 bridge";
 #endif
         }
         else if (music.time < 508.051)
         {
-            currentRegionId = 21;
+            CurrentRegionId = 21;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 rhythm + melody + hihat";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 rhythm + melody + hihat";
 #endif
         }
         else if (music.time < 532.986)
         {
-            currentRegionId = 22;
+            CurrentRegionId = 22;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 rhythm + melody";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 rhythm + melody";
 #endif
         }
         else if (music.time < 557.922)
         {
-            currentRegionId = 23;
+            CurrentRegionId = 23;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 melody + bass";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 melody + bass";
 #endif
         }
         else if (music.time < 582.857)
         {
-            currentRegionId = 24;
+            CurrentRegionId = 24;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 melody + bass + hihat";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 melody + bass + hihat";
 #endif
         }
         else
         { // if (music.time < 595.324) {
-            currentRegionId = 25;
+            CurrentRegionId = 25;
 #if UNITY_EDITOR
-            currentPart = CurrentPart.Part1Probe;
-            currentRegionDescription = "Part 1 to 2 bridge";
+            CurrentPart = Part.Part1Probe;
+            CurrentRegionDescription = "Part 1 to 2 bridge";
 #endif
         }
     }
@@ -333,16 +327,16 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void SetBeats()
     {
-        if (music.time > ((currentBar - 1) * 4 + currentBeat) * beatDuration)
+        if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * beatDuration)
         {
-            if (currentBeat < 4)
+            if (CurrentBeat < 4)
             {
-                currentBeat++;
+                CurrentBeat++;
             }
             else
             {
-                currentBeat = 1;
-                currentBar++;
+                CurrentBeat = 1;
+                CurrentBar++;
             }
         }
     }
@@ -355,10 +349,10 @@ public class Sequencer : MonoBehaviour
         {
             music.time = (float)((loopToBar - 1d) * 4d * beatDuration);
             music.Play();
-            currentBar = this.loopToBar;
+            CurrentBar = this.loopToBar;
 
 #if UNITY_EDITOR
-            currentBeat = 1;
+            CurrentBeat = 1;
 #endif
         }
     }

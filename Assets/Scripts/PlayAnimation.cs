@@ -27,7 +27,6 @@ public class PlayAnimation : MonoBehaviour
     [NonSerialized]
     public Transform sun;
 
-    Sequencer sequencer;
     int compareBar;
     int currentRegion = 0;
 
@@ -37,17 +36,16 @@ public class PlayAnimation : MonoBehaviour
 
     void Start()
     {
-        sequencer = GetComponent<Sequencer>();
-        compareBar = sequencer.fastForwardToBar;
+        compareBar = 0; //sequencer.fastForwardToBar;
     }
 
 
 
     void Update()
     {
-        if (sequencer.currentRegionId == 2)
+        if (Sequencer.CurrentRegionId == 2)
         {
-            if (currentRegion != sequencer.currentRegionId)
+            if (currentRegion != Sequencer.CurrentRegionId)
             {
                 sun = Instantiate(newSun, new Vector3(0, 0, 0), Quaternion.identity);
                 sun.localScale = new Vector3(5, 5, 5);
@@ -55,39 +53,39 @@ public class PlayAnimation : MonoBehaviour
 #if UNITY_EDITOR
                 sun.name = "PyramidSun";
 #endif
-                currentRegion = sequencer.currentRegionId;
+                currentRegion = Sequencer.CurrentRegionId;
             }
 
-            if (compareBar != sequencer.currentBar)
+            if (compareBar != Sequencer.CurrentBar)
             {
                 SwitchAnimation(0, 10, 0);
-                compareBar = sequencer.currentBar;
+                compareBar = Sequencer.CurrentBar;
             }
         }
-        else if (sequencer.currentRegionId == 3 && compareBar != sequencer.currentBar)
+        else if (Sequencer.CurrentRegionId == 3 && compareBar != Sequencer.CurrentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = sequencer.currentBar;
+            compareBar = Sequencer.CurrentBar;
         }
-        else if (sequencer.currentRegionId == 4 && compareBar != sequencer.currentBar)
+        else if (Sequencer.CurrentRegionId == 4 && compareBar != Sequencer.CurrentBar)
         {
             SwitchAnimation(2, 0, -70);
-            compareBar = sequencer.currentBar;
+            compareBar = Sequencer.CurrentBar;
         }
-        else if (sequencer.currentRegionId >= 5 && sequencer.currentRegionId <= 8 && compareBar != sequencer.currentBar)
+        else if (Sequencer.CurrentRegionId >= 5 && Sequencer.CurrentRegionId <= 8 && compareBar != Sequencer.CurrentBar)
         {
             SwitchAnimation(0, -300, 0);
-            compareBar = sequencer.currentBar;
+            compareBar = Sequencer.CurrentBar;
         }
-        else if (sequencer.currentRegionId >= 10 && sequencer.currentRegionId <= 24 && compareBar != sequencer.currentBar)
+        else if (Sequencer.CurrentRegionId >= 10 && Sequencer.CurrentRegionId <= 24 && compareBar != Sequencer.CurrentBar)
         {
             SwitchAnimation(1, -300, 0);
-            compareBar = sequencer.currentBar;
+            compareBar = Sequencer.CurrentBar;
         }
-        else if (sequencer.currentRegionId == 9 || sequencer.currentRegionId == 25)
+        else if (Sequencer.CurrentRegionId == 9 || Sequencer.CurrentRegionId == 25)
         {
             TurnOffAnimation(0);
-            compareBar = sequencer.currentBar;
+            compareBar = Sequencer.CurrentBar;
             sun.GetComponent<Collider>().enabled = false;
             sun.GetComponent<Renderer>().enabled = false;
             sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);

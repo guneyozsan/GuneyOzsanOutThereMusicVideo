@@ -24,23 +24,16 @@ using UnityEngine;
 
 public class DebugGUI : MonoBehaviour {
 
-    Sequencer sequencer;
-
-    void Start()
-    {
-        sequencer = GetComponent<Sequencer>();
-    }
-
     void OnGUI()
     {
         GUI.Label(
             new Rect(10, 10, 200, 100),
-            "Bar:   " + sequencer.currentBar + ":" + sequencer.currentBeat
-            + "      Time:   " + (int)(sequencer.musicDebug.time * 1000) + " ms" + Environment.NewLine
+            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
+            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
             + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + sequencer.currentPart + Environment.NewLine
-            + "Region:   " + sequencer.currentRegionId + Environment.NewLine
-            + sequencer.currentRegionDescription
+            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
+            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
+            + Sequencer.CurrentRegionDescription
         );
     }
 }
