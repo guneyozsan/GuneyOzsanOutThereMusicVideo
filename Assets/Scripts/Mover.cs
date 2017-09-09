@@ -15,9 +15,9 @@ public class Mover : MonoBehaviour {
 
         float t = 0;
 
-        while (transform.position != target)
+        while (true)
         {
-            transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+            transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
             t += Time.deltaTime / time;
             yield return null;
         }

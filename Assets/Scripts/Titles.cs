@@ -81,25 +81,68 @@ public class Title
 
     public static void FormTitle(Title title, float time)
     {
-        int planetesimalIndex = 0;
+        StopPlanetesimals();
+        SetPlanetesimalsFree();
 
+        int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+
+        Vector3 xVector = new Vector3(1, 0, 0);
+        Vector3 yVector = new Vector3(0, 1, 0);
+
+        // word
         for (int i = 0; i < title.Length; i++)
         {
+            Vector3 wordLocation = title[i].Location;
+            float letterSize = (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * (title[i].HorizontalParticleSlotsPerLetter + 1);
+
+            // letter
             for (int j = 0; j < title[i].Length; j++)
             {
+                Vector3 letterLocation = (j * letterSize) * xVector;
+
+                // slot y
                 for (int k = 0; k < title[i][j].Slots.GetLength(0); k++)
                 {
+                    Vector3 slotLocationY = k * (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * yVector;
+
+                    // slot x
                     for (int l = 0; l < title[i][j].Slots.GetLength(1); l++)
                     {
+                        Vector3 slotLocationX = l * (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * xVector;
+                        
                         if (title[i][j].Slots[k, l])
                         {
-                            Vector3 target = 5 * Vector3.one * (i + j + k + l);
-                            Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time);
-                            planetesimalIndex++;
+                            Vector3 slotLocation = wordLocation + letterLocation + slotLocationX - slotLocationY;
+
+                            for (int m = 0; m < title[i].VerticalParticlesPerSlot; m++)
+                            {
+                                for (int n = 0; n < title[i].HorizontalParticlesPerSlot; n++)
+                                {
+                                    Vector3 target = slotLocation + new Vector3(m * title[i].ParticlePadding, n * title[i].ParticlePadding, 0);
+                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time);
+                                    planetesimalIndex++;
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    public static void StopPlanetesimals()
+    {
+        for (int i = 0; i < Space.planetesimals.Count; i++)
+        {
+            Space.planetesimals[i].Rigidbody.velocity = Vector3.zero;
+        }
+    }
+
+    public static void SetPlanetesimalsFree()
+    {
+        for (int i = 0; i < Space.planetesimals.Count; i++)
+        {
+            Space.planetesimals[i].Mover.StopAllCoroutines();
         }
     }
 }
@@ -363,6 +406,12 @@ public class Letter
             "   0 ",
             "  0  ",
             " 0   ",
-            "00000"}  }
+            "00000"}  },
+         { ' ', new string[] {
+            "     ",
+            "     ",
+            "     ",
+            "     ",
+            "     "}  }
     };
 }

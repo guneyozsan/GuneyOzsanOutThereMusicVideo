@@ -26,6 +26,9 @@ public class AnimationManager : MonoBehaviour
     Transform planetesimalPrefab;
 
     public static Title openingTitles;
+    public static Title openingTitlesWide;
+    public static Title partOneTitles;
+    public static Title partOneTitlesWide;
 
     public Transform newSun;
 
@@ -42,10 +45,27 @@ public class AnimationManager : MonoBehaviour
     void Start()
     {
         openingTitles = new Title(new Word[] {
-            new Word(new Vector3(-62f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "GUNEY"),
-            new Word(new Vector3(10f, 15f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "OZSAN"),
-            new Word(new Vector3(-50f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "OUT"),
-            new Word(new Vector3(-2f, 0f, 4.6f), 5, 5, 2, 2, 2, 0.96f, "THERE")
+            new Word(new Vector3(-62f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "GUNEY"),
+            new Word(new Vector3(10f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "OZSAN"),
+            new Word(new Vector3(-50f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "OUT"),
+            new Word(new Vector3(-2f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "THERE")
+        });
+
+        openingTitlesWide = new Title(new Word[] {
+            new Word(new Vector3(-66f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "GUNEY"),
+            new Word(new Vector3(6f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "OZSAN"),
+            new Word(new Vector3(-54f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "OUT"),
+            new Word(new Vector3(-6f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "THERE")
+        });
+
+        partOneTitles = new Title(new Word[] {
+            new Word(new Vector3(-35f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "PART I"),
+            new Word(new Vector3(-30f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "PROBE"),
+        });
+
+        partOneTitlesWide = new Title(new Word[] {
+            new Word(new Vector3(-39f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "PART I"),
+            new Word(new Vector3(-34f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "PROBE"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
@@ -119,7 +139,7 @@ public class AnimationManager : MonoBehaviour
 
     void Update()
     {
-        if (Sequencer.CurrentRegionId == 1)
+        if (Sequencer.CurrentRegionId == 2)
         {
             if (currentRegion != Sequencer.CurrentRegionId)
             {
@@ -138,12 +158,17 @@ public class AnimationManager : MonoBehaviour
                 currentBar = Sequencer.CurrentBar;
             }
         }
-        else if (Sequencer.CurrentRegionId == 2)
+        else if (Sequencer.CurrentRegionId == 4)
         {
             if (currentRegion != Sequencer.CurrentRegionId)
             {
                 currentRegion = Sequencer.CurrentRegionId;
-                Title.FormTitle(openingTitles, 9.35f);
+                Title.FormTitle(openingTitles, 18.70125f);
+            }
+
+            if (Sequencer.CurrentBar == 14 && currentBar != 14)
+            {
+                Title.FormTitle(openingTitlesWide, 6.33f);
             }
 
             if (currentBar != Sequencer.CurrentBar)
@@ -151,33 +176,53 @@ public class AnimationManager : MonoBehaviour
                 currentBar = Sequencer.CurrentBar;
             }
         }
-        //else if (Sequencer.CurrentRegionId == 4 && currentBar != Sequencer.CurrentBar)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    SwitchAnimation(2, 0, -70);
-        //    currentBar = Sequencer.CurrentBar;
-        //}
-        //else if (Sequencer.CurrentRegionId >= 5 && Sequencer.CurrentRegionId <= 8 && currentBar != Sequencer.CurrentBar)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    SwitchAnimation(0, -300, 0);
-        //    currentBar = Sequencer.CurrentBar;
-        //}
-        //else if (Sequencer.CurrentRegionId >= 10 && Sequencer.CurrentRegionId <= 24 && currentBar != Sequencer.CurrentBar)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    SwitchAnimation(1, -300, 0);
-        //    currentBar = Sequencer.CurrentBar;
-        //}
-        //else if (Sequencer.CurrentRegionId == 9 || Sequencer.CurrentRegionId == 25)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    TurnOffAnimation(0);
-        //    currentBar = Sequencer.CurrentBar;
-        //    sun.GetComponent<Collider>().enabled = false;
-        //    sun.GetComponent<Renderer>().enabled = false;
-        //    sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);
-        //}
+        else if (Sequencer.CurrentRegionId == 5)
+        {
+            if (currentRegion != Sequencer.CurrentRegionId)
+            {
+                currentRegion = Sequencer.CurrentRegionId;
+                Title.SetPlanetesimalsFree();
+            }
+
+            if (Sequencer.CurrentBar == 18 && currentBar != 18)
+            {
+                Title.FormTitle(partOneTitles, 12.4675f);
+            }
+            else if (Sequencer.CurrentBar == 22 && currentBar != 22)
+            {
+                Title.FormTitle(partOneTitlesWide, 6.33f);
+            }
+            else if (Sequencer.CurrentBar == 24 && currentBar != 24)
+            {
+                Title.SetPlanetesimalsFree();
+            }
+
+            if (currentBar != Sequencer.CurrentBar)
+            {
+                currentBar = Sequencer.CurrentBar;
+            }
+        }
+        else if (Sequencer.CurrentRegionId >= 6 && Sequencer.CurrentRegionId <= 8 && currentBar != Sequencer.CurrentBar)
+        {
+            currentRegion = Sequencer.CurrentRegionId;
+            SwitchAnimation(0, -300, 0);
+            currentBar = Sequencer.CurrentBar;
+        }
+        else if (Sequencer.CurrentRegionId >= 10 && Sequencer.CurrentRegionId <= 24 && currentBar != Sequencer.CurrentBar)
+        {
+            currentRegion = Sequencer.CurrentRegionId;
+            SwitchAnimation(1, -300, 0);
+            currentBar = Sequencer.CurrentBar;
+        }
+        else if (Sequencer.CurrentRegionId == 9 || Sequencer.CurrentRegionId == 25)
+        {
+            currentRegion = Sequencer.CurrentRegionId;
+            TurnOffAnimation(0);
+            currentBar = Sequencer.CurrentBar;
+            sun.GetComponent<Collider>().enabled = false;
+            sun.GetComponent<Renderer>().enabled = false;
+            sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);
+        }
     }
 
 
