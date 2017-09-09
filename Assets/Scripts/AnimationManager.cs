@@ -1,4 +1,4 @@
-﻿// Guney Ozsan - Out There (Music Video) - Real time music video in demoscene style for Unity 3D.
+﻿// Guney Ozsan - Out There (Music Video) - Real time procedural music video in demoscene style for Unity 3D.
 // Copyright (C) 2017 Guney Ozsan
 
 // This program is free software: you can redistribute it and/or modify
