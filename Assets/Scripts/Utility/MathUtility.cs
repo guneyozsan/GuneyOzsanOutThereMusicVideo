@@ -15,26 +15,31 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-// Displays the current time, measure and song part for tracking our place in the song and debugging.
-# if UNITY_EDITOR
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
+public static class MathUtility {
 
-    void OnGUI()
+	public static int ClosestCubeRoot(int source, bool inclusive)
     {
-        GUI.Label(
-            new Rect(10, 10, 200, 100),
-            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
-            + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
-            + Sequencer.CurrentRegionDescription
-        );
+        int root = 0;
+        float rootPower = Mathf.Pow(root, 3);
+
+        while (rootPower < source)
+        {
+            root++;
+            rootPower = Mathf.Pow(root, 3);
+        }
+
+        if (inclusive)
+        {
+            return root;
+        }
+        else
+        {
+            return root - 1;
+        }
     }
+
 }
-#endif // UNITY_EDITOR

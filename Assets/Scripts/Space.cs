@@ -15,26 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-// Displays the current time, measure and song part for tracking our place in the song and debugging.
-# if UNITY_EDITOR
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
-
-    void OnGUI()
-    {
-        GUI.Label(
-            new Rect(10, 10, 200, 100),
-            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
-            + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
-            + Sequencer.CurrentRegionDescription
-        );
-    }
+public static class Space
+{
+    public static List<Planetesimal> planetesimals = new List<Planetesimal>();
 }
-#endif // UNITY_EDITOR
