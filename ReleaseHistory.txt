@@ -1,0 +1,17 @@
+RELEASE NOTES
+------
+v0.4.0
+- Implemented system for forming title texts on screen with planetesimals.
+- The starting scene now starts with a single blue cube that explodes to form small planetesimals in sync with the explosion sound in the intro.
+
+------
+v0.3.0
+- Organize code structure for better architecture.
+
+------
+v0.2.0
+- JavaScript prototype is converted to C#.
+
+------
+v0.1.0
+- Initial prototype made with JavaScript
