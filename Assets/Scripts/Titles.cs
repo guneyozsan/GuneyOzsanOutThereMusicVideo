@@ -79,15 +79,14 @@ public class Title
 
     Vector3 velocity = Vector3.zero;
 
-    public static void FormTitle(Title title, float time)
+    public static void FormTitle(Title title, float time, float particleDelay)
     {
-        StopPlanetesimals();
-        SetPlanetesimalsFree();
-
         int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+        int particleCount = 0;
 
         Vector3 xVector = new Vector3(1, 0, 0);
         Vector3 yVector = new Vector3(0, 1, 0);
+
 
         // word
         for (int i = 0; i < title.Length; i++)
@@ -119,7 +118,8 @@ public class Title
                                 for (int n = 0; n < title[i].HorizontalParticlesPerSlot; n++)
                                 {
                                     Vector3 target = slotLocation + new Vector3(m * title[i].ParticlePadding, n * title[i].ParticlePadding, 0);
-                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time);
+                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, particleCount * particleDelay);
+                                    particleCount++;
                                     planetesimalIndex++;
                                 }
                             }
@@ -143,6 +143,16 @@ public class Title
         for (int i = 0; i < Space.planetesimals.Count; i++)
         {
             Space.planetesimals[i].Mover.StopAllCoroutines();
+        }
+    }
+
+    public static void DistributeTitle(Title title, float range, float time, float delay)
+    {
+        int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+
+        for (int i = planetesimalIndex; i < Space.planetesimals.Count - planetesimalIndex; i++)
+        {
+            Space.planetesimals[i].Mover.SpreadAround(range, time, delay);
         }
     }
 }

@@ -21,13 +21,21 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour {
 
-    public void MoveTo(Vector3 target, float time)
+    public void MoveTo(Vector3 target, float time, float delay)
     {
-        StartCoroutine(MoveThisTo(target, time));
+        StartCoroutine(MoveThisTo(target, time, delay));
     }
 
-    IEnumerator MoveThisTo(Vector3 target, float time)
+    public void SpreadAround(float range, float time, float delay)
     {
+        StartCoroutine(SpreadThisAround(range, time, delay));
+    }
+
+
+    IEnumerator MoveThisTo(Vector3 target, float time, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
 
         float t = 0;
@@ -38,5 +46,23 @@ public class Mover : MonoBehaviour {
             t += Time.deltaTime / time;
             yield return null;
         }
+    }
+
+    IEnumerator SpreadThisAround(float range, float time, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Vector3 start = transform.position;
+        Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value));
+        float t = 0;
+
+        while (transform.position != target)
+        {
+            transform.position = Vector3.Slerp(start, target, t);
+            t += Time.deltaTime / time;
+            yield return null;
+        }
+
+        StopAllCoroutines();
+        transform.GetComponent<Rigidbody>().velocity = range * (new Vector3(Random.value, Random.value, Random.value));
     }
 }
