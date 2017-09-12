@@ -17,10 +17,10 @@ The basic implementation of the idea for this was written in 2014 but it couldn'
 ## Progress
 - ~~Translate original Javascript codebase to C#.~~
 - ~~Refactor the prototype code with a better architecture.~~
-- Improve the system for forming letters with planetesimals. **(in progress)**
-- Write the names of Part 1 and Part 2 of the music piece with cubes.
+- ~~Improve the system for forming letters with planetesimals.~~
+- Part I composition **(in progress)**
+- Part II composition.
 - Place the first person view on the cubes in Part 2.
-- Establish composition in time.
 - Explore visual effect possibilities through color, shader, post-processing.
 - Research and experiment  various user interaction possibilities.
 - Take screen recording.
