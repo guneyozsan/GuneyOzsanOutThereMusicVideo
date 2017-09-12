@@ -1,4 +1,4 @@
-﻿// Guney Ozsan - Out There (Music Video) - Real time music video in demoscene style for Unity 3D.
+﻿// Guney Ozsan - Out There (Music Video) - Real time procedural music video in demoscene style for Unity 3D.
 // Copyright (C) 2017 Guney Ozsan
 
 // This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ public class Gravity : MonoBehaviour
 {
     Rigidbody body;
 
-    Transform target;
+    Vector3 target;
     [NonSerialized]
     public int forceMultiplier = 0;
 
@@ -37,10 +37,13 @@ public class Gravity : MonoBehaviour
 
     void Update ()
     {
-        body.AddForce(forceMultiplier * (transform.position - target.position) / Mathf.Pow(Vector3.Distance(transform.position, target.position), 2));
+        if (Mathf.Pow(Vector3.Distance(transform.position, target), 2) != 0)
+        {
+            body.AddForce(forceMultiplier * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
+        }
     }
 
-    public void SetTarget(Transform target)
+    public void SetTarget(Vector3 target)
     {
         this.target = target;
     }

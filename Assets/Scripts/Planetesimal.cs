@@ -15,26 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-// Displays the current time, measure and song part for tracking our place in the song and debugging.
-# if UNITY_EDITOR
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
+public class Planetesimal {
 
-    void OnGUI()
+    public Transform Transform { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+    public Gravity Gravity { get; private set; }
+    public Mover Mover { get; private set; }
+
+    public Planetesimal(Transform planetesimal)
     {
-        GUI.Label(
-            new Rect(10, 10, 200, 100),
-            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
-            + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
-            + Sequencer.CurrentRegionDescription
-        );
+        Transform = planetesimal.transform;
+        Rigidbody = planetesimal.GetComponent<Rigidbody>();
+        Gravity = planetesimal.GetComponent<Gravity>();
+        Mover = planetesimal.GetComponent<Mover>();
     }
 }
-#endif // UNITY_EDITOR
