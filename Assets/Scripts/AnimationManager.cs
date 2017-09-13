@@ -62,11 +62,11 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-30f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
+            new Word(new Vector3(-30f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-25f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
+            new Word(new Vector3(-25f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
@@ -119,60 +119,46 @@ public class AnimationManager : MonoBehaviour
             case 7:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(openingTitlesMusic, 10, 0.05f, true);
+                    Title.FormTitle(openingTitlesMusic, 3.2f * Sequencer.BarDurationF, 0.05f, true);
                     SetGravity(-3);
                 }
                 break;
 
-            case 20:
+            case 17:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.SpreadTitle(openingTitlesMusic, 30, 3 * (float)Sequencer.BarDuration, 0.018f, false);
+                    Title.SpreadTitle(openingTitlesMusic, 30, 5 * (float)Sequencer.BarDurationF, 0.1f, false);
                 }
                 break;
 
-            case 114:
+            case 18:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartNumber, 5f, 0.012f, true);
+                    SetGravity(0);
                 }
                 break;
 
-            case 117:
+            case 22:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartName, 5f, 0, true);
+                    SetGravity(-10);
                 }
                 break;
 
-            case 113:
+            case 32:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f, true);
+                    Title.FormTitle(partOneTitlesPartNumber, 0.5f * Sequencer.BarDurationF, 0.02f, true);
                 }
+                SetGravity(0);
                 break;
 
-            case 119:
+            case 34:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.SpreadTitle(openingTitlesComposer, 20, 8, 0.018f, true);
+                    Title.FormTitle(partOneTitlesPartName, 0.5f * Sequencer.BarDurationF, 0f, true);
                 }
-                break;
-
-            case 120:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    Title.SetPlanetesimalsFree();
-                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f, true);
-                }
-                break;
-
-            case 116:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    Title.SetPlanetesimalsFree();
-                    Title.FormTitle(partOneTitlesPartNumber, 4f, 0.018f, true);
-                }
+                SetGravity(0);
                 break;
         }
 

@@ -43,7 +43,14 @@ public class Sequencer : MonoBehaviour
     public static double BarDuration {
         get
         {
-            return BeatDuration * 4;
+            return 4 * BeatDuration;
+        }
+    }
+    public static float BarDurationF
+    {
+        get
+        {
+            return 4 * (float)BeatDuration;
         }
     }
 

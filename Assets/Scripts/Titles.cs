@@ -87,7 +87,6 @@ public class Title
         Vector3 xVector = new Vector3(1, 0, 0);
         Vector3 yVector = new Vector3(0, 1, 0);
 
-
         // word
         for (int i = 0; i < title.Length; i++)
         {
@@ -148,11 +147,11 @@ public class Title
 
     public static void SpreadTitle(Title title, float range, float time, float delay, bool sphericalLerp)
     {
-        int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+        int firstPlanetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
 
-        for (int i = planetesimalIndex; i < Space.planetesimals.Count - planetesimalIndex; i++)
+        for (int i = firstPlanetesimalIndex; i < Space.planetesimals.Count - firstPlanetesimalIndex; i++)
         {
-            Space.planetesimals[i].Mover.SpreadAround(range, time, i * delay, sphericalLerp);
+            Space.planetesimals[i].Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
         }
     }
 }
