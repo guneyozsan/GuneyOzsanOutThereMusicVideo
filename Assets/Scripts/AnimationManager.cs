@@ -245,20 +245,32 @@ public class AnimationManager : MonoBehaviour
         //}
     }
 
+
+
+    void SetGravity(float gravityForce)
+    {
+        for (int i = 0; i < Space.planetesimals.Count; i++)
+        {
+            Space.planetesimals[i].Gravity.SetForce(gravityForce);
+        }
+    }
+
+
+
     void SwitchAnimation(int switcher, int gravityForce, int antiGravityForce)
     {
         if (animationCurrentBar % 2 == switcher)
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.Gravity.forceMultiplier = gravityForce;
+                planetesimal.Gravity.SetForce(gravityForce);
             }
         }
         else
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.Gravity.forceMultiplier = antiGravityForce;
+                planetesimal.Gravity.SetForce(antiGravityForce);
             }
         }
     }
@@ -270,7 +282,7 @@ public class AnimationManager : MonoBehaviour
         foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
         {
             gravity = planet.GetComponent<Gravity>();
-            gravity.forceMultiplier = antiGravityForce;
+            gravity.SetForce(antiGravityForce);
         }
     }
 }
