@@ -25,21 +25,21 @@ public class Mover : MonoBehaviour {
     Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
 
 
-    public void MoveTo(Vector3 target, float time, float delay)
+    public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
-        StartCoroutine(MoveThisTo(target, time, delay));
+        StartCoroutine(MoveThisTo(target, time, delay, sphericalLerp));
     }
 
 
 
-    public void SpreadAround(float range, float time, float delay)
+    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
-        StartCoroutine(SpreadThisAround(range, time, delay));
+        StartCoroutine(SpreadThisAround(range, time, delay, sphericalLerp));
     }
 
 
 
-    IEnumerator MoveThisTo(Vector3 target, float time, float delay)
+    IEnumerator MoveThisTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
         yield return new WaitForSeconds(delay);
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -49,7 +49,14 @@ public class Mover : MonoBehaviour {
 
         while (!stoppingCoroutines)
         {
-            transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+            if (sphericalLerp)
+            {
+                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+            }
+            else
+            {
+                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+            }
             t += Time.deltaTime / time;
             yield return null;
         }
@@ -58,9 +65,10 @@ public class Mover : MonoBehaviour {
 
 
 
-    IEnumerator SpreadThisAround(float range, float time, float delay)
+    IEnumerator SpreadThisAround(float range, float time, float delay, bool sphericalLerp)
     {
         yield return new WaitForSeconds(delay);
+        print("x");
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
         Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
@@ -68,7 +76,15 @@ public class Mover : MonoBehaviour {
 
         while (t <= 1)
         {
-            transform.position = Vector3.Slerp(start, target, t);
+            if (sphericalLerp)
+            {
+                transform.position = Vector3.Slerp(start, target, t);
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(start, target, t);
+            }
+
             t += Time.deltaTime / time;
             if (t >= 1)
             {

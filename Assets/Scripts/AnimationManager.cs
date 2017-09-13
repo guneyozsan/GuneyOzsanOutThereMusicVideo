@@ -62,11 +62,11 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(0f, 15f, -9.4f), 5, 5, 2, 2, 2, 1.1f, "PART I"),
+            new Word(new Vector3(-30f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(0f, 0f, -9.4f), 5, 5, 2, 2, 2, 1.5f, "PROBE"),
+            new Word(new Vector3(-25f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
@@ -101,7 +101,7 @@ public class AnimationManager : MonoBehaviour
     {
         switch (Sequencer.CurrentBar)
         {
-            case 2:
+            case 4:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     currentRegion = Sequencer.CurrentRegionId;
@@ -112,42 +112,58 @@ public class AnimationManager : MonoBehaviour
 #if UNITY_EDITOR
                     sun.name = "PyramidSun";
 #endif
-                    Title.FormTitle(openingTitlesMusic, 5f, 0.012f);
-                    SetGravity(-5);
+                    SetGravity(0);
                 }
                 break;
 
-            case 8:
+            case 7:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.DistributeTitle(openingTitlesMusic, 20, 8, 0.018f);
+                    Title.FormTitle(openingTitlesMusic, 10, 0.05f, true);
+                    SetGravity(-3);
                 }
                 break;
 
-            case 12:
-                SetGravity(-20);
-                break;
-
-            case 13:
+            case 20:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f);
+                    Title.DistributeTitle(openingTitlesMusic, 30, 3 * (float)Sequencer.BarDuration, 0.1f, false);
                 }
                 break;
 
-            case 19:
+            case 114:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.DistributeTitle(openingTitlesComposer, 20, 8, 0.018f);
+                    Title.FormTitle(partOneTitlesPartNumber, 5f, 0.012f, true);
                 }
                 break;
 
+            case 117:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    Title.FormTitle(partOneTitlesPartName, 5f, 0, true);
+                }
+                break;
 
-            case 112:
+            case 113:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f, true);
+                }
+                break;
+
+            case 119:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    Title.DistributeTitle(openingTitlesComposer, 20, 8, 0.018f, true);
+                }
+                break;
+
+            case 120:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     Title.SetPlanetesimalsFree();
-                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f);
+                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f, true);
                 }
                 break;
 
@@ -155,7 +171,7 @@ public class AnimationManager : MonoBehaviour
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     Title.SetPlanetesimalsFree();
-                    Title.FormTitle(partOneTitlesPartNumber, 4f, 0.018f);
+                    Title.FormTitle(partOneTitlesPartNumber, 4f, 0.018f, true);
                 }
                 break;
         }
