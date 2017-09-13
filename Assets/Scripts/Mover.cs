@@ -68,7 +68,6 @@ public class Mover : MonoBehaviour {
     IEnumerator SpreadThisAround(float range, float time, float delay, bool sphericalLerp)
     {
         yield return new WaitForSeconds(delay);
-        print("x");
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
         Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);

@@ -146,13 +146,13 @@ public class Title
         }
     }
 
-    public static void DistributeTitle(Title title, float range, float time, float delay, bool sphericalLerp)
+    public static void SpreadTitle(Title title, float range, float time, float delay, bool sphericalLerp)
     {
         int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
 
         for (int i = planetesimalIndex; i < Space.planetesimals.Count - planetesimalIndex; i++)
         {
-            Space.planetesimals[i].Mover.SpreadAround(range, time, delay, sphericalLerp);
+            Space.planetesimals[i].Mover.SpreadAround(range, time, i * delay, sphericalLerp);
         }
     }
 }

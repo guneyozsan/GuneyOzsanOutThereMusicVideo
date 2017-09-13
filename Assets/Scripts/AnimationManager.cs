@@ -127,7 +127,7 @@ public class AnimationManager : MonoBehaviour
             case 20:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.DistributeTitle(openingTitlesMusic, 30, 3 * (float)Sequencer.BarDuration, 0.1f, false);
+                    Title.SpreadTitle(openingTitlesMusic, 30, 3 * (float)Sequencer.BarDuration, 0.018f, false);
                 }
                 break;
 
@@ -155,7 +155,7 @@ public class AnimationManager : MonoBehaviour
             case 119:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.DistributeTitle(openingTitlesComposer, 20, 8, 0.018f, true);
+                    Title.SpreadTitle(openingTitlesComposer, 20, 8, 0.018f, true);
                 }
                 break;
 
