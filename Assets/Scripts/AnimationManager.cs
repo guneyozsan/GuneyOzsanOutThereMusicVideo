@@ -48,25 +48,25 @@ public class AnimationManager : MonoBehaviour
     void Start()
     {
         openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-55f, 17f, -8.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
-            new Word(new Vector3(-2f, 17f, -8.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
+            new Word(new Vector3(-55f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
+            new Word(new Vector3(-2f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
         });
 
         openingTitlesBy = new Title(new Word[] {
-            new Word(new Vector3(-11f, 7f, -8.4f), 5, 5, 2, 2, 2, 1.3f, "BY"),
+            new Word(new Vector3(-11f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "BY"),
         });
 
         openingTitlesComposer = new Title(new Word[] {
-            new Word(new Vector3(-66f, 7f, -8.4f), 5, 5, 2, 2, 2, 1.3f, "GUNEY"),
-            new Word(new Vector3(8f, 7f, -8.4f), 5, 5, 2, 2, 2, 1.3f, "OZSAN"),
+            new Word(new Vector3(-66f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "GUNEY"),
+            new Word(new Vector3(8f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OZSAN"),
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(0f, 15f, -8.4f), 5, 5, 2, 2, 2, 1.1f, "PART I"),
+            new Word(new Vector3(0f, 15f, -9.4f), 5, 5, 2, 2, 2, 1.1f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(0f, 0f, -8.4f), 5, 5, 2, 2, 2, 1.5f, "PROBE"),
+            new Word(new Vector3(0f, 0f, -9.4f), 5, 5, 2, 2, 2, 1.5f, "PROBE"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
@@ -101,7 +101,7 @@ public class AnimationManager : MonoBehaviour
     {
         switch (Sequencer.CurrentBar)
         {
-            case 4:
+            case 2:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     currentRegion = Sequencer.CurrentRegionId;
@@ -112,23 +112,36 @@ public class AnimationManager : MonoBehaviour
 #if UNITY_EDITOR
                     sun.name = "PyramidSun";
 #endif
-                    Title.FormTitle(openingTitlesMusic, 4f, 0.018f);
+                    Title.FormTitle(openingTitlesMusic, 5f, 0.012f);
+                    SetGravity(-5);
                 }
                 break;
 
             case 8:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.DistributeTitle(openingTitlesMusic, 10, 8, 0.018f);
+                    Title.DistributeTitle(openingTitlesMusic, 20, 8, 0.018f);
                 }
                 break;
 
-            case 110:
+            case 12:
+                SetGravity(-20);
+                break;
+
+            case 13:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(openingTitlesBy, 4f, 0.018f);
+                    Title.FormTitle(openingTitlesComposer, 4f, 0.018f);
                 }
                 break;
+
+            case 19:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    Title.DistributeTitle(openingTitlesComposer, 20, 8, 0.018f);
+                }
+                break;
+
 
             case 112:
                 if (animationCurrentBar != Sequencer.CurrentBar)

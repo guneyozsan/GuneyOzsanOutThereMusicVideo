@@ -21,15 +21,22 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour {
 
+    bool stoppingCoroutines;
+    Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
+
+
     public void MoveTo(Vector3 target, float time, float delay)
     {
         StartCoroutine(MoveThisTo(target, time, delay));
     }
 
+
+
     public void SpreadAround(float range, float time, float delay)
     {
         StartCoroutine(SpreadThisAround(range, time, delay));
     }
+
 
 
     IEnumerator MoveThisTo(Vector3 target, float time, float delay)
@@ -40,29 +47,35 @@ public class Mover : MonoBehaviour {
 
         float t = 0;
 
-        while (true)
+        while (!stoppingCoroutines)
         {
             transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
             t += Time.deltaTime / time;
             yield return null;
         }
+        stoppingCoroutines = false;
     }
+
+
 
     IEnumerator SpreadThisAround(float range, float time, float delay)
     {
         yield return new WaitForSeconds(delay);
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
-        Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value));
+        Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
         float t = 0;
 
-        while (transform.position != target)
+        while (t <= 1)
         {
             transform.position = Vector3.Slerp(start, target, t);
             t += Time.deltaTime / time;
+            if (t >= 1)
+            {
+                stoppingCoroutines = true;
+            }
             yield return null;
         }
-
-        StopAllCoroutines();
-        transform.GetComponent<Rigidbody>().velocity = range * (new Vector3(Random.value, Random.value, Random.value));
+        transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
     }
 }
