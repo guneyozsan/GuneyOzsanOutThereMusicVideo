@@ -24,17 +24,23 @@ using UnityEngine;
 
 public class DebugGUI : MonoBehaviour {
 
+    [SerializeField]
+    bool displayGui;
+
     void OnGUI()
     {
-        GUI.Label(
-            new Rect(10, 10, 200, 100),
-            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
-            + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
-            + Sequencer.CurrentRegionDescription
-        );
+        if (displayGui)
+        {
+            GUI.Label(
+                new Rect(10, 10, 200, 100),
+                "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
+                + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
+                + "-------------------------------------------" + Environment.NewLine
+                + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
+                + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
+                + Sequencer.CurrentRegionDescription
+            );
+        }
     }
 }
 #endif // UNITY_EDITOR
