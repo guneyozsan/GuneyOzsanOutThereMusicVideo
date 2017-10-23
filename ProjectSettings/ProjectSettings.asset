@@ -618,9 +618,9 @@ PlayerSettings:
   cloudServicesEnabled: {}
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 2
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: ca4f8e98-cb7d-45be-9749-b1d8c2bb4b88
+  projectName: Guney Ozsan - Out There (Music Video)
+  organizationId: guney-ozsan
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
