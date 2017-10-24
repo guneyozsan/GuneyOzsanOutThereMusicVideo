@@ -19,35 +19,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mover : MonoBehaviour {
-
-    bool stoppingCoroutines;
+public class Mover : MonoBehaviour
+{
     Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
-
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
-        StartCoroutine(MoveThisTo(target, time, delay, sphericalLerp));
+        StartCoroutine(DelayMoveTo(target, time, delay, sphericalLerp));
     }
 
-
-
-    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
-    {
-        StartCoroutine(SpreadThisAround(range, time, delay, sphericalLerp));
-    }
-
-
-
-    IEnumerator MoveThisTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    IEnumerator DelayMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
         yield return new WaitForSeconds(delay);
+        StopAllCoroutines();
+        StartCoroutine(PerformMoveTo(target, time, delay, sphericalLerp));
+    }
+
+    IEnumerator PerformMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
 
         float t = 0;
 
-        while (!stoppingCoroutines)
+        while (true)
         {
             if (sphericalLerp)
             {
@@ -60,14 +55,22 @@ public class Mover : MonoBehaviour {
             t += Time.deltaTime / time;
             yield return null;
         }
-        stoppingCoroutines = false;
     }
 
+    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
+        StartCoroutine(DelaySpreadAround(range, time, delay, sphericalLerp));
+    }
 
-
-    IEnumerator SpreadThisAround(float range, float time, float delay, bool sphericalLerp)
+    IEnumerator DelaySpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
         yield return new WaitForSeconds(delay);
+        StopAllCoroutines();
+        StartCoroutine(PerformSpreadAround(range, time, delay, sphericalLerp));
+    }
+
+    IEnumerator PerformSpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
         Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
@@ -85,12 +88,9 @@ public class Mover : MonoBehaviour {
             }
 
             t += Time.deltaTime / time;
-            if (t >= 1)
-            {
-                stoppingCoroutines = true;
-            }
             yield return null;
         }
+        // Allows the object to keep floating to the direction it is moved.
         transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
     }
 }
