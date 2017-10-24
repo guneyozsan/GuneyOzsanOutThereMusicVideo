@@ -62,11 +62,11 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-30f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
+            new Word(new Vector3(-37.5f, -10f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-25f, 17f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
+            new Word(new Vector3(-25f, -10f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
@@ -138,25 +138,25 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
 
-            case 22:
+            case 20:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     SetGravity(-10);
                 }
                 break;
 
-            case 31:
+            case 21:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartNumber, 0.5f * Sequencer.BarDurationF, 0.02f, false, true);
+                    Title.FormTitle(partOneTitlesPartNumber, 11f * Sequencer.BarDurationF, 0.015f, true, true);
                 }
-                SetGravity(0);
+                SetGravity(-20);
                 break;
 
-            case 34:
+            case 29:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartName, 0.5f * Sequencer.BarDurationF, 0.01f, false, true);
+                    //Title.FormTitle(partOneTitlesPartName, 5f * Sequencer.BarDurationF, 0.02f, true, true);
                 }
                 SetGravity(-20);
                 break;
