@@ -119,7 +119,7 @@ public class AnimationManager : MonoBehaviour
             case 7:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(openingTitlesMusic, 3.2f * Sequencer.BarDurationF, 0.05f, true);
+                    Title.FormTitle(openingTitlesMusic, 3.2f * Sequencer.BarDurationF, 0.05f, true, true);
                     SetGravity(-3);
                 }
                 break;
@@ -127,7 +127,7 @@ public class AnimationManager : MonoBehaviour
             case 17:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.SpreadTitle(openingTitlesMusic, 30, 5 * (float)Sequencer.BarDurationF, 0.1f, false);
+                    Title.SpreadTitle(openingTitlesMusic, 30, 5 * Sequencer.BarDurationF, 0.1f, true, false);
                 }
                 break;
 
@@ -145,10 +145,10 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
 
-            case 32:
+            case 31:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartNumber, 0.5f * Sequencer.BarDurationF, 0.02f, true);
+                    Title.FormTitle(partOneTitlesPartNumber, 0.5f * Sequencer.BarDurationF, 0.02f, false, true);
                 }
                 SetGravity(0);
                 break;
@@ -156,9 +156,9 @@ public class AnimationManager : MonoBehaviour
             case 34:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    Title.FormTitle(partOneTitlesPartName, 0.5f * Sequencer.BarDurationF, 0f, true);
+                    Title.FormTitle(partOneTitlesPartName, 0.5f * Sequencer.BarDurationF, 0.01f, false, true);
                 }
-                SetGravity(0);
+                SetGravity(-20);
                 break;
         }
 

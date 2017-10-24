@@ -79,8 +79,11 @@ public class Title
 
     Vector3 velocity = Vector3.zero;
 
-    public static void FormTitle(Title title, float time, float particleDelay, bool sphericalLerp)
+    static List<int> usedIndices = new List<int>();
+
+    public static void FormTitle(Title title, float time, float particleDelay, bool randomSelection, bool sphericalLerp)
     {
+
         int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
         int particleCount = 0;
 
@@ -117,9 +120,21 @@ public class Title
                                 for (int n = 0; n < title[i].HorizontalParticlesPerSlot; n++)
                                 {
                                     Vector3 target = slotLocation + new Vector3(m * title[i].ParticlePadding, n * title[i].ParticlePadding, 0);
+                                    if(randomSelection)
+                                    {
+                                        do
+                                        {
+                                            planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
+                                        }
+                                        while (usedIndices.Contains(planetesimalIndex));
+                                        usedIndices.Add(planetesimalIndex);
+                                    }
                                     Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, particleCount * particleDelay, sphericalLerp);
                                     particleCount++;
-                                    planetesimalIndex++;
+                                    if (!randomSelection)
+                                    {
+                                        planetesimalIndex++;
+                                    }
                                 }
                             }
                         }
@@ -145,13 +160,22 @@ public class Title
         }
     }
 
-    public static void SpreadTitle(Title title, float range, float time, float delay, bool sphericalLerp)
+    public static void SpreadTitle(Title title, float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
         int firstPlanetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
 
         for (int i = firstPlanetesimalIndex; i < Space.planetesimals.Count - firstPlanetesimalIndex; i++)
         {
-            Space.planetesimals[i].Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
+            int j;
+            if (randomSelection)
+            {
+                j = usedIndices[i - firstPlanetesimalIndex];
+            }
+            else
+            {
+                j = i;
+            }
+            Space.planetesimals[j].Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
         }
     }
 }
