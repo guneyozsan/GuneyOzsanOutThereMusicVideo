@@ -26,6 +26,9 @@ public class Title
 {
     Word[] words;
 
+    Vector3 velocity = Vector3.zero;
+    static List<int> usedIndices = new List<int>();
+
     public Title(Word[] words)
     {
         this.words = new Word[words.Length];
@@ -77,13 +80,8 @@ public class Title
         }
     }
 
-    Vector3 velocity = Vector3.zero;
-
-    static List<int> usedIndices = new List<int>();
-
     public static void FormTitle(Title title, float time, float particleDelay, bool randomSelection, bool sphericalLerp)
     {
-
         int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
         int particleCount = 0;
 
