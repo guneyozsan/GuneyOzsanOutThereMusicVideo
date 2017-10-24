@@ -50,6 +50,7 @@ public class Sequencer : MonoBehaviour
 #endif
 
 
+
     void Start()
     {
 #if UNITY_EDITOR
@@ -69,21 +70,28 @@ public class Sequencer : MonoBehaviour
 #endif
 
         CurrentBar = 1;
+#if UNITY_EDITOR
         CurrentBeat = 1;
+#endif
     }
+
 
 
     void Update()
     {
+#if UNITY_EDITOR
         if (doFastForward)
         {
             FastForward();
         }
 
-        SetCurrentRegion();
         SetBeats();
+#endif
+        SetCurrentRegion();
         LoopMusicTo(loopToBar);
     }
+
+
 
 #if UNITY_EDITOR
     void InitializeFastForward()
@@ -100,8 +108,11 @@ public class Sequencer : MonoBehaviour
             doFastForward = false;
         }
     }
+#endif
 
 
+
+#if UNITY_EDITOR
     void FastForward()
     {
         throw new NotImplementedException();
