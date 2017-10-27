@@ -6,6 +6,8 @@
 ## Release
 The project is still in progress and not released yet. But the binaries of the latest state are available at [releases section](https://github.com/guneyozsan/Guney-Ozsan-Out-There-Music-Video-Unity-3D-Demo/releases) (Windows, Mac, Linux).
 
+Development is mostly linear. Checking the latest feature branch using Unity 3D is suggested for catching up with the latest state.
+
 ## Style
 The challenge of this project is to let the viewer dive into an impressive psychedelic experience within the world suggested by the music, while at the same time carrying and representing the characteristics of a demo as in the demoscene sense. So both the general aesthetic and technical approaches should be consistent with the classic demo style but in a non-conservative sense. This can be implemented in various ways such as runtime procedural generation, minimalism in code, wow moments, playing with geometry and colors, and generating an atmosphere or perhaps a world. 
 
