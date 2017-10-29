@@ -27,7 +27,7 @@ public class Title
     Word[] words;
 
     Vector3 velocity = Vector3.zero;
-    static List<int> usedIndices = new List<int>();
+    static List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
 
     public Title(Word[] words)
     {
@@ -83,7 +83,7 @@ public class Title
     public void FormTitle(float time, float particleDelay, bool randomSelection, bool sphericalLerp)
     {
         int planetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
-        int particleCount = 0;
+        int currentParticleCount = 0;
 
         Vector3 xVector = new Vector3(1, 0, 0);
         Vector3 yVector = new Vector3(0, 1, 0);
@@ -118,17 +118,20 @@ public class Title
                                 for (int n = 0; n < this[i].HorizontalParticlesPerSlot; n++)
                                 {
                                     Vector3 target = slotLocation + new Vector3(m * this[i].ParticlePadding, n * this[i].ParticlePadding, 0);
+
                                     if(randomSelection)
                                     {
                                         do
                                         {
                                             planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
                                         }
-                                        while (usedIndices.Contains(planetesimalIndex));
-                                        usedIndices.Add(planetesimalIndex);
+                                        while (planetesimalsUsed.Contains(Space.planetesimals[planetesimalIndex]));
                                     }
-                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, particleCount * particleDelay, sphericalLerp);
-                                    particleCount++;
+
+                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
+                                    planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
+                                    currentParticleCount++;
+
                                     if (!randomSelection)
                                     {
                                         planetesimalIndex++;
@@ -164,16 +167,17 @@ public class Title
 
         for (int i = firstPlanetesimalIndex; i < Space.planetesimals.Count - firstPlanetesimalIndex; i++)
         {
-            int j;
+            Planetesimal planetesimal;
+
             if (randomSelection)
             {
-                j = usedIndices[i - firstPlanetesimalIndex];
+                planetesimal = planetesimalsUsed[i - firstPlanetesimalIndex];
             }
             else
             {
-                j = i;
+                planetesimal = Space.planetesimals[i];
             }
-            Space.planetesimals[j].Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
+            planetesimal.Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
         }
     }
 }
