@@ -27,7 +27,7 @@ public class Title
     Word[] words;
 
     Vector3 velocity = Vector3.zero;
-    static List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
+    static List<Planetesimal> allPlanetesimalsUsed = new List<Planetesimal>();
 
     public Title(Word[] words)
     {
@@ -125,11 +125,11 @@ public class Title
                                         {
                                             planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
                                         }
-                                        while (planetesimalsUsed.Contains(Space.planetesimals[planetesimalIndex]));
+                                        while (allPlanetesimalsUsed.Contains(Space.planetesimals[planetesimalIndex]));
                                     }
 
                                     Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
-                                    planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
+                                    allPlanetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
 
                                     if (!randomSelection)
@@ -171,7 +171,7 @@ public class Title
 
             if (randomSelection)
             {
-                planetesimal = planetesimalsUsed[i - firstPlanetesimalIndex];
+                planetesimal = allPlanetesimalsUsed[i - firstPlanetesimalIndex];
             }
             else
             {
