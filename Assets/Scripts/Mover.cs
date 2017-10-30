@@ -21,6 +21,8 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
+    public event System.Action MoverFinished;
+
     Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
@@ -98,5 +100,6 @@ public class Mover : MonoBehaviour
         }
         // Allows the object to keep floating to the direction it is moved.
         transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
+        if (MoverFinished != null) MoverFinished();
     }
 }

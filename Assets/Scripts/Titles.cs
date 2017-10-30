@@ -126,7 +126,7 @@ public class Title
                                         {
                                             planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
                                         }
-                                        while (allPlanetesimalsUsed.Contains(Space.planetesimals[planetesimalIndex]));
+                                        while (Space.planetesimals[planetesimalIndex].InUse);
                                     }
 
                                     Space.planetesimals[planetesimalIndex].MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);

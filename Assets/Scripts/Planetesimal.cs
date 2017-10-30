@@ -24,6 +24,22 @@ public class Planetesimal {
     Rigidbody Rigidbody { get; set; }
     Gravity Gravity { get; set; }
     Mover Mover { get; set; }
+    public bool InUse { get; private set; }
+
+    void Awake()
+    {
+        Mover.MoverFinished += OnMoverFinished;
+    }
+
+    void OnDestroy()
+    {
+        Mover.MoverFinished -= OnMoverFinished;
+    }
+
+    public void OnMoverFinished()
+    {
+        InUse = false;
+    }
 
     public Planetesimal(Transform planetesimal)
     {
@@ -34,11 +50,13 @@ public class Planetesimal {
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
+        InUse = true;
         Mover.MoveTo(target, time, delay, sphericalLerp);
     }
 
     public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
+        InUse = true;
         Mover.SpreadAround(range, time, delay, sphericalLerp);
     }
 
@@ -50,5 +68,5 @@ public class Planetesimal {
     public void SetVelocity(Vector3 velocity)
     {
         Rigidbody.velocity = velocity;
-    }
+    }   
 }
