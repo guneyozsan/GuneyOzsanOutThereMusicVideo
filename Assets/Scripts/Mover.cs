@@ -42,7 +42,7 @@ public class Mover : MonoBehaviour
 
         float t = 0;
 
-        while (true)
+        while (t <= 1)
         {
             if (sphericalLerp)
             {
@@ -53,6 +53,12 @@ public class Mover : MonoBehaviour
                 transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
             }
             t += Time.deltaTime / time;
+            yield return null;
+        }
+
+        while (true)
+        {
+            transform.position = target;
             yield return null;
         }
     }
