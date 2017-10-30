@@ -129,7 +129,7 @@ public class Title
                                         while (allPlanetesimalsUsed.Contains(Space.planetesimals[planetesimalIndex]));
                                     }
 
-                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
+                                    Space.planetesimals[planetesimalIndex].MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
                                     allPlanetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
@@ -155,14 +155,6 @@ public class Title
         }
     }
 
-    public static void SetPlanetesimalsFree()
-    {
-        for (int i = 0; i < Space.planetesimals.Count; i++)
-        {
-            Space.planetesimals[i].Mover.StopAllCoroutines();
-        }
-    }
-
     public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
         int firstPlanetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
@@ -179,7 +171,7 @@ public class Title
             {
                 planetesimal = Space.planetesimals[i];
             }
-            planetesimal.Mover.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
+            planetesimal.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
         }
     }
 }
