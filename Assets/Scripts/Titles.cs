@@ -161,9 +161,9 @@ public class Title
         }
     }
 
-    public static void SpreadTitle(Title title, float range, float time, float delay, bool randomSelection, bool sphericalLerp)
+    public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
-        int firstPlanetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+        int firstPlanetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
 
         for (int i = firstPlanetesimalIndex; i < Space.planetesimals.Count - firstPlanetesimalIndex; i++)
         {
