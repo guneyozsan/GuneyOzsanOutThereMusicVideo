@@ -147,14 +147,6 @@ public class Title
         }
     }
 
-    public static void StopPlanetesimals()
-    {
-        for (int i = 0; i < Space.planetesimals.Count; i++)
-        {
-            Space.planetesimals[i].Rigidbody.velocity = Vector3.zero;
-        }
-    }
-
     public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
         int firstPlanetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;

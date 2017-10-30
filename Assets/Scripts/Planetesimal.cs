@@ -22,7 +22,7 @@ using UnityEngine;
 public class Planetesimal {
 
     public Transform Transform { get; private set; }
-    public Rigidbody Rigidbody { get; private set; }
+    Rigidbody Rigidbody { get; set; }
     Gravity Gravity { get; set; }
     Mover Mover { get; set; }
 
@@ -47,5 +47,10 @@ public class Planetesimal {
     public void SetGravityForce(float gravityForce)
     {
         Gravity.SetForce(gravityForce);
+    }
+
+    public void SetVelocity(Vector3 velocity)
+    {
+        Rigidbody.velocity = velocity;
     }
 }
