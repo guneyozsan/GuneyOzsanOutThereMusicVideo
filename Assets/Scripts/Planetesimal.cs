@@ -23,7 +23,7 @@ public class Planetesimal {
 
     public Transform Transform { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
-    public Gravity Gravity { get; private set; }
+    Gravity Gravity { get; set; }
     Mover Mover { get; set; }
 
     public Planetesimal(Transform planetesimal)
@@ -42,5 +42,10 @@ public class Planetesimal {
     public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
         Mover.SpreadAround(range, time, delay, sphericalLerp);
+    }
+
+    public void SetGravityForce(float gravityForce)
+    {
+        Gravity.SetForce(gravityForce);
     }
 }

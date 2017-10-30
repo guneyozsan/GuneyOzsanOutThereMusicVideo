@@ -272,7 +272,7 @@ public class AnimationManager : MonoBehaviour
     {
         for (int i = 0; i < Space.planetesimals.Count; i++)
         {
-            Space.planetesimals[i].Gravity.SetForce(gravityForce);
+            Space.planetesimals[i].SetGravityForce(gravityForce);
         }
     }
 
@@ -284,14 +284,14 @@ public class AnimationManager : MonoBehaviour
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.Gravity.SetForce(gravityForce);
+                planetesimal.SetGravityForce(gravityForce);
             }
         }
         else
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.Gravity.SetForce(antiGravityForce);
+                planetesimal.SetGravityForce(antiGravityForce);
             }
         }
     }
