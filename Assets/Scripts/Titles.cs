@@ -28,6 +28,7 @@ public class Title
 
     Vector3 velocity = Vector3.zero;
     static List<Planetesimal> allPlanetesimalsUsed = new List<Planetesimal>();
+    List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
 
     public Title(Word[] words)
     {
@@ -130,6 +131,7 @@ public class Title
 
                                     Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
                                     allPlanetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
+                                    planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
 
                                     if (!randomSelection)
