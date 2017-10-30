@@ -21,14 +21,12 @@ using UnityEngine;
 
 public class Planetesimal {
 
-    public Transform Transform { get; private set; }
     Rigidbody Rigidbody { get; set; }
     Gravity Gravity { get; set; }
     Mover Mover { get; set; }
 
     public Planetesimal(Transform planetesimal)
     {
-        Transform = planetesimal.transform;
         Rigidbody = planetesimal.GetComponent<Rigidbody>();
         Gravity = planetesimal.GetComponent<Gravity>();
         Mover = planetesimal.GetComponent<Mover>();
