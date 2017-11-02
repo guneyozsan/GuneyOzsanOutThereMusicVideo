@@ -19,24 +19,87 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mover : MonoBehaviour {
+public class Mover : MonoBehaviour
+{
+    public event System.Action MoverFinished;
 
-    public void MoveTo(Vector3 target, float time)
+    Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
+
+    public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
-        StartCoroutine(MoveThisTo(target, time));
+        StartCoroutine(DelayMoveTo(target, time, delay, sphericalLerp));
     }
 
-    IEnumerator MoveThisTo(Vector3 target, float time)
+    IEnumerator DelayMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
+        yield return new WaitForSeconds(delay);
+        StopAllCoroutines();
+        StartCoroutine(PerformMoveTo(target, time, delay, sphericalLerp));
+    }
+
+    IEnumerator PerformMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    {
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
 
         float t = 0;
 
-        while (true)
+        while (t <= 1)
         {
-            transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+            if (sphericalLerp)
+            {
+                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+            }
+            else
+            {
+                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+            }
             t += Time.deltaTime / time;
             yield return null;
         }
+
+        while (true)
+        {
+            transform.position = target;
+            yield return null;
+        }
+    }
+
+    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
+        StartCoroutine(DelaySpreadAround(range, time, delay, sphericalLerp));
+    }
+
+    IEnumerator DelaySpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
+        yield return new WaitForSeconds(delay);
+        StopAllCoroutines();
+        StartCoroutine(PerformSpreadAround(range, time, delay, sphericalLerp));
+    }
+
+    IEnumerator PerformSpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
+        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        Vector3 start = transform.position;
+        Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
+        float t = 0;
+
+        while (t <= 1)
+        {
+            if (sphericalLerp)
+            {
+                transform.position = Vector3.Slerp(start, target, t);
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(start, target, t);
+            }
+
+            t += Time.deltaTime / time;
+            yield return null;
+        }
+        // Allows the object to keep floating to the direction it is moved.
+        transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
+        if (MoverFinished != null) MoverFinished();
     }
 }
