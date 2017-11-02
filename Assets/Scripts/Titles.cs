@@ -27,7 +27,6 @@ public class Title
     Word[] words;
 
     Vector3 velocity = Vector3.zero;
-    static List<Planetesimal> allPlanetesimalsUsed = new List<Planetesimal>();
     List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
 
     public Title(Word[] words)
@@ -130,7 +129,6 @@ public class Title
                                     }
 
                                     Space.planetesimals[planetesimalIndex].MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
-                                    allPlanetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
 
@@ -149,21 +147,9 @@ public class Title
 
     public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
-        int firstPlanetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
-
-        for (int i = firstPlanetesimalIndex; i < Space.planetesimals.Count - firstPlanetesimalIndex; i++)
+        for (int i = 0; i < planetesimalsUsed.Count; i++)
         {
-            Planetesimal planetesimal;
-
-            if (randomSelection)
-            {
-                planetesimal = allPlanetesimalsUsed[i - firstPlanetesimalIndex];
-            }
-            else
-            {
-                planetesimal = Space.planetesimals[i];
-            }
-            planetesimal.SpreadAround(range, time, (i - firstPlanetesimalIndex) * delay, sphericalLerp);
+            planetesimalsUsed[i].SpreadAround(range, time, i * delay, sphericalLerp);
         }
     }
 }
