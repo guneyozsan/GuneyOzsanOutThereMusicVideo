@@ -26,6 +26,15 @@ public class Debugging : MonoBehaviour {
 
     [SerializeField]
     bool displayGui;
+    [SerializeField]
+    float playbackSpeed;
+
+    public static float PlaybackSpeed { get; private set; }
+
+    void Awake()
+    {
+        PlaybackSpeed = playbackSpeed;
+    }
 
     void OnGUI()
     {

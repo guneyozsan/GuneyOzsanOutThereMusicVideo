@@ -412,6 +412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayGui: 1
+  playbackSpeed: 1
 --- !u!4 &1256199838
 Transform:
   m_ObjectHideFlags: 0
