@@ -363,6 +363,11 @@ public class Sequencer : MonoBehaviour
                 CurrentBar++;
             }
         }
+
+        if (Time.timeScale != 1 && (music.time + Time.deltaTime * (Time.timeScale - 1)) >= 0)
+        {
+            music.time += Time.deltaTime * (Time.timeScale - 1);
+        }
     }
 #endif
 

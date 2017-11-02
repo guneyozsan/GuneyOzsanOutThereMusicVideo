@@ -22,10 +22,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
+public class Debugging : MonoBehaviour {
 
     [SerializeField]
     bool displayGui;
+    [SerializeField]
+    [Range(0, 5)]
+    float playbackSpeed;
+
+    public static float PlaybackSpeed { get; private set; }
+
+    void Update()
+    {
+        PlaybackSpeed = playbackSpeed;
+    }
 
     void OnGUI()
     {
