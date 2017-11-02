@@ -22,4 +22,12 @@ using UnityEngine;
 public static class Space
 {
     public static List<Planetesimal> planetesimals = new List<Planetesimal>();
+
+    public static void SetAllFree()
+    {
+        for (int i = 0; i < planetesimals.Count; i++)
+        {
+            planetesimals[i].SetFree();
+        }
+    }
 }

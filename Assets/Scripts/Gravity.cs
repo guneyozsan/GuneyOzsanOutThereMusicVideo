@@ -28,7 +28,8 @@ public class Gravity : MonoBehaviour
 
     Vector3 target;
     [NonSerialized]
-    public int forceMultiplier = 0;
+
+    float forceMagnitude;
 
     void Start()
     {
@@ -39,12 +40,17 @@ public class Gravity : MonoBehaviour
     {
         if (Mathf.Pow(Vector3.Distance(transform.position, target), 2) != 0)
         {
-            body.AddForce(forceMultiplier * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
+            body.AddForce(forceMagnitude * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
         }
     }
 
     public void SetTarget(Vector3 target)
     {
         this.target = target;
+    }
+
+    public void SetForce(float forceMagnitude)
+    {
+        this.forceMagnitude = forceMagnitude;
     }
 }

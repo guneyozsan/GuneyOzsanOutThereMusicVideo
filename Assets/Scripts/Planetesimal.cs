@@ -21,16 +21,57 @@ using UnityEngine;
 
 public class Planetesimal {
 
-    public Transform Transform { get; private set; }
-    public Rigidbody Rigidbody { get; private set; }
-    public Gravity Gravity { get; private set; }
-    public Mover Mover { get; private set; }
+    Rigidbody Rigidbody { get; set; }
+    Gravity Gravity { get; set; }
+    Mover Mover { get; set; }
+    public bool InUse { get; private set; }
+
+    void Awake()
+    {
+        Mover.MoverFinished += OnMoverFinished;
+    }
+
+    void OnDestroy()
+    {
+        Mover.MoverFinished -= OnMoverFinished;
+    }
+
+    public void OnMoverFinished()
+    {
+        InUse = false;
+    }
 
     public Planetesimal(Transform planetesimal)
     {
-        Transform = planetesimal.transform;
         Rigidbody = planetesimal.GetComponent<Rigidbody>();
         Gravity = planetesimal.GetComponent<Gravity>();
         Mover = planetesimal.GetComponent<Mover>();
+    }
+
+    public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    {
+        InUse = true;
+        Mover.MoveTo(target, time, delay, sphericalLerp);
+    }
+
+    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
+    {
+        InUse = true;
+        Mover.SpreadAround(range, time, delay, sphericalLerp);
+    }
+
+    public void SetGravityForce(float gravityForce)
+    {
+        Gravity.SetForce(gravityForce);
+    }
+
+    public void SetVelocity(Vector3 velocity)
+    {
+        Rigidbody.velocity = velocity;
+    }
+    
+    public void SetFree()
+    {
+        InUse = false;
     }
 }

@@ -39,7 +39,20 @@ public class Sequencer : MonoBehaviour
     public static int CurrentBar { get; private set; }
 
     int BPM;
-    double beatDuration;
+    public static double BeatDuration { get; private set; }
+    public static double BarDuration {
+        get
+        {
+            return 4 * BeatDuration;
+        }
+    }
+    public static float BarDurationF
+    {
+        get
+        {
+            return 4 * (float)BeatDuration;
+        }
+    }
 
     int loopToBar;
 
@@ -57,7 +70,7 @@ public class Sequencer : MonoBehaviour
         // InitializeFastForward();
 #endif
         BPM = 77;
-        beatDuration = 60d / BPM;
+        BeatDuration = 60d / BPM;
 
         loopToBar = 60;
 
@@ -338,7 +351,7 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void SetBeats()
     {
-        if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * beatDuration)
+        if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration)
         {
             if (CurrentBeat < 4)
             {
@@ -350,6 +363,11 @@ public class Sequencer : MonoBehaviour
                 CurrentBar++;
             }
         }
+
+        if (Time.timeScale != 1 && (music.time + Time.deltaTime * (Time.timeScale - 1)) >= 0)
+        {
+            music.time += Time.deltaTime * (Time.timeScale - 1);
+        }
     }
 #endif
 
@@ -358,7 +376,7 @@ public class Sequencer : MonoBehaviour
     {
         if (music.time >= 595.324)
         {
-            music.time = (float)((loopToBar - 1d) * 4d * beatDuration);
+            music.time = (float)((loopToBar - 1d) * 4d * BeatDuration);
             music.Play();
             CurrentBar = this.loopToBar;
 

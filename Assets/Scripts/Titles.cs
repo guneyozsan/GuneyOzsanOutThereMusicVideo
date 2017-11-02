@@ -26,6 +26,9 @@ public class Title
 {
     Word[] words;
 
+    Vector3 velocity = Vector3.zero;
+    List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
+
     public Title(Word[] words)
     {
         this.words = new Word[words.Length];
@@ -77,50 +80,62 @@ public class Title
         }
     }
 
-    Vector3 velocity = Vector3.zero;
-
-    public static void FormTitle(Title title, float time)
+    public void FormTitle(float time, float particleDelay, bool randomSelection, bool sphericalLerp)
     {
-        StopPlanetesimals();
-        SetPlanetesimalsFree();
-
-        int planetesimalIndex = (Space.planetesimals.Count - title.ParticleCount) / 2;
+        int planetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
+        int currentParticleCount = 0;
 
         Vector3 xVector = new Vector3(1, 0, 0);
         Vector3 yVector = new Vector3(0, 1, 0);
 
         // word
-        for (int i = 0; i < title.Length; i++)
+        for (int i = 0; i < Length; i++)
         {
-            Vector3 wordLocation = title[i].Location;
-            float letterSize = (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * (title[i].HorizontalParticleSlotsPerLetter + 1);
+            Vector3 wordLocation = this[i].Location;
+            float letterSize = (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * (this[i].HorizontalParticleSlotsPerLetter + 1);
 
             // letter
-            for (int j = 0; j < title[i].Length; j++)
+            for (int j = 0; j < this[i].Length; j++)
             {
                 Vector3 letterLocation = (j * letterSize) * xVector;
 
                 // slot y
-                for (int k = 0; k < title[i][j].Slots.GetLength(0); k++)
+                for (int k = 0; k < this[i][j].Slots.GetLength(0); k++)
                 {
-                    Vector3 slotLocationY = k * (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * yVector;
+                    Vector3 slotLocationY = k * (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * yVector;
 
                     // slot x
-                    for (int l = 0; l < title[i][j].Slots.GetLength(1); l++)
+                    for (int l = 0; l < this[i][j].Slots.GetLength(1); l++)
                     {
-                        Vector3 slotLocationX = l * (title[i].SlotPadding + Mathf.Max(0, title[i].ParticlePadding - 1)) * xVector;
+                        Vector3 slotLocationX = l * (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * xVector;
                         
-                        if (title[i][j].Slots[k, l])
+                        if (this[i][j].Slots[k, l])
                         {
                             Vector3 slotLocation = wordLocation + letterLocation + slotLocationX - slotLocationY;
 
-                            for (int m = 0; m < title[i].VerticalParticlesPerSlot; m++)
+                            for (int m = 0; m < this[i].VerticalParticlesPerSlot; m++)
                             {
-                                for (int n = 0; n < title[i].HorizontalParticlesPerSlot; n++)
+                                for (int n = 0; n < this[i].HorizontalParticlesPerSlot; n++)
                                 {
-                                    Vector3 target = slotLocation + new Vector3(m * title[i].ParticlePadding, n * title[i].ParticlePadding, 0);
-                                    Space.planetesimals[planetesimalIndex].Mover.MoveTo(target, time);
-                                    planetesimalIndex++;
+                                    Vector3 target = slotLocation + new Vector3(m * this[i].ParticlePadding, n * this[i].ParticlePadding, 0);
+
+                                    if(randomSelection)
+                                    {
+                                        do
+                                        {
+                                            planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
+                                        }
+                                        while (Space.planetesimals[planetesimalIndex].InUse);
+                                    }
+
+                                    Space.planetesimals[planetesimalIndex].MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
+                                    planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
+                                    currentParticleCount++;
+
+                                    if (!randomSelection)
+                                    {
+                                        planetesimalIndex++;
+                                    }
                                 }
                             }
                         }
@@ -130,19 +145,11 @@ public class Title
         }
     }
 
-    public static void StopPlanetesimals()
+    public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
     {
-        for (int i = 0; i < Space.planetesimals.Count; i++)
+        for (int i = 0; i < planetesimalsUsed.Count; i++)
         {
-            Space.planetesimals[i].Rigidbody.velocity = Vector3.zero;
-        }
-    }
-
-    public static void SetPlanetesimalsFree()
-    {
-        for (int i = 0; i < Space.planetesimals.Count; i++)
-        {
-            Space.planetesimals[i].Mover.StopAllCoroutines();
+            planetesimalsUsed[i].SpreadAround(range, time, i * delay, sphericalLerp);
         }
     }
 }

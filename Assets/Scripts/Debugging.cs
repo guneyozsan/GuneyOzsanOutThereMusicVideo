@@ -22,19 +22,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
+public class Debugging : MonoBehaviour {
+
+    [SerializeField]
+    bool displayGui;
+    [SerializeField]
+    [Range(0, 5)]
+    float playbackSpeed;
+
+    public static float PlaybackSpeed { get; private set; }
+
+    void Update()
+    {
+        PlaybackSpeed = playbackSpeed;
+    }
 
     void OnGUI()
     {
-        GUI.Label(
-            new Rect(10, 10, 200, 100),
-            "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-            + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
-            + "-------------------------------------------" + Environment.NewLine
-            + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-            + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
-            + Sequencer.CurrentRegionDescription
-        );
+        if (displayGui)
+        {
+            GUI.Label(
+                new Rect(10, 10, 200, 100),
+                "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
+                + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
+                + "-------------------------------------------" + Environment.NewLine
+                + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
+                + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
+                + Sequencer.CurrentRegionDescription
+            );
+        }
     }
 }
 #endif // UNITY_EDITOR
