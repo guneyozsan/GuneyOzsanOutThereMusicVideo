@@ -47,9 +47,6 @@ public class AnimationManager : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR
-        Time.timeScale = Debugging.PlaybackSpeed;
-#endif
         openingTitlesMusic = new Title(new Word[] {
             new Word(new Vector3(-59.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
             new Word(new Vector3(-6.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
@@ -102,6 +99,10 @@ public class AnimationManager : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
+        Time.timeScale = Debugging.PlaybackSpeed;
+#endif
+
         switch (Sequencer.CurrentBar)
         {
             case 4:

@@ -27,11 +27,12 @@ public class Debugging : MonoBehaviour {
     [SerializeField]
     bool displayGui;
     [SerializeField]
+    [Range(0, 5)]
     float playbackSpeed;
 
     public static float PlaybackSpeed { get; private set; }
 
-    void Awake()
+    void Update()
     {
         PlaybackSpeed = playbackSpeed;
     }
