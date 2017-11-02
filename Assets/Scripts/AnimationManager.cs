@@ -142,28 +142,43 @@ public class AnimationManager : MonoBehaviour
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     partOneTitlesPartNumber.FormTitle(11f * Sequencer.BarDurationF, 0.015f, true, true);
+                    SetGravity(-10);
                 }
                 break;
 
-            case 23:
+            case 22:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.FormTitle(11f * Sequencer.BarDurationF, 0.015f, true, true);
+                    partOneTitlesPartName.FormTitle(11f * Sequencer.BarDurationF, 0.01f, true, true);
                 }
                 break;
 
-            case 35:
+            case 34:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartNumber.SpreadTitle(30, 5 * Sequencer.BarDurationF, 0.05f, true, false);
                     SetGravity(-20);
+                    partOneTitlesPartNumber.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.02f, true, false);
                 }
                 break;
 
-            case 39:
+            case 36:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(30, 5 * Sequencer.BarDurationF, 0.05f, true, false);
+                    partOneTitlesPartName.SpreadTitle(10, 30 * Sequencer.BarDurationF, 0.01f, true, false);
+                }
+                break;
+
+            case 43:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    SetGravity(0);
+                }
+                break;
+
+            case 47:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    SetGravity(-50);
                 }
                 break;
         }
