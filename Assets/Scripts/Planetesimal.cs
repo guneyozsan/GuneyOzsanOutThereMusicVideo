@@ -68,5 +68,10 @@ public class Planetesimal {
     public void SetVelocity(Vector3 velocity)
     {
         Rigidbody.velocity = velocity;
-    }   
+    }
+    
+    public void SetFree()
+    {
+        InUse = false;
+    }
 }
