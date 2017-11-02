@@ -22,7 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DebugGUI : MonoBehaviour {
+public class Debugging : MonoBehaviour {
 
     [SerializeField]
     bool displayGui;

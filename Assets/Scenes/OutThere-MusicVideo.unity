@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 1256199838}
   - component: {fileID: 1256199837}
   m_Layer: 0
-  m_Name: DebugGui
+  m_Name: Debugging
   m_TagString: EditorOnly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
