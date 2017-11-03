@@ -30,11 +30,9 @@ public class AnimationManager : MonoBehaviour
     public static Title openingTitlesComposer;
     public static Title partOneTitlesPartNumber;
     public static Title partOneTitlesPartName;
-
-    public Transform newSun;
-
-    [NonSerialized]
-    public Transform sun;
+    
+    //[NonSerialized]
+    //public Transform sun;
 
     float alignY = 0;
 
@@ -109,26 +107,26 @@ public class AnimationManager : MonoBehaviour
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     currentRegion = Sequencer.CurrentRegionId;
+                    openingTitlesMusic.FormTitle(10f * Sequencer.BarDurationF, 0.01f, true, true);
 
-                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
-                    sun.localScale = new Vector3(5, 5, 5);
-                    sun.tag = "Sun";
-#if UNITY_EDITOR
-                    sun.name = "PyramidSun";
-#endif
+//                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
+//                    sun.localScale = new Vector3(5, 5, 5);
+//                    sun.tag = "Sun";
+//#if UNITY_EDITOR
+//                    sun.name = "PyramidSun";
+//#endif
                     SetGravity(0);
                 }
                 break;
 
-            case 7:
+            case 5:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.FormTitle(3.2f * Sequencer.BarDurationF, 0.05f, true, true);
                     SetGravity(-3);
                 }
                 break;
 
-            case 17:
+            case 16:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     openingTitlesMusic.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.1f, true, false);
