@@ -67,7 +67,6 @@ public class AnimationManager : MonoBehaviour
             new Word(new Vector3(-53.45f, -12.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
         });
 
-        Transform gravityTarget = GetComponent<AnimationManager>().sun;
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
         //int cubeSideLength = MathUtility.ClosestCubeRoot(openingTitlesBy.ParticleCount, true);
