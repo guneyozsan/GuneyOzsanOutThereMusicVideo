@@ -89,7 +89,7 @@ public class AnimationManager : MonoBehaviour
                 for (int k = 0; k < cubeSideLength; k++)
                 {
                     float z = k * particlePadding - alignmentAdjustment;
-                    Space.planetesimals.Add(new Planetesimal(Instantiate(planetesimalPrefab, new Vector3(x, y + alignY, z), Quaternion.identity, planetesimalParent)));
+                    Space.planetesimals.Add(Instantiate(planetesimalPrefab, new Vector3(x, y + alignY, z), Quaternion.identity, planetesimalParent).GetComponent<Planetesimal>());
                 }
             }
         }
