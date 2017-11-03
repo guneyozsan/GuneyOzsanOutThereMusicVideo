@@ -46,8 +46,8 @@ public class AnimationManager : MonoBehaviour
     void Start()
     {
         openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-59.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
-            new Word(new Vector3(-6.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
+            new Word(new Vector3(-19.1f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
+            new Word(new Vector3(-27.3f, -9.2f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
         });
 
         openingTitlesBy = new Title(new Word[] {
