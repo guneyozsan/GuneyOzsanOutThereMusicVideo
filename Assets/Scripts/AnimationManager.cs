@@ -66,7 +66,7 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-32.85f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
+            new Word(new Vector3(-53.45f, -12.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
         });
 
         Transform gravityTarget = GetComponent<AnimationManager>().sun;
