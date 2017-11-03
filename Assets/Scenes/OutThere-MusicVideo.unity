@@ -477,7 +477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planetesimalPrefab: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
-  newSun: {fileID: 400000, guid: 8b1f3da1ad7f8c5418f95bafdc7078e5, type: 2}
 --- !u!114 &1368347922
 MonoBehaviour:
   m_ObjectHideFlags: 0
