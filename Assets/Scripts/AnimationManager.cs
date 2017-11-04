@@ -46,8 +46,8 @@ public class AnimationManager : MonoBehaviour
     void Start()
     {
         openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-19.1f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
-            new Word(new Vector3(-27.3f, -9.2f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
+            new Word(new Vector3(-19.1f, 15f, 0), 5, 5, 2, 2, 2, 1.3f, "OUT"),
+            new Word(new Vector3(-32.85f, -5.2f, 0), 5, 5, 2, 2, 2, 1.3f, "THERE"),
         });
 
         openingTitlesBy = new Title(new Word[] {
@@ -60,11 +60,11 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-39.5f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
+            new Word(new Vector3(-39.5f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-53.45f, -12.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
+            new Word(new Vector3(-53.45f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
         });
 
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
@@ -102,10 +102,10 @@ public class AnimationManager : MonoBehaviour
 
         switch (Sequencer.CurrentBar)
         {
-            case 3:
-                if (Sequencer.CurrentBeat == 4 && !exploded)
+            case 4:
+                if (Sequencer.CurrentBeat == 1 && !exploded)
                 {
-                    openingTitlesMusic.FormTitle(6 * Sequencer.BarDurationF, 0.07f, true, true);
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, true);
                     exploded = true;
                 }
 
@@ -123,31 +123,31 @@ public class AnimationManager : MonoBehaviour
 
                 break;
 
-            case 5:
+            case 8:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    SetGravity(-3);
+                    SetGravity(-5);
                 }
                 break;
 
             case 16:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.1f, true, false);
+                    openingTitlesMusic.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.002f, true, false);
+                    SetGravity(-10);
                 }
                 break;
 
             case 18:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    SetGravity(0);
+                    SetGravity(-10);
                 }
                 break;
 
             case 19:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartNumber.FormTitle(11f * Sequencer.BarDurationF, 0.015f, true, true);
                     SetGravity(-10);
                 }
                 break;
@@ -155,22 +155,23 @@ public class AnimationManager : MonoBehaviour
             case 20:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.FormTitle(11f * Sequencer.BarDurationF, 0.001f, true, true);
+                    partOneTitlesPartNumber.FormTitle(10.25f * Sequencer.BarDurationF, 0.001f, true, true);
+                    partOneTitlesPartName.FormTitle(10.25f * Sequencer.BarDurationF, 0.001f, true, true);
                 }
                 break;
 
-            case 33:
+            case 32:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     SetGravity(-20);
                     partOneTitlesPartNumber.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.002f, true, false);
+                    partOneTitlesPartName.SpreadTitle(10, 34 * Sequencer.BarDurationF, 0.002f, true, false);
                 }
                 break;
 
             case 36:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 30 * Sequencer.BarDurationF, 0.01f, true, false);
                 }
                 break;
 
