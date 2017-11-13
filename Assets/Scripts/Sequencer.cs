@@ -32,7 +32,7 @@ public class Sequencer : MonoBehaviour
     public static Part CurrentPart { get; private set; }
     public static string CurrentRegionDescription { get; private set; }
 
-    public enum Part { Intro, Part1Probe, Part2Approach };
+    public enum Part { Intro, Part1Approach, Part2Probe };
 
     public static int CurrentBeat { get; private set; }
 #endif
@@ -157,7 +157,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 2;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "explosion";
 #endif
         }
@@ -165,7 +165,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 3;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "ping sound!";
 #endif
         }
@@ -173,7 +173,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 4;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "musical base";
 #endif
         }
@@ -181,7 +181,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 5;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "melody";
 #endif
         }
@@ -189,7 +189,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 6;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "bass";
 #endif
         }
@@ -197,7 +197,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 7;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "hihat and full bass";
 #endif
         }
@@ -205,7 +205,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 8;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "bass syncopation";
 #endif
         }
@@ -213,7 +213,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 9;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 to 2 bridge";
 #endif
         }
@@ -221,7 +221,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 10;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: musical base";
 #endif
         }
@@ -229,7 +229,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 11;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: melody";
 #endif
         }
@@ -237,7 +237,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 12;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
 #endif
         }
@@ -245,7 +245,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 13;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: musical base";
 #endif
         }
@@ -253,7 +253,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 14;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: melody";
 #endif
         }
@@ -261,7 +261,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 15;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
 #endif
         }
@@ -269,7 +269,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 16;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: melody";
 #endif
         }
@@ -277,7 +277,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 17;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
 #endif
         }
@@ -285,7 +285,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 18;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: melody";
 #endif
         }
@@ -293,7 +293,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 19;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
 #endif
         }
@@ -301,7 +301,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 20;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part2Approach;
+            CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "Part 2 to 1 bridge";
 #endif
         }
@@ -309,7 +309,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 21;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 rhythm + melody + hihat";
 #endif
         }
@@ -317,7 +317,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 22;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 rhythm + melody";
 #endif
         }
@@ -325,7 +325,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 23;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 melody + bass";
 #endif
         }
@@ -333,7 +333,7 @@ public class Sequencer : MonoBehaviour
         {
             CurrentRegionId = 24;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 melody + bass + hihat";
 #endif
         }
@@ -341,7 +341,7 @@ public class Sequencer : MonoBehaviour
         { // if (music.time < 595.324) {
             CurrentRegionId = 25;
 #if UNITY_EDITOR
-            CurrentPart = Part.Part1Probe;
+            CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 to 2 bridge";
 #endif
         }
