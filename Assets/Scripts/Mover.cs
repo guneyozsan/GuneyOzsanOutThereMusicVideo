@@ -48,11 +48,11 @@ public class Mover : MonoBehaviour
         {
             if (sphericalLerp)
             {
-                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
             }
             else
             {
-                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
             }
             t += Time.deltaTime / time;
             yield return null;
