@@ -34,10 +34,10 @@ public class Mover : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
-        StartCoroutine(PerformMoveTo(target, time, delay, sphericalLerp));
+        StartCoroutine(PerformMoveTo(target, time, sphericalLerp));
     }
 
-    IEnumerator PerformMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    IEnumerator PerformMoveTo(Vector3 target, float time, bool sphericalLerp)
     {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
@@ -74,10 +74,10 @@ public class Mover : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
-        StartCoroutine(PerformSpreadAround(range, time, delay, sphericalLerp));
+        StartCoroutine(PerformSpreadAround(range, time, sphericalLerp));
     }
 
-    IEnumerator PerformSpreadAround(float range, float time, float delay, bool sphericalLerp)
+    IEnumerator PerformSpreadAround(float range, float time, bool sphericalLerp)
     {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
