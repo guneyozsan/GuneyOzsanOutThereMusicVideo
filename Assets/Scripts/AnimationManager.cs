@@ -144,13 +144,7 @@ public class AnimationManager : MonoBehaviour
                     partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
                 }
                 break;
-
-            case 24:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                }
-                break;
-
+                
             case 32:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
@@ -159,7 +153,7 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
 
-            case 40:
+            case 38:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     partOneTitlesPartName.SpreadTitle(10, 1.1f * Sequencer.BarDurationF, 0.002f, true, false);
@@ -188,7 +182,8 @@ public class AnimationManager : MonoBehaviour
         {
             if (Sequencer.CurrentBar >= 16 && Sequencer.CurrentBar < 56)
             {
-                SwitchAnimation(1, -1 * (10 + 2.5f * (Sequencer.CurrentBar - 16)), 0);
+                int k = Sequencer.CurrentBar - 16;
+                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 8);
             }
             else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
             {
