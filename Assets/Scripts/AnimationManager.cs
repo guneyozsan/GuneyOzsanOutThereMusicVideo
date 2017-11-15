@@ -163,16 +163,16 @@ public class AnimationManager : MonoBehaviour
             case 60:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.FormTitle(1.75f * Sequencer.BarDurationF, 0.001f, true, false);
-                    partTwoTitlesPartName.FormTitle(1.75f * Sequencer.BarDurationF, 0.001f, true, false);
+                    partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDurationF, 0.007f, true, true);
+                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.011f, true, true);
                 }
                 break;
-
-            case 63:
+                
+            case 65:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.002f, true, false);
-                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.002f, true, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
+                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
                 }
                 break;
         }
