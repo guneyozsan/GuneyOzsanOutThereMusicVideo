@@ -148,15 +148,14 @@ public class AnimationManager : MonoBehaviour
             case 32:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartNumber.SpreadTitle(10, 1.1f * Sequencer.BarDurationF, 0.002f, true, false);
-                    partOneTitlesPartName.SpreadTitle(5, 17f * Sequencer.BarDurationF, 0.002f, true, false);
+                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
 
-            case 38:
+            case 36:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 1.1f * Sequencer.BarDurationF, 0.002f, true, false);
+                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
 
@@ -164,7 +163,7 @@ public class AnimationManager : MonoBehaviour
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDurationF, 0.007f, true, true);
-                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.011f, true, true);
+                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.014f, true, true);
                 }
                 break;
                 
