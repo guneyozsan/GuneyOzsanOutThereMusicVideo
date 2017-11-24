@@ -40,9 +40,10 @@ public class Planetesimal : MonoBehaviour {
         Mover.MoverFinished -= OnMoverFinished;
     }
 
-    public void OnMoverFinished()
+    public void OnMoverFinished(Vector3 velocity)
     {
         InUse = false;
+        SetVelocity(velocity);
     }
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
