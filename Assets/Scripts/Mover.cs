@@ -21,7 +21,7 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
-    public event System.Action MoverFinished;
+    public event System.Action<Vector3> MoverFinished;
 
     Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
 
@@ -99,7 +99,7 @@ public class Mover : MonoBehaviour
             yield return null;
         }
         // Allows the object to keep floating to the direction it is moved.
-        transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
-        if (MoverFinished != null) MoverFinished();
+        Vector3 velocity = (target - start) / time;
+        if (MoverFinished != null) MoverFinished(velocity);
     }
 }
