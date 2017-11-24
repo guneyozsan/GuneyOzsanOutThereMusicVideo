@@ -21,7 +21,7 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
-    public event System.Action MoverFinished;
+    public event System.Action<Vector3> MoverFinished;
 
     Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
 
@@ -34,10 +34,10 @@ public class Mover : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
-        StartCoroutine(PerformMoveTo(target, time, delay, sphericalLerp));
+        StartCoroutine(PerformMoveTo(target, time, sphericalLerp));
     }
 
-    IEnumerator PerformMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    IEnumerator PerformMoveTo(Vector3 target, float time, bool sphericalLerp)
     {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
@@ -48,11 +48,11 @@ public class Mover : MonoBehaviour
         {
             if (sphericalLerp)
             {
-                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
             }
             else
             {
-                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
+                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
             }
             t += Time.deltaTime / time;
             yield return null;
@@ -74,10 +74,10 @@ public class Mover : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
-        StartCoroutine(PerformSpreadAround(range, time, delay, sphericalLerp));
+        StartCoroutine(PerformSpreadAround(range, time, sphericalLerp));
     }
 
-    IEnumerator PerformSpreadAround(float range, float time, float delay, bool sphericalLerp)
+    IEnumerator PerformSpreadAround(float range, float time, bool sphericalLerp)
     {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
@@ -99,7 +99,7 @@ public class Mover : MonoBehaviour
             yield return null;
         }
         // Allows the object to keep floating to the direction it is moved.
-        transform.GetComponent<Rigidbody>().velocity = (target - start) / time;
-        if (MoverFinished != null) MoverFinished();
+        Vector3 velocity = (target - start) / time;
+        if (MoverFinished != null) MoverFinished(velocity);
     }
 }

@@ -1,7 +1,14 @@
 RELEASE NOTES
 ------
+v0.6.0
+- Animation of "Part 1" is near complete. General flow is almost fixed.
+- Transition to and opening of "Part 2 - Probe" is roughly established.
+- Pyramid sun is removed and opening explosion is triggered by forming the title "Out There".
+- Planetesimals objects are redesigned around prefabs.
+
+------
 v0.5.0
-- Rough cut of "Part 1 - Probe" that is the region until bar 60, is completed.
+- Rough cut of "Part 1 - Approach" that is the region until bar 60, is completed.
 - Added real time playback speed control for seeking forward faster (also allows slow motion for debugging).
 - Connected to Unity cloud build.
 - Option for disabling debug GUI.

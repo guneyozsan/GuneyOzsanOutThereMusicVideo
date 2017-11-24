@@ -19,7 +19,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Planetesimal {
+public class Planetesimal : MonoBehaviour {
 
     Rigidbody Rigidbody { get; set; }
     Gravity Gravity { get; set; }
@@ -28,6 +28,10 @@ public class Planetesimal {
 
     void Awake()
     {
+        Rigidbody = GetComponent<Rigidbody>();
+        Gravity = GetComponent<Gravity>();
+        Mover = GetComponent<Mover>();
+
         Mover.MoverFinished += OnMoverFinished;
     }
 
@@ -36,16 +40,10 @@ public class Planetesimal {
         Mover.MoverFinished -= OnMoverFinished;
     }
 
-    public void OnMoverFinished()
+    public void OnMoverFinished(Vector3 velocity)
     {
         InUse = false;
-    }
-
-    public Planetesimal(Transform planetesimal)
-    {
-        Rigidbody = planetesimal.GetComponent<Rigidbody>();
-        Gravity = planetesimal.GetComponent<Gravity>();
-        Mover = planetesimal.GetComponent<Mover>();
+        SetVelocity(velocity);
     }
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)

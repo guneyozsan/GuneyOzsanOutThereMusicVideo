@@ -30,16 +30,15 @@ public class AnimationManager : MonoBehaviour
     public static Title openingTitlesComposer;
     public static Title partOneTitlesPartNumber;
     public static Title partOneTitlesPartName;
+    public static Title partTwoTitlesPartNumber;
+    public static Title partTwoTitlesPartName;
 
-    public Transform newSun;
-
-    [NonSerialized]
-    public Transform sun;
+    //[NonSerialized]
+    //public Transform sun;
 
     float alignY = 0;
 
     int animationCurrentBar = 0;
-    int currentRegion = 0;
 
     Gravity gravity;
 
@@ -48,8 +47,8 @@ public class AnimationManager : MonoBehaviour
     void Start()
     {
         openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-59.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OUT"),
-            new Word(new Vector3(-6.3f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "THERE"),
+            new Word(new Vector3(-19.1f, 15f, 0), 5, 5, 2, 2, 2, 1.3f, "OUT"),
+            new Word(new Vector3(-32.85f, -5.2f, 0), 5, 5, 2, 2, 2, 1.3f, "THERE"),
         });
 
         openingTitlesBy = new Title(new Word[] {
@@ -62,18 +61,29 @@ public class AnimationManager : MonoBehaviour
         });
 
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-39.5f, 19f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
+            new Word(new Vector3(-39.5f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
         });
 
         partOneTitlesPartName = new Title(new Word[] {
+            new Word(new Vector3(-53.45f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
+        });
+
+        partTwoTitlesPartNumber = new Title(new Word[] {
+            new Word(new Vector3(-39.5f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART II"),
+        });
+
+        partTwoTitlesPartName = new Title(new Word[] {
             new Word(new Vector3(-32.85f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
         });
 
-        Transform gravityTarget = GetComponent<AnimationManager>().sun;
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
-        //int cubeSideLength = MathUtility.ClosestCubeRoot(openingTitlesBy.ParticleCount, true);
-        int cubeSideLength = MathUtility.ClosestCubeRoot(896, true);
+        //int cubeSideLength = MathUtility.ClosestCubeRoot(
+        //    openingTitlesMusic.ParticleCount
+        //    + partOneTitlesPartNumber.ParticleCount
+        //    + partOneTitlesPartName.ParticleCount, true);
+        //print(cubeSideLength);
+        int cubeSideLength = 11;
 
         float particlePadding = 1f;
         float alignmentAdjustment = cubeSideLength / 2;
@@ -89,13 +99,13 @@ public class AnimationManager : MonoBehaviour
                 for (int k = 0; k < cubeSideLength; k++)
                 {
                     float z = k * particlePadding - alignmentAdjustment;
-                    Space.planetesimals.Add(new Planetesimal(Instantiate(planetesimalPrefab, new Vector3(x, y + alignY, z), Quaternion.identity, planetesimalParent)));
+                    Space.planetesimals.Add(Instantiate(planetesimalPrefab, new Vector3(x, y + alignY, z), Quaternion.identity, planetesimalParent).GetComponent<Planetesimal>());
                 }
             }
         }
     }
 
-
+    bool exploded;
 
     void Update()
     {
@@ -106,89 +116,83 @@ public class AnimationManager : MonoBehaviour
         switch (Sequencer.CurrentBar)
         {
             case 4:
+                if (Sequencer.CurrentBeat == 1 && !exploded)
+                {
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
+                    exploded = true;
+                }
+
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    currentRegion = Sequencer.CurrentRegionId;
 
-                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
-                    sun.localScale = new Vector3(5, 5, 5);
-                    sun.tag = "Sun";
-#if UNITY_EDITOR
-                    sun.name = "PyramidSun";
-#endif
+//                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
+//                    sun.localScale = new Vector3(5, 5, 5);
+//                    sun.tag = "Sun";
+//#if UNITY_EDITOR
+//                    sun.name = "PyramidSun";
+//#endif
                     SetGravity(0);
                 }
+
                 break;
 
-            case 7:
+            case 16:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.FormTitle(3.2f * Sequencer.BarDurationF, 0.05f, true, true);
-                    SetGravity(-3);
+                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDurationF, 0.002f, true, false);
+                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
+                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
                 }
                 break;
-
-            case 17:
+                
+            case 32:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.1f, true, false);
-                }
-                break;
-
-            case 18:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    SetGravity(0);
-                }
-                break;
-
-            case 21:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    partOneTitlesPartNumber.FormTitle(11f * Sequencer.BarDurationF, 0.015f, true, true);
-                    SetGravity(-10);
-                }
-                break;
-
-            case 22:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    partOneTitlesPartName.FormTitle(11f * Sequencer.BarDurationF, 0.01f, true, true);
-                }
-                break;
-
-            case 34:
-                if (animationCurrentBar != Sequencer.CurrentBar)
-                {
-                    SetGravity(-20);
-                    partOneTitlesPartNumber.SpreadTitle(30, 3.3f * Sequencer.BarDurationF, 0.02f, true, false);
+                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
 
             case 36:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 30 * Sequencer.BarDurationF, 0.01f, true, false);
+                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
 
-            case 43:
+            case 60:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    SetGravity(0);
+                    partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDurationF, 0.007f, true, true);
+                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.014f, true, true);
                 }
                 break;
-
-            case 47:
+                
+            case 65:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-                    SetGravity(-50);
+                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
+                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
                 }
                 break;
         }
 
+
         if (animationCurrentBar != Sequencer.CurrentBar)
         {
+            if (Sequencer.CurrentBar >= 16 && Sequencer.CurrentBar < 56)
+            {
+                int k = Sequencer.CurrentBar - 16;
+                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 8);
+            }
+            else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
+            {
+                SetGravity(0);
+            }
+            else if (Sequencer.CurrentBar >= 60)
+            {
+                SwitchAnimation(1, -300, 0);
+            }
+
             animationCurrentBar = Sequencer.CurrentBar;
         }
 
@@ -297,7 +301,7 @@ public class AnimationManager : MonoBehaviour
 
 
 
-    void SwitchAnimation(int switcher, int gravityForce, int antiGravityForce)
+    void SwitchAnimation(int switcher, float gravityForce, float antiGravityForce)
     {
         if (animationCurrentBar % 2 == switcher)
         {
