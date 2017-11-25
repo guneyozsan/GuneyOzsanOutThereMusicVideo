@@ -3,6 +3,20 @@
 
 ![Alt text](https://78.media.tumblr.com/f74ed3b4b553be7754e22f6f8f40634d/tumblr_oy692kdsPU1u47bpmo1_1280.gif "Opening scene")
 
+## Release
+The project is still in progress and not released yet. But the binaries for the latest state are available at the [releases section](https://github.com/guneyozsan/Guney-Ozsan-Out-There-Music-Video-Unity-3D-Demo/releases) (Windows, Mac, Linux).
+
+Please check the latest feature or development branch using Unity 3D for catching up with the latest state. Development is mostly linear and almost all commits are stable and runnable.
+
+## Music
+The music piece is Out There by [Guney Ozsan](http://www.guneyozsan). It is a mid pace electronic music with inspirations from 70's psychedelic music and 80's science fiction.
+* [Spotify](https://open.spotify.com/album/59xmXDNHhe1vJWit5tIJ3r)
+* [SoundCloud](https://soundcloud.com/guneyozsan/sets/guney-ozsan-out-there)
+
+The music consists of 2 parts, "[Part 1 - Approach](https://soundcloud.com/guneyozsan/guney-ozsan-out-there-part-1-approach?in=guneyozsan/sets/guney-ozsan-out-there)" and "[Part 2 - Probe](https://soundcloud.com/guneyozsan/guney-ozsan-out-there-part-2-probe?in=guneyozsan/sets/guney-ozsan-out-there)". Part 1 starts with a big explosive hit and sets the atmosphere in about 3 minutes. Part 2 is a groovy track that takes the listener to a psychedelic journey which lasts about 7 minutes. Part 2 is loopable and this will be used for making the music video running infinitely long with no repetition, giving an opportunity to the viewer to get lost in the experience as long as they feel comfortable.
+
+The music was originally and non-exclusively created for the video game [Big Blue World Domination](http://www.adventuregamestudio.co.uk/site/games/game/1561/) by [Wham Games](http://www.adventuregamestudio.co.uk/site/games/author/WHAM/) ([gameplay video](https://www.youtube.com/watch?v=YI0yjCBDnoA)).
+
 ## Style
 The challenge of this project is to let the viewer dive into an impressive psychedelic experience within the world suggested by the music, while at the same time carrying and representing the characteristics of a demo as in the demoscene sense. So both the general aesthetic and technical approaches should be consistent with the classic demo style but in a non-conservative sense. This can be implemented in various ways such as runtime procedural generation, minimalism in code, wow moments, playing with geometry and colors, and generating an atmosphere or perhaps a world. 
 
@@ -35,12 +49,7 @@ The basic implementation of the idea for this was written in 2014 but it couldn'
 The project is open source and published under GNU General Public License. More details can be found in the LICENSE.md file, in the source files or at <http://www.gnu.org/licenses>.
 
 ## Links
-**Link to the music piece:**
-Guney Ozsan - Out There
-https://open.spotify.com/album/59xmXDNHhe1vJWit5tIJ3r
-
-**About me:**
+* **About the author:**
 http://www.guneyozsan.com
-
-**Contact:**
+* **Contact:**
 guney@guneyozsan.com
