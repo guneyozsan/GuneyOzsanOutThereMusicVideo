@@ -105,8 +105,6 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    bool exploded;
-
     void Update()
     {
 #if UNITY_EDITOR
@@ -116,21 +114,15 @@ public class AnimationManager : MonoBehaviour
         switch (Sequencer.CurrentBar)
         {
             case 4:
-                if (Sequencer.CurrentBeat == 1 && !exploded)
-                {
-                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
-                    exploded = true;
-                }
-
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-
 //                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
 //                    sun.localScale = new Vector3(5, 5, 5);
 //                    sun.tag = "Sun";
 //#if UNITY_EDITOR
 //                    sun.name = "PyramidSun";
 //#endif
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
                     SetGravity(0);
                 }
 
