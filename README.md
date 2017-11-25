@@ -1,7 +1,7 @@
 # Guney Ozsan - Out There (Music Video)
 **Open source procedural real time music video in demoscene style made with Unity 3D for Out There by Guney Ozsan.**
 
-![Alt text](https://78.media.tumblr.com/f74ed3b4b553be7754e22f6f8f40634d/tumblr_oy692kdsPU1u47bpmo1_1280.gif "Opening scene")
+![Opening scene](https://78.media.tumblr.com/f74ed3b4b553be7754e22f6f8f40634d/tumblr_oy692kdsPU1u47bpmo1_1280.gif "Opening scene")
 
 ## Release
 The project is still in progress and not released yet. But the binaries for the latest state are available at the [releases section](https://github.com/guneyozsan/Guney-Ozsan-Out-There-Music-Video-Unity-3D-Demo/releases) (Windows, Mac, Linux).
@@ -34,8 +34,8 @@ The basic implementation of the idea for this was written in 2014 but it couldn'
 - ~~Translate original Javascript codebase to C#.~~
 - ~~Refactor the prototype code with a better architecture.~~
 - ~~Improve the system for forming letters with planetesimals.~~
-- Part I composition **(in progress)**
-- Part II composition.
+- ~~Part I composition~~
+- Part II composition. **(in progress)**
 - Place the first person view on the cubes in Part 2.
 - Explore visual effect possibilities through color, shader, post-processing.
 - Research and experiment  various user interaction possibilities.
