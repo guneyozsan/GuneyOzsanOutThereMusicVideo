@@ -47,7 +47,6 @@ public class Debugging : MonoBehaviour {
                 + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
                 + "-------------------------------------------" + Environment.NewLine
                 + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-                + "Region:   " + Sequencer.CurrentRegionId + Environment.NewLine
                 + Sequencer.CurrentRegionDescription
             );
         }
