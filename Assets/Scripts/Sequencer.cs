@@ -31,8 +31,8 @@ public class Sequencer : MonoBehaviour
 
     public enum Part { Intro, Part1Approach, Part2Probe };
 
-    public static int CurrentBeat { get; private set; }
 #endif
+    public static int CurrentBeat { get; private set; }
     public static int CurrentBar { get; private set; }
 
     int BPM;
@@ -80,9 +80,7 @@ public class Sequencer : MonoBehaviour
 #endif
 
         CurrentBar = 1;
-#if UNITY_EDITOR
         CurrentBeat = 1;
-#endif
     }
 
 
@@ -95,9 +93,9 @@ public class Sequencer : MonoBehaviour
             FastForward();
         }
 
-        SetBeats();
         SetCurrentRegion();
 #endif
+        SetBeats();
         LoopMusicTo(loopToBar);
     }
 
@@ -272,7 +270,6 @@ public class Sequencer : MonoBehaviour
 #endif
 
 
-#if UNITY_EDITOR
     void SetBeats()
     {
         if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration)
@@ -288,12 +285,13 @@ public class Sequencer : MonoBehaviour
             }
         }
 
+#if UNITY_EDITOR
         if (Time.timeScale != 1 && (music.time + Time.deltaTime * (Time.timeScale - 1)) >= 0)
         {
             music.time += Time.deltaTime * (Time.timeScale - 1);
         }
-    }
 #endif
+    }
 
 
     void LoopMusicTo(int loopToBar)
@@ -302,11 +300,9 @@ public class Sequencer : MonoBehaviour
         {
             music.time = (float)((loopToBar - 1d) * 4d * BeatDuration);
             music.Play();
-            CurrentBar = this.loopToBar;
+            CurrentBar = loopToBar;
 
-#if UNITY_EDITOR
             CurrentBeat = 1;
-#endif
         }
     }
 }
