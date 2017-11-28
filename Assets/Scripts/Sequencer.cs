@@ -37,12 +37,6 @@ public class Sequencer : MonoBehaviour
 
     int BPM;
     public static double BeatDuration { get; private set; }
-    public static double BarDuration {
-        get
-        {
-            return 4 * BeatDuration;
-        }
-    }
     public static float BarDurationF
     {
         get
@@ -87,7 +81,7 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void AdjustPlaybackSpeed()
     {
-        if (Sequencer.CurrentBar < Debugging.FastForwardToBar)
+        if (CurrentBar < Debugging.FastForwardToBar && Debugging.FastForwardSpeed != 1)
         {
             music.volume = 0;
             Time.timeScale = Debugging.FastForwardSpeed;
@@ -96,13 +90,6 @@ public class Sequencer : MonoBehaviour
         {
             music.volume = 1;
             Time.timeScale = Debugging.PlaybackSpeed;
-        }
-
-        float musicTimeCorrection = Time.deltaTime * (Time.timeScale - 1);
-        bool firstCorrectionResultsInNegativeTime = music.time + musicTimeCorrection < 0;
-        if (Time.timeScale != 1 && !firstCorrectionResultsInNegativeTime)
-        {
-            music.time += musicTimeCorrection;
         }
     }
 #endif
@@ -240,9 +227,14 @@ public class Sequencer : MonoBehaviour
 #endif
 
 
+
     void SetBeats()
     {
-        if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration)
+        double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
+#if UNITY_EDITOR
+        timeOfCurrentBeat -= BeatDuration * (1 - 1/ Time.timeScale);
+#endif
+        if (music.time > timeOfCurrentBeat)
         {
             if (CurrentBeat < 4)
             {
@@ -253,8 +245,16 @@ public class Sequencer : MonoBehaviour
                 CurrentBeat = 1;
                 CurrentBar++;
             }
+
+#if UNITY_EDITOR
+            if (Time.timeScale != 1)
+            {
+                music.time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / Time.timeScale));
+            }
+#endif
         }
     }
+
 
 
     void LoopMusicTo(int loopToBar)
