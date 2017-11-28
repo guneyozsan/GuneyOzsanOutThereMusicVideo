@@ -32,6 +32,9 @@ public class Mover : MonoBehaviour
 
     IEnumerator DelayMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
+#if UNITY_EDITOR
+        delay = delay / Time.timeScale;
+#endif
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
         StartCoroutine(PerformMoveTo(target, time, sphericalLerp));
@@ -39,6 +42,9 @@ public class Mover : MonoBehaviour
 
     IEnumerator PerformMoveTo(Vector3 target, float time, bool sphericalLerp)
     {
+#if UNITY_EDITOR
+        time = time / Time.timeScale;
+#endif
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
 
@@ -72,6 +78,9 @@ public class Mover : MonoBehaviour
 
     IEnumerator DelaySpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
+#if UNITY_EDITOR
+        delay = delay / Time.timeScale;
+#endif
         yield return new WaitForSeconds(delay);
         StopAllCoroutines();
         StartCoroutine(PerformSpreadAround(range, time, sphericalLerp));
@@ -79,6 +88,9 @@ public class Mover : MonoBehaviour
 
     IEnumerator PerformSpreadAround(float range, float time, bool sphericalLerp)
     {
+#if UNITY_EDITOR
+        time = time / Time.timeScale;
+#endif
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
         Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
