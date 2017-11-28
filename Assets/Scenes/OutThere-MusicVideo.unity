@@ -413,6 +413,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayGui: 1
   playbackSpeed: 1
+  fastForwardToBar: 56
+  fastForwardSpeed: 2
 --- !u!4 &1256199838
 Transform:
   m_ObjectHideFlags: 0
@@ -488,7 +490,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3343ab5a1122340ba11203423828c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fastForwardToBar: 0
 --- !u!82 &1368347924
 AudioSource:
   m_ObjectHideFlags: 0

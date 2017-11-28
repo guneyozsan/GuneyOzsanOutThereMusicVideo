@@ -53,26 +53,14 @@ public class Sequencer : MonoBehaviour
 
     int loopToBar;
 
-#if UNITY_EDITOR
-    public int fastForwardToBar;
-    int fastForwardSpeed;
-    bool doFastForward;
-#endif
-
-
-
     void Start()
     {
-#if UNITY_EDITOR
-        // InitializeFastForward();
-#endif
         BPM = 77;
         BeatDuration = 60d / BPM;
 
         loopToBar = 60;
 
         music = GetComponent<AudioSource>();
-        //music.time = (fastForwardToBar - 1)*4*beatDuration;
         music.time = 0;
         music.Play();
 #if UNITY_EDITOR
@@ -88,11 +76,7 @@ public class Sequencer : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        if (doFastForward)
-        {
-            FastForward();
-        }
-
+        AdjustPlaybackSpeed();
         SetCurrentRegion();
 #endif
         SetBeats();
@@ -100,39 +84,25 @@ public class Sequencer : MonoBehaviour
     }
 
 
-
 #if UNITY_EDITOR
-    void InitializeFastForward()
+    void AdjustPlaybackSpeed()
     {
-        throw new NotImplementedException();
-        doFastForward = true;
-
-        fastForwardToBar = 4;
-        fastForwardSpeed = 3;
-
-        if (fastForwardToBar <= 1 || fastForwardToBar > 191)
+        if (Sequencer.CurrentBar < Debugging.FastForwardToBar)
         {
-            fastForwardToBar = 1;
-            doFastForward = false;
-        }
-    }
-#endif
-
-
-
-#if UNITY_EDITOR
-    void FastForward()
-    {
-        throw new NotImplementedException();
-        //Debug.Log(Time.timeScale + " " + doFastForward);
-        if (CurrentBar < fastForwardToBar && Time.timeScale != fastForwardSpeed)
-        {
-            Time.timeScale = fastForwardSpeed;
+            music.volume = 0;
+            Time.timeScale = Debugging.FastForwardSpeed;
         }
         else
         {
-            doFastForward = false;
-            Time.timeScale = 1;
+            music.volume = 1;
+            Time.timeScale = Debugging.PlaybackSpeed;
+        }
+
+        float musicTimeCorrection = Time.deltaTime * (Time.timeScale - 1);
+        bool firstCorrectionResultsInNegativeTime = music.time + musicTimeCorrection < 0;
+        if (Time.timeScale != 1 && !firstCorrectionResultsInNegativeTime)
+        {
+            music.time += musicTimeCorrection;
         }
     }
 #endif
@@ -284,13 +254,6 @@ public class Sequencer : MonoBehaviour
                 CurrentBar++;
             }
         }
-
-#if UNITY_EDITOR
-        if (Time.timeScale != 1 && (music.time + Time.deltaTime * (Time.timeScale - 1)) >= 0)
-        {
-            music.time += Time.deltaTime * (Time.timeScale - 1);
-        }
-#endif
     }
 
 

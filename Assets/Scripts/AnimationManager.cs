@@ -107,10 +107,6 @@ public class AnimationManager : MonoBehaviour
 
     void Update()
     {
-#if UNITY_EDITOR
-        Time.timeScale = Debugging.PlaybackSpeed;
-#endif
-
         switch (Sequencer.CurrentBar)
         {
             case 4:
