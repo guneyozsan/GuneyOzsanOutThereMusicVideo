@@ -48,6 +48,8 @@ The basic implementation of the idea for this was written in 2014 but it couldn'
 ## License
 The project is open source and published under GNU General Public License. More details can be found in the LICENSE.md file, in the source files or at <http://www.gnu.org/licenses>.
 
+The music piece "Out There (Full Version)" by Guney Ozsan is licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
+
 ## Links
 * **About the author:**
 http://www.guneyozsan.com
