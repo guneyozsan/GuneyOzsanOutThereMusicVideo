@@ -111,7 +111,7 @@ public class AnimationManager : MonoBehaviour
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
                     openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
-                    SetGravity(0);
+                    SetGravity(0, Vector3.zero);
                 }
 
                 break;
@@ -170,15 +170,15 @@ public class AnimationManager : MonoBehaviour
             if (Sequencer.CurrentBar >= 16 && Sequencer.CurrentBar < 56)
             {
                 int k = Sequencer.CurrentBar - 16;
-                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 7.5f);
+                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 7.5f, Vector3.zero);
             }
             else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
             {
-                SetGravity(0);
+                SetGravity(0, Vector3.zero);
             }
             else if (Sequencer.CurrentBar >= 60)
             {
-                SwitchAnimation(1, -300, 0);
+                SwitchAnimation(1, -300, 0, Vector3.zero);
             }
 
             animationCurrentBar = Sequencer.CurrentBar;
@@ -279,42 +279,31 @@ public class AnimationManager : MonoBehaviour
 
 
 
-    void SetGravity(float gravityForce)
+    void SetGravity(float gravityForce, Vector3 target)
     {
         for (int i = 0; i < Space.planetesimals.Count; i++)
         {
-            Space.planetesimals[i].SetGravityForce(gravityForce);
+            Space.planetesimals[i].SetGravityForce(gravityForce, target);
         }
     }
 
 
 
-    void SwitchAnimation(int switcher, float gravityForce, float antiGravityForce)
+    void SwitchAnimation(int switcher, float gravityForce, float antiGravityForce, Vector3 target)
     {
         if (animationCurrentBar % 2 == switcher)
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.SetGravityForce(gravityForce);
+                planetesimal.SetGravityForce(gravityForce, target);
             }
         }
         else
         {
             foreach (Planetesimal planetesimal in Space.planetesimals)
             {
-                planetesimal.SetGravityForce(antiGravityForce);
+                planetesimal.SetGravityForce(antiGravityForce, target);
             }
-        }
-    }
-
-
-
-    void TurnOffAnimation(int antiGravityForce)
-    {
-        foreach (GameObject planet in GameObject.FindGameObjectsWithTag("Planet"))
-        {
-            gravity = planet.GetComponent<Gravity>();
-            gravity.SetForce(antiGravityForce);
         }
     }
 }

@@ -24,6 +24,8 @@ public class Planetesimal : MonoBehaviour {
     Rigidbody Rigidbody { get; set; }
     Gravity Gravity { get; set; }
     Mover Mover { get; set; }
+
+    // If the planetesimal is being used for constructing a shape or free.
     public bool InUse { get; private set; }
 
     void Awake()
@@ -58,9 +60,9 @@ public class Planetesimal : MonoBehaviour {
         Mover.SpreadAround(range, time, delay, sphericalLerp);
     }
 
-    public void SetGravityForce(float gravityForce)
+    public void SetGravityForce(float gravityForce, Vector3 target)
     {
-        Gravity.SetForce(gravityForce);
+        Gravity.SetForce(gravityForce, target);
     }
 
     public void SetVelocity(Vector3 velocity)
