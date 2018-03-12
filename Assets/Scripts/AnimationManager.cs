@@ -112,12 +112,6 @@ public class AnimationManager : MonoBehaviour
             case 4:
                 if (animationCurrentBar != Sequencer.CurrentBar)
                 {
-//                    sun = Instantiate(newSun, new Vector3(0, alignY, 0), Quaternion.identity);
-//                    sun.localScale = new Vector3(5, 5, 5);
-//                    sun.tag = "Sun";
-//#if UNITY_EDITOR
-//                    sun.name = "PyramidSun";
-//#endif
                     openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
                     SetGravity(0);
                 }
@@ -170,7 +164,7 @@ public class AnimationManager : MonoBehaviour
             if (Sequencer.CurrentBar >= 16 && Sequencer.CurrentBar < 56)
             {
                 int k = Sequencer.CurrentBar - 16;
-                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 8);
+                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 7.5f);
             }
             else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
             {
