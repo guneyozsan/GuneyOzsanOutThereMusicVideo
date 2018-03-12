@@ -24,6 +24,8 @@ public class AnimationManager : MonoBehaviour
 {
     [SerializeField]
     Transform planetesimalPrefab;
+    [SerializeField]
+    Camera camera;
 
     public static Title openingTitlesMusic;
     public static Title openingTitlesBy;
@@ -33,19 +35,15 @@ public class AnimationManager : MonoBehaviour
     public static Title partTwoTitlesPartNumber;
     public static Title partTwoTitlesPartName;
 
-    //[NonSerialized]
-    //public Transform sun;
-
     float alignY = 0;
-
     int animationCurrentBar = 0;
-
     Gravity gravity;
-
-
+    Vector3 defaultCameraLocation;
 
     void Start()
     {
+        defaultCameraLocation = camera.transform.position;
+
         openingTitlesMusic = new Title(new Word[] {
             new Word(new Vector3(-19.1f, 15f, 0), 5, 5, 2, 2, 2, 1.3f, "OUT"),
             new Word(new Vector3(-32.85f, -5.2f, 0), 5, 5, 2, 2, 2, 1.3f, "THERE"),
@@ -156,8 +154,16 @@ public class AnimationManager : MonoBehaviour
                     partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
                 }
                 break;
-        }
 
+            case 100:
+                if (animationCurrentBar != Sequencer.CurrentBar)
+                {
+                    Transform cameraPlanetesimal = Instantiate(planetesimalPrefab, camera.transform.position, Quaternion.identity);
+                    Space.planetesimals.Add(cameraPlanetesimal.GetComponent<Planetesimal>());
+                    camera.transform.SetParent(cameraPlanetesimal);
+                }
+                break;
+        }
 
         if (animationCurrentBar != Sequencer.CurrentBar)
         {
