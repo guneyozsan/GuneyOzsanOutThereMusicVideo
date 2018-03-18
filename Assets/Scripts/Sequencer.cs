@@ -23,15 +23,20 @@ using UnityEngine;
 public class Sequencer : MonoBehaviour
 {
     AudioSource music;
+
 #if UNITY_EDITOR
     public static AudioSource MusicDebug { get; private set; }
 
     public static Part CurrentPart { get; private set; }
     public static string CurrentRegionDescription { get; private set; }
 
-    public enum Part { Intro, Part1Approach, Part2Probe };
+    public enum Part {
+        Intro,
+        Part1Approach,
+        Part2Probe
+    };
+#endif // UNITY_EDITOR
 
-#endif
     public static int CurrentBeat { get; private set; }
     public static int CurrentBar { get; private set; }
 
@@ -57,22 +62,22 @@ public class Sequencer : MonoBehaviour
         music = GetComponent<AudioSource>();
         music.time = 0;
         music.Play();
+
 #if UNITY_EDITOR
         MusicDebug = music;
-#endif
+#endif // UNITY_EDITOR
 
         CurrentBar = 1;
         CurrentBeat = 1;
     }
-
-
 
     void Update()
     {
 #if UNITY_EDITOR
         AdjustPlaybackSpeed();
         SetCurrentRegion();
-#endif
+#endif // UNITY_EDITOR
+
         SetBeats();
         LoopMusicTo(loopToBar);
     }
@@ -81,7 +86,8 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void AdjustPlaybackSpeed()
     {
-        if (CurrentBar < Debugging.FastForwardToBar && Debugging.FastForwardSpeed != 1)
+        if (CurrentBar < Debugging.FastForwardToBar
+            && Debugging.FastForwardSpeed != 1)
         {
             music.volume = 0;
             Time.timeScale = Debugging.FastForwardSpeed;
@@ -92,7 +98,7 @@ public class Sequencer : MonoBehaviour
             Time.timeScale = Debugging.PlaybackSpeed;
         }
     }
-#endif
+#endif // UNITY_EDITOR
 
 
 #if UNITY_EDITOR
@@ -224,16 +230,18 @@ public class Sequencer : MonoBehaviour
             CurrentRegionDescription = "Part 1 to 2 bridge";
         }
     }
-#endif
+#endif // UNITY_EDITOR
 
 
 
     void SetBeats()
     {
         double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
+
 #if UNITY_EDITOR
         timeOfCurrentBeat -= BeatDuration * (1 - 1/ Time.timeScale);
-#endif
+#endif // UNITY_EDITOR
+
         if (music.time > timeOfCurrentBeat)
         {
             if (CurrentBeat < 4)
@@ -248,10 +256,9 @@ public class Sequencer : MonoBehaviour
 
 #if UNITY_EDITOR
             if (Time.timeScale != 1)
-            {
                 music.time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / Time.timeScale));
-            }
-#endif
+#endif // UNITY_EDITOR
+
         }
     }
 

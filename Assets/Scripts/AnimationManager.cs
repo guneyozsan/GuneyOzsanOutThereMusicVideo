@@ -36,9 +36,18 @@ public class AnimationManager : MonoBehaviour
     public static Title partTwoTitlesPartName;
 
     float alignY = 0;
-    int animationCurrentBar = 0;
+    int currentAnimationBar = 0;
+    int currentAnimationBeat = 0;
     Gravity gravity;
     Vector3 defaultCameraLocation;
+
+    Vector3 target = Vector3.zero;
+    List<Vector3> targets = new List<Vector3>() {
+        Vector3.zero
+    };
+
+    float rad = 0;
+    float r = 0;
 
     void Start()
     {
@@ -103,14 +112,12 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    List<Vector3> targets = new List<Vector3>();
-
     void Update()
     {
         switch (Sequencer.CurrentBar)
         {
             case 4:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
                     SetGravity(0, Vector3.zero);
@@ -119,7 +126,7 @@ public class AnimationManager : MonoBehaviour
                 break;
 
             case 16:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDurationF, 0.002f, true, false);
                     partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
@@ -128,21 +135,21 @@ public class AnimationManager : MonoBehaviour
                 break;
 
             case 32:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
 
             case 36:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
                 }
                 break;
                 
             case 60:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDurationF, 0.007f, true, true);
                     partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.014f, true, true);
@@ -150,7 +157,7 @@ public class AnimationManager : MonoBehaviour
                 break;
 
             case 65:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
                     partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
@@ -158,7 +165,7 @@ public class AnimationManager : MonoBehaviour
                 break;
 
             case 100:
-                if (animationCurrentBar != Sequencer.CurrentBar)
+                if (currentAnimationBar != Sequencer.CurrentBar)
                 {
                     Transform cameraPlanetesimal = Instantiate(planetesimalPrefab, camera.transform.position, Quaternion.identity);
                     Space.planetesimals.Add(cameraPlanetesimal.GetComponent<Planetesimal>());
@@ -166,42 +173,63 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
         }
-
-        if (animationCurrentBar != Sequencer.CurrentBar)
+        
+        if ((Sequencer.CurrentBar >= 30) && (Sequencer.CurrentBar < 56))
         {
-            if (Sequencer.CurrentBar >= 16 && Sequencer.CurrentBar < 32)
+            int k = 1 + Sequencer.CurrentBar - 30;
+            float speed = 1f / (Mathf.Pow(k, 1f / 3f) * 300f);
+            float maxR = 45f;
+            float initialR = 15f;
+            float r = initialR + (Mathf.Pow(k, 0.5f) * (maxR - initialR) / Mathf.Pow(26f, 0.5f));
+            float zOffset = -9.4f;
+            targets = new List<Vector3>() {
+                new Vector3( r * Mathf.Sin(speed * rad), 0, -r * Mathf.Cos(speed * rad) + zOffset),
+                new Vector3(-r * Mathf.Sin(speed * rad), 0,  r * Mathf.Cos(speed * rad) + zOffset)
+            };
+            rad += Time.deltaTime * 60f;
+
+            float force = -1f * Mathf.Pow(k, 0.5f) * 100f / Mathf.Pow(26f, 0.5f);
+            print(force + " - " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat + " - " + new Vector3(-40f * Mathf.Sin(speed * rad), 0, 40 * Mathf.Cos(speed * rad)));
+            SetGravity(force, targets);
+        }
+
+        if ((currentAnimationBar != Sequencer.CurrentBar)
+            || (currentAnimationBeat != Sequencer.CurrentBeat))
+        {
+            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < 30)
+                && (Sequencer.CurrentBeat == 1))
             {
                 int k = Sequencer.CurrentBar - 16;
                 SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 30f , Vector3.zero);
             }
-            else if (Sequencer.CurrentBar >= 32 && Sequencer.CurrentBar < 56)
+            else if ((Sequencer.CurrentBar >= 32) && (Sequencer.CurrentBar < 56)
+                && (Sequencer.CurrentBeat >= 1))
             {
-                Vector3 target = Vector3.zero;
+                //if (Sequencer.CurrentBar == 32
+                //    && (Sequencer.CurrentBeat == 1))
+                //{
+                    
+                //}
+                //else if (Sequencer.CurrentBar == 34
+                //    && Sequencer.CurrentBeat == 2)
+                //{
+                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
+                //    target = new Vector3(38.7f, 19, -9.5f);
+                //}
+                //else if (Sequencer.CurrentBar >= 36 && Sequencer.CurrentBar < 37
+                //    && (Sequencer.CurrentBeat == 1))
+                //{
+                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
+                //    target = new Vector3(-53.5f, -20, -9.5f);
+                //}
+                //else if (Sequencer.CurrentBar == 40
+                //    && (Sequencer.CurrentBeat == 1))
+                //{
+                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
+                //    target = new Vector3(53.5f, -20, -9.5f);
+                //}
 
-                if (Sequencer.CurrentBar >= 32 && Sequencer.CurrentBar < 33)
-                {
-                    if (animationCurrentBar != Sequencer.CurrentBar)
-                        target = new Vector3(-39.5f, 19, -9.5f);
-                }
-                else if (Sequencer.CurrentBar >= 34 && Sequencer.CurrentBar < 35)
-                {
-                    if (animationCurrentBar != Sequencer.CurrentBar)
-                        target = new Vector3(38.7f, 19, -9.5f);
-                }
-                else if (Sequencer.CurrentBar >= 36 && Sequencer.CurrentBar < 37)
-                {
-                    if (animationCurrentBar != Sequencer.CurrentBar)
-                        target = new Vector3(-53.5f, -20, -9.5f);
-                }
-                else if (Sequencer.CurrentBar == 40)
-                {
-                    if (animationCurrentBar != Sequencer.CurrentBar)
-                        target = new Vector3(53.5f, -20, -9.5f);
-                }
-
-                int k = Sequencer.CurrentBar - 16;
-                float force = -1 * (10 + 2.5f * k);
-                SwitchAnimation(1, force, force/-10, target);
+                //SwitchAnimation(1, force, force, targets);
             }
             else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
             {
@@ -212,107 +240,34 @@ public class AnimationManager : MonoBehaviour
                 SwitchAnimation(1, -300, 0 , Vector3.zero);
             }
 
-            animationCurrentBar = Sequencer.CurrentBar;
+            currentAnimationBar = Sequencer.CurrentBar;
+            currentAnimationBeat = Sequencer.CurrentBeat;
         }
-
-        //------------------------
-
-        //        if (Sequencer.CurrentRegionId == 2)
-        //        {
-        //            if (currentRegion != Sequencer.CurrentRegionId)
-        //            {
-        //                currentRegion = Sequencer.CurrentRegionId;
-
-        //                sun = Instantiate(newSun, new Vector3(0, 0, 0), Quaternion.identity);
-        //                sun.localScale = new Vector3(5, 5, 5);
-        //                sun.tag = "Sun";
-        //#if UNITY_EDITOR
-        //                sun.name = "PyramidSun";
-        //#endif
-        //            }
-
-        //            if (Sequencer.CurrentBar == 6 && currentBar != 6)
-        //            {
-        //                Title.FormTitle(openingTitlesName   , 7f, 0.05f);
-        //            }
-
-        //            if (currentBar != Sequencer.CurrentBar)
-        //            {
-        //                currentBar = Sequencer.CurrentBar;
-        //            }
-        //        }
-        //        else if (Sequencer.CurrentRegionId == 4)
-        //        {
-        //            if (currentRegion != Sequencer.CurrentRegionId)
-        //            {
-        //                currentRegion = Sequencer.CurrentRegionId;
-        //                //Title.FormTitle(openingTitlesBy, 5f, 0.03f);
-        //            }
-
-        //            if (Sequencer.CurrentBar == 14 && currentBar != 14)
-        //            {
-        //                //Title.FormTitle(openingTitlesWide, 6.33f);
-        //            }
-
-        //            if (currentBar != Sequencer.CurrentBar)
-        //            {
-        //                currentBar = Sequencer.CurrentBar;
-        //            }
-        //        }
-        //else if (Sequencer.CurrentRegionId == 5)
-        //{
-        //    if (currentRegion != Sequencer.CurrentRegionId)
-        //    {
-        //        currentRegion = Sequencer.CurrentRegionId;
-        //        Title.SetPlanetesimalsFree();
-        //    }
-
-        //    if (Sequencer.CurrentBar == 18 && currentBar != 18)
-        //    {
-        //        Title.FormTitle(partOneTitles, 12.4675f, 0);
-        //    }
-        //    else if (Sequencer.CurrentBar == 22 && currentBar != 22)
-        //    {
-        //        Title.FormTitle(partOneTitlesWide, 6.33f, 0);
-        //    }
-        //    else if (Sequencer.CurrentBar == 24 && currentBar != 24)
-        //    {
-        //        Title.SetPlanetesimalsFree();
-        //    }
-
-        //    if (currentBar != Sequencer.CurrentBar)
-        //    {
-        //        currentBar = Sequencer.CurrentBar;
-        //    }
-        //}
-        //else if (Sequencer.CurrentRegionId >= 6 && Sequencer.CurrentRegionId <= 8 && currentBar != Sequencer.CurrentBar)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    SwitchAnimation(0, -300, 0);
-        //    currentBar = Sequencer.CurrentBar;
-        //}
-        //else if (Sequencer.CurrentRegionId >= 10 && Sequencer.CurrentRegionId <= 24 && currentBar != Sequencer.CurrentBar)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    SwitchAnimation(1, -300, 0);
-        //    currentBar = Sequencer.CurrentBar;
-        //}
-        //else if (Sequencer.CurrentRegionId == 9 || Sequencer.CurrentRegionId == 25)
-        //{
-        //    currentRegion = Sequencer.CurrentRegionId;
-        //    TurnOffAnimation(0);
-        //    currentBar = Sequencer.CurrentBar;
-        //    sun.GetComponent<Collider>().enabled = false;
-        //    sun.GetComponent<Renderer>().enabled = false;
-        //    sun.GetComponent<Transform>().localScale = Vector3.Lerp(sun.GetComponent<Transform>().localScale, new Vector3(0.1f, 0.1f, 0.1f), Time.deltaTime);
-        //}
     }
 
     void SetGravity(float gravityForce, Vector3 target)
     {
-        for (int i = 0; i < Space.planetesimals.Count; i++)
+        List<Vector3> targets = new List<Vector3> { target };
+        SetGravity(gravityForce, targets);
+    }
+
+    void SetGravity(float gravityForce, List<Vector3> targets)
+    {
+        int planetesimalsPerTarget = Space.planetesimals.Count / targets.Count;
+
+        for (int i = 0; i < targets.Count; i++)
         {
-            Space.planetesimals[i].SetGravityForce(gravityForce, target);
+            int lastPlanetesimalIndex;
+
+            if ((i + 1) * planetesimalsPerTarget >= Space.planetesimals.Count)
+                lastPlanetesimalIndex = Space.planetesimals.Count;
+            else
+                lastPlanetesimalIndex = (i + 1) * planetesimalsPerTarget;
+
+            for (int j = (i * planetesimalsPerTarget); j < lastPlanetesimalIndex; j++)
+            {
+                Space.planetesimals[j].SetGravityForce(gravityForce, targets[i]);
+            }
         }
     }
 
@@ -337,7 +292,7 @@ public class AnimationManager : MonoBehaviour
 
             float force;
 
-            if (animationCurrentBar % 2 == switcher)
+            if (currentAnimationBar % 2 == switcher)
                 force = gravityForce1;
             else
                 force = gravityForce2;
