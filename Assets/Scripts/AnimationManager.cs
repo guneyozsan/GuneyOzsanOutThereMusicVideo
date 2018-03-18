@@ -173,30 +173,33 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
         }
-        
-        if ((Sequencer.CurrentBar >= 30) && (Sequencer.CurrentBar < 56))
+
+        int twinGalaxyStartingBar = 30;
+        if ((Sequencer.CurrentBar >= twinGalaxyStartingBar) && (Sequencer.CurrentBar < 56))
         {
-            int k = 1 + Sequencer.CurrentBar - 30;
+            int k = 1 + Sequencer.CurrentBar - twinGalaxyStartingBar;
             float speed = 1f / (Mathf.Pow(k, 1f / 3f) * 300f);
+
+            float initialR = 20f;
             float maxR = 45f;
-            float initialR = 15f;
             float r = initialR + (Mathf.Pow(k, 0.5f) * (maxR - initialR) / Mathf.Pow(26f, 0.5f));
+
             float zOffset = -9.4f;
             targets = new List<Vector3>() {
-                new Vector3( r * Mathf.Sin(speed * rad), 0, -r * Mathf.Cos(speed * rad) + zOffset),
-                new Vector3(-r * Mathf.Sin(speed * rad), 0,  r * Mathf.Cos(speed * rad) + zOffset)
+                new Vector3( r * Mathf.Sin(speed * rad), -20f * Mathf.Cos(speed * rad), -r * Mathf.Cos(speed * rad) + zOffset),
+                new Vector3(-r * Mathf.Sin(speed * rad),  20f * Mathf.Cos(speed * rad),  r * Mathf.Cos(speed * rad) + zOffset)
             };
             rad += Time.deltaTime * 60f;
 
-            float force = -1f * Mathf.Pow(k, 0.5f) * 100f / Mathf.Pow(26f, 0.5f);
-            print(force + " - " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat + " - " + new Vector3(-40f * Mathf.Sin(speed * rad), 0, 40 * Mathf.Cos(speed * rad)));
-            SetGravity(force, targets);
+            float force = -1f * Mathf.Pow(k, 1f / 3f) * 100f / Mathf.Pow(26f, 1f / 3f);
+            //SetGravity(force, targets);
+            SwitchAnimation(1, 1.7f * force, 1.1f * force, targets);
         }
 
         if ((currentAnimationBar != Sequencer.CurrentBar)
             || (currentAnimationBeat != Sequencer.CurrentBeat))
         {
-            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < 30)
+            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < twinGalaxyStartingBar)
                 && (Sequencer.CurrentBeat == 1))
             {
                 int k = Sequencer.CurrentBar - 16;
