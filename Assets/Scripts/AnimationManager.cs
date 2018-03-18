@@ -49,6 +49,10 @@ public class AnimationManager : MonoBehaviour
     float rad = 0;
     float r = 0;
 
+#if UNITY_EDITOR
+    List<GameObject> pilotObjects = new List<GameObject>();
+#endif // UNITY_EDITOR
+
     void Start()
     {
         defaultCameraLocation = camera.transform.position;
@@ -282,6 +286,17 @@ public class AnimationManager : MonoBehaviour
 
     void SwitchAnimation(int switcher, float gravityForce1, float gravityForce2, List<Vector3> targets)
     {
+#if UNITY_EDITOR
+        if (pilotObjects.Count > targets.Count)
+        {
+            for (int i = targets.Count; i < pilotObjects.Count; i++)
+            {
+                Destroy(pilotObjects[i]);
+            }
+            pilotObjects = pilotObjects.GetRange(0, targets.Count);
+        }
+#endif // UNITY_EDITOR
+
         int planetesimalsPerTarget = Space.planetesimals.Count / targets.Count;
 
         for (int i = 0; i < targets.Count; i++)
@@ -304,6 +319,12 @@ public class AnimationManager : MonoBehaviour
             {
                 Space.planetesimals[j].SetGravityForce(force, targets[i]);
             }
+
+#if UNITY_EDITOR
+            if (i > pilotObjects.Count - 1)
+                pilotObjects.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+            pilotObjects[i].transform.position = targets[i];    
+#endif // UNITY_EDITOR
         }
     }
 }
