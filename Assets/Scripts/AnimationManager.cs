@@ -48,6 +48,7 @@ public class AnimationManager : MonoBehaviour
 
     float rad = 0;
     float r = 0;
+    float t = 0;
 
 #if UNITY_EDITOR
     List<GameObject> pilotObjects = new List<GameObject>();
@@ -123,7 +124,7 @@ public class AnimationManager : MonoBehaviour
             case 4:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDurationF, 0.005f, true, false);
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 0.005f, true, false);
                     SetGravity(0, Vector3.zero);
                 }
 
@@ -132,39 +133,39 @@ public class AnimationManager : MonoBehaviour
             case 16:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDurationF, 0.002f, true, false);
-                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
-                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDurationF, 0.001f, true, true);
+                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.002f, true, false);
+                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
+                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
                 }
                 break;
 
             case 32:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
+                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false, false);
                 }
                 break;
 
             case 36:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDurationF, 0.05f, false, false);
+                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false, false);
                 }
                 break;
                 
             case 60:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDurationF, 0.007f, true, true);
-                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDurationF, 0.014f, true, true);
+                    partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDuration, 0.007f, true, true);
+                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDuration, 0.014f, true, true);
                 }
                 break;
 
             case 65:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
-                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDurationF, 0.0025f, true, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDuration, 0.0025f, true, false);
+                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDuration, 0.0025f, true, false);
                 }
                 break;
 
@@ -178,32 +179,40 @@ public class AnimationManager : MonoBehaviour
                 break;
         }
 
-        int twinGalaxyStartingBar = 30;
-        if ((Sequencer.CurrentBar >= twinGalaxyStartingBar) && (Sequencer.CurrentBar < 56))
+        int firstBarOfTwinGalaxy = 30;
+        int lastBarOfTwinGalaxy = 55;
+
+        if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
         {
-            int k = 1 + Sequencer.CurrentBar - twinGalaxyStartingBar;
-            float speed = 1f / (Mathf.Pow(k, 1f / 3f) * 300f);
+            float sequenceLength = Sequencer.BarDuration * (lastBarOfTwinGalaxy + 1 - firstBarOfTwinGalaxy);
+            int k = 1 + Sequencer.CurrentBar - firstBarOfTwinGalaxy;
+            float speedPower = 1.03f;
+            float speed = 0.0016f;// * (Mathf.Pow(sequenceLength - k, speedPower) / Mathf.Pow(1f, speedPower));
 
             float initialR = 20f;
-            float maxR = 45f;
-            float r = initialR + (Mathf.Pow(k, 0.5f) * (maxR - initialR) / Mathf.Pow(26f, 0.5f));
+            float maxR = 35f;
+            float rPower = 0.5f;
+            float r = initialR + (maxR - initialR) * (Mathf.Pow(t, rPower) / Mathf.Pow(sequenceLength, rPower));
 
             float zOffset = -9.4f;
             targets = new List<Vector3>() {
-                new Vector3( r * Mathf.Sin(speed * rad), -20f * Mathf.Cos(speed * rad), -r * Mathf.Cos(speed * rad) + zOffset),
-                new Vector3(-r * Mathf.Sin(speed * rad),  20f * Mathf.Cos(speed * rad),  r * Mathf.Cos(speed * rad) + zOffset)
+                new Vector3( r * Mathf.Sin(rad), -0.5f * r * Mathf.Cos(rad), -r * Mathf.Cos(rad) + zOffset),
+                new Vector3(-r * Mathf.Sin(rad),  0.5f * r * Mathf.Cos(rad),  r * Mathf.Cos(rad) + zOffset)
             };
-            rad += Time.deltaTime * 60f;
+            rad = speed * 60f * t;
 
-            float force = -1f * Mathf.Pow(k, 1f / 3f) * 100f / Mathf.Pow(26f, 1f / 3f);
-            //SetGravity(force, targets);
-            SwitchAnimation(1, 1.7f * force, 1.1f * force, targets);
+            float forcePower = 1f / 3f;
+            float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
+
+            SwitchAnimation(1, 1.8f * force, 0.9f * force, targets);
+
+            t += Time.deltaTime;
         }
 
         if ((currentAnimationBar != Sequencer.CurrentBar)
             || (currentAnimationBeat != Sequencer.CurrentBeat))
         {
-            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < twinGalaxyStartingBar)
+            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
                 && (Sequencer.CurrentBeat == 1))
             {
                 int k = Sequencer.CurrentBar - 16;
@@ -322,8 +331,11 @@ public class AnimationManager : MonoBehaviour
 
 #if UNITY_EDITOR
             if (i > pilotObjects.Count - 1)
+            {
                 pilotObjects.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
-            pilotObjects[i].transform.position = targets[i];    
+                Destroy(pilotObjects[i].GetComponent<SphereCollider>());
+            }
+            pilotObjects[i].transform.position = targets[i];
 #endif // UNITY_EDITOR
         }
     }

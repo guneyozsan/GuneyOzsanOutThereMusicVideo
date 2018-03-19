@@ -42,7 +42,7 @@ public class Sequencer : MonoBehaviour
 
     int BPM;
     public static double BeatDuration { get; private set; }
-    public static float BarDurationF
+    public static float BarDuration
     {
         get
         {
