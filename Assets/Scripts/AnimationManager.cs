@@ -182,11 +182,20 @@ public class AnimationManager : MonoBehaviour
         int firstBarOfTwinGalaxy = 30;
         int lastBarOfTwinGalaxy = 55;
 
-        if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
+        if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
+            && (Sequencer.CurrentBeat == 1))
+        {
+            if (FirstTimeInBarAndBeat())
+            {
+                int k = Sequencer.CurrentBar - 16;
+                SwitchAnimation(new float[] { -1f * (10f + 2.5f * k), k / 30f }, Vector3.zero);
+            }
+        }
+        else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
         {
             float sequenceLength = Sequencer.BarDuration * (lastBarOfTwinGalaxy + 1 - firstBarOfTwinGalaxy);
             int k = 1 + Sequencer.CurrentBar - firstBarOfTwinGalaxy;
-            float speedPower = 1.03f;
+            //float speedPower = 1.03f;
             float speed = 0.0016f;// * (Mathf.Pow(sequenceLength - k, speedPower) / Mathf.Pow(1f, speedPower));
 
             float initialR = 20f;
@@ -204,61 +213,32 @@ public class AnimationManager : MonoBehaviour
             float forcePower = 1f / 3f;
             float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
 
-            SwitchAnimation(new float[] { 1.8f * force, 0.9f * force }, targets);
-
+            SwitchAnimation(new float[] { 1.85f * force, 0.65f * force }, targets);
             t += Time.deltaTime;
         }
+        else if (Sequencer.CurrentBar >= lastBarOfTwinGalaxy && Sequencer.CurrentBar < 60)
+        {
+            if (FirstTimeInBarAndBeat())
+                SetGravity(0, Vector3.zero);
+        }
+        else if (Sequencer.CurrentBar >= 60
+            && (Sequencer.CurrentBeat == 1))
+        {
+            if (FirstTimeInBarAndBeat())
+                SwitchAnimation(new float[] { -300, 0 }, Vector3.zero);
+        }
 
+        currentAnimationBar = Sequencer.CurrentBar;
+        currentAnimationBeat = Sequencer.CurrentBeat;
+    }
+
+    bool FirstTimeInBarAndBeat()
+    {
         if ((currentAnimationBar != Sequencer.CurrentBar)
             || (currentAnimationBeat != Sequencer.CurrentBeat))
-        {
-            if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
-                && (Sequencer.CurrentBeat == 1))
-            {
-                int k = Sequencer.CurrentBar - 16;
-                SwitchAnimation(new float[] { -1f * (10f + 2.5f * k), k / 30f }, Vector3.zero);
-            }
-            else if ((Sequencer.CurrentBar >= 32) && (Sequencer.CurrentBar < 56)
-                && (Sequencer.CurrentBeat >= 1))
-            {
-                //if (Sequencer.CurrentBar == 32
-                //    && (Sequencer.CurrentBeat == 1))
-                //{
-                    
-                //}
-                //else if (Sequencer.CurrentBar == 34
-                //    && Sequencer.CurrentBeat == 2)
-                //{
-                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
-                //    target = new Vector3(38.7f, 19, -9.5f);
-                //}
-                //else if (Sequencer.CurrentBar >= 36 && Sequencer.CurrentBar < 37
-                //    && (Sequencer.CurrentBeat == 1))
-                //{
-                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
-                //    target = new Vector3(-53.5f, -20, -9.5f);
-                //}
-                //else if (Sequencer.CurrentBar == 40
-                //    && (Sequencer.CurrentBeat == 1))
-                //{
-                //    print(Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat);
-                //    target = new Vector3(53.5f, -20, -9.5f);
-                //}
-
-                //SwitchAnimation(1, force, force, targets);
-            }
-            else if (Sequencer.CurrentBar >= 56 && Sequencer.CurrentBar < 60)
-            {
-                SetGravity(0, Vector3.zero);
-            }
-            else if (Sequencer.CurrentBar >= 60)
-            {
-                SwitchAnimation(new float[] { -300, 0 }, Vector3.zero);
-            }
-
-            currentAnimationBar = Sequencer.CurrentBar;
-            currentAnimationBeat = Sequencer.CurrentBeat;
-        }
+            return true;
+        else
+            return false;
     }
 
     void SetGravity(float gravityForce, Vector3 target)
