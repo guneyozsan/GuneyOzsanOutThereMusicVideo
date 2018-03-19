@@ -204,7 +204,7 @@ public class AnimationManager : MonoBehaviour
             float forcePower = 1f / 3f;
             float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
 
-            SwitchAnimation(1, 1.8f * force, 0.9f * force, targets);
+            SwitchAnimation(new float[] { 1.8f * force, 0.9f * force }, targets);
 
             t += Time.deltaTime;
         }
@@ -216,7 +216,7 @@ public class AnimationManager : MonoBehaviour
                 && (Sequencer.CurrentBeat == 1))
             {
                 int k = Sequencer.CurrentBar - 16;
-                SwitchAnimation(1, -1 * (10 + 2.5f * k), k / 30f , Vector3.zero);
+                SwitchAnimation(new float[] { -1f * (10f + 2.5f * k), k / 30f }, Vector3.zero);
             }
             else if ((Sequencer.CurrentBar >= 32) && (Sequencer.CurrentBar < 56)
                 && (Sequencer.CurrentBeat >= 1))
@@ -253,7 +253,7 @@ public class AnimationManager : MonoBehaviour
             }
             else if (Sequencer.CurrentBar >= 60)
             {
-                SwitchAnimation(1, -300, 0 , Vector3.zero);
+                SwitchAnimation(new float[] { -300, 0 }, Vector3.zero);
             }
 
             currentAnimationBar = Sequencer.CurrentBar;
@@ -287,13 +287,13 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    void SwitchAnimation(int switcher, float gravityForce1, float gravityForce2, Vector3 target)
+    void SwitchAnimation(float[] gravityForce, Vector3 target)
     {
         List<Vector3> targets = new List<Vector3> { target };
-        SwitchAnimation(switcher, gravityForce1, gravityForce2, targets);
+        SwitchAnimation(gravityForce, targets);
     }
 
-    void SwitchAnimation(int switcher, float gravityForce1, float gravityForce2, List<Vector3> targets)
+    void SwitchAnimation(float[] gravityForce, List<Vector3> targets)
     {
 #if UNITY_EDITOR
         if (pilotObjects.Count > targets.Count)
@@ -307,22 +307,23 @@ public class AnimationManager : MonoBehaviour
 #endif // UNITY_EDITOR
 
         int planetesimalsPerTarget = Space.planetesimals.Count / targets.Count;
+        float force;
+        int lastPlanetesimalIndex;
 
         for (int i = 0; i < targets.Count; i++)
         {
-            int lastPlanetesimalIndex;
-
             if ((i + 1) * planetesimalsPerTarget >= Space.planetesimals.Count)
                 lastPlanetesimalIndex = Space.planetesimals.Count;
             else
                 lastPlanetesimalIndex = (i + 1) * planetesimalsPerTarget;
 
-            float force;
+            force = 0;
 
-            if (currentAnimationBar % 2 == switcher)
-                force = gravityForce1;
-            else
-                force = gravityForce2;
+            for (int j = 0; j < gravityForce.Length; j++)
+            {
+                if (currentAnimationBar % gravityForce.Length == j)
+                    force = gravityForce[j];
+            }
 
             for (int j = (i * planetesimalsPerTarget); j < lastPlanetesimalIndex; j++)
             {
