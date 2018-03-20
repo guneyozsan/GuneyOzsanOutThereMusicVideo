@@ -19,11 +19,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sun : MonoBehaviour {
+public class Rotator : MonoBehaviour {
+    float speed;
+    float t;
+    float noise;
+    float rotationMagnitude;
+
+    public void Initialize(float speed, float rotationMagnitude)
+    {
+        this.speed = speed;
+        this.rotationMagnitude = rotationMagnitude;
+    }
+
+    void Start()
+    {
+        t = 0f;
+        noise = 0f;
+        rotationMagnitude = 8f;
+    }
 
     void Update ()
     {
-        transform.Rotate(0, 50 * Time.deltaTime, 0);
+        noise = rotationMagnitude * (Mathf.PerlinNoise(0f, t) - 0.5f);
+        transform.Rotate(noise * Time.smoothDeltaTime, noise * Time.smoothDeltaTime, noise * Time.smoothDeltaTime);
+        t += speed * Time.deltaTime;
     }
-
 }

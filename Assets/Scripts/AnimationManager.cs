@@ -89,6 +89,7 @@ public class AnimationManager : MonoBehaviour
         });
 
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
+        planetesimalParent.gameObject.AddComponent<Rotator>().Initialize(0.005f, 10f);
 
         //int cubeSideLength = MathUtility.ClosestCubeRoot(
         //    openingTitlesMusic.ParticleCount
@@ -205,15 +206,15 @@ public class AnimationManager : MonoBehaviour
 
             float zOffset = -9.4f;
             targets = new List<Vector3>() {
-                new Vector3( r * Mathf.Sin(rad), -0.5f * r * Mathf.Cos(rad), -r * Mathf.Cos(rad) + zOffset),
-                new Vector3(-r * Mathf.Sin(rad),  0.5f * r * Mathf.Cos(rad),  r * Mathf.Cos(rad) + zOffset)
+                new Vector3( r * Mathf.Cos(rad), -0.5f * r * Mathf.Cos(rad), -r * Mathf.Sin(rad) + zOffset),
+                new Vector3(-r * Mathf.Cos(rad),  0.5f * r * Mathf.Cos(rad),  r * Mathf.Sin(rad) + zOffset)
             };
             rad = speed * 60f * t;
 
             float forcePower = 1f / 3f;
             float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
 
-            SwitchAnimation(new float[] { 1.85f * force, 0.65f * force }, targets);
+            SwitchAnimation(new float[] { 1.85f * force, 0.70f * force }, targets);
             t += Time.deltaTime;
         }
         else if (Sequencer.CurrentBar >= lastBarOfTwinGalaxy && Sequencer.CurrentBar < 60)
