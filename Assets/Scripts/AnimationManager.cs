@@ -25,7 +25,7 @@ public class AnimationManager : MonoBehaviour
     [SerializeField]
     Transform planetesimalPrefab;
     [SerializeField]
-    Camera camera;
+    Camera mainCamera;
 
     public static Title openingTitlesMusic;
     public static Title openingTitlesBy;
@@ -36,27 +36,22 @@ public class AnimationManager : MonoBehaviour
     public static Title partTwoTitlesPartName;
 
     float alignY = 0;
-    int currentAnimationBar = 0;
-    int currentAnimationBeat = 0;
-    Gravity gravity;
+    static int currentAnimationBar = 0;
+    static int currentAnimationBeat = 0;
     Vector3 defaultCameraLocation;
 
     Vector3 target = Vector3.zero;
     List<Vector3> targets = new List<Vector3>() {
         Vector3.zero
     };
-
-    float rad = 0;
-    float r = 0;
-    float t = 0;
-
+    
 #if UNITY_EDITOR
-    List<GameObject> pilotObjects = new List<GameObject>();
+    static List<GameObject> pilotObjects = new List<GameObject>();
 #endif // UNITY_EDITOR
 
     void Start()
     {
-        defaultCameraLocation = camera.transform.position;
+        defaultCameraLocation = mainCamera.transform.position;
 
         openingTitlesMusic = new Title(new Word[] {
             new Word(new Vector3(-19.1f, 15f, 0), 5, 5, 2, 2, 2, 1.3f, "OUT"),
@@ -173,9 +168,9 @@ public class AnimationManager : MonoBehaviour
             case 100:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    Transform cameraPlanetesimal = Instantiate(planetesimalPrefab, camera.transform.position, Quaternion.identity);
+                    Transform cameraPlanetesimal = Instantiate(planetesimalPrefab, mainCamera.transform.position, Quaternion.identity);
                     Space.planetesimals.Add(cameraPlanetesimal.GetComponent<Planetesimal>());
-                    camera.transform.SetParent(cameraPlanetesimal);
+                    mainCamera.transform.SetParent(cameraPlanetesimal);
                 }
                 break;
         }
@@ -194,28 +189,7 @@ public class AnimationManager : MonoBehaviour
         }
         else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
         {
-            float sequenceLength = Sequencer.BarDuration * (lastBarOfTwinGalaxy + 1 - firstBarOfTwinGalaxy);
-            int k = 1 + Sequencer.CurrentBar - firstBarOfTwinGalaxy;
-            //float speedPower = 1.03f;
-            float speed = 0.0016f;// * (Mathf.Pow(sequenceLength - k, speedPower) / Mathf.Pow(1f, speedPower));
-
-            float initialR = 20f;
-            float maxR = 35f;
-            float rPower = 0.5f;
-            float r = initialR + (maxR - initialR) * (Mathf.Pow(t, rPower) / Mathf.Pow(sequenceLength, rPower));
-
-            float zOffset = -9.4f;
-            targets = new List<Vector3>() {
-                new Vector3( r * Mathf.Cos(rad), -0.5f * r * Mathf.Cos(rad), -r * Mathf.Sin(rad) + zOffset),
-                new Vector3(-r * Mathf.Cos(rad),  0.5f * r * Mathf.Cos(rad),  r * Mathf.Sin(rad) + zOffset)
-            };
-            rad = speed * 60f * t;
-
-            float forcePower = 1f / 3f;
-            float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
-
-            SwitchAnimation(new float[] { 1.85f * force, 0.70f * force }, targets);
-            t += Time.deltaTime;
+            TwinGalaxyAnimation.UpdateFrame(firstBarOfTwinGalaxy, lastBarOfTwinGalaxy);
         }
         else if (Sequencer.CurrentBar >= lastBarOfTwinGalaxy && Sequencer.CurrentBar < 60)
         {
@@ -274,7 +248,7 @@ public class AnimationManager : MonoBehaviour
         SwitchAnimation(gravityForce, targets);
     }
 
-    void SwitchAnimation(float[] gravityForce, List<Vector3> targets)
+    public static void SwitchAnimation(float[] gravityForce, List<Vector3> targets)
     {
 #if UNITY_EDITOR
         if (pilotObjects.Count > targets.Count)
