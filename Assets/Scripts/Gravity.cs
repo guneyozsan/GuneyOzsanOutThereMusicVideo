@@ -25,10 +25,7 @@ using UnityEngine;
 public class Gravity : MonoBehaviour
 {
     Rigidbody body;
-
-    Vector3 target;
-    [NonSerialized]
-
+    Vector3 target = Vector3.zero;
     float forceMagnitude;
 
     void Start()
@@ -49,8 +46,9 @@ public class Gravity : MonoBehaviour
         this.target = target;
     }
 
-    public void SetForce(float forceMagnitude)
+    public void SetForce(float forceMagnitude, Vector3 target)
     {
         this.forceMagnitude = forceMagnitude;
+        this.target = target;
     }
 }
