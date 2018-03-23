@@ -37,7 +37,7 @@ public class TwinGalaxyAnimation {
         float forceGrowthPower = 1f / 2.8f;
         float force = maxGravityForce * Mathf.Pow(t, forceGrowthPower) / Mathf.Pow(sequenceLength, forceGrowthPower);
 
-        AnimationManager.SetGravityPerBar(new float[] { 0.65f * force, 1.70f * force}, targets, 1);
+        AnimationManager.SetGravityPerBar(new float[] { 0.65f * force, 1.70f * force}, targets, 1, firstBar);
         t += Time.deltaTime;
     }
 }

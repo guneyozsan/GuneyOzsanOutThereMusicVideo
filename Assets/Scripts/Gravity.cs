@@ -25,30 +25,46 @@ using UnityEngine;
 public class Gravity : MonoBehaviour
 {
     Rigidbody body;
-    Vector3 target = Vector3.zero;
-    float forceMagnitude;
+    ForceVector[] forceVectors;
+    ForceVector force;
+
+    Vector3 compoundForce;
+
+    public struct ForceVector {
+        public float forceMagnitude;
+        public Vector3 target;
+
+        public ForceVector (float forceMagnitude, Vector3 target)
+        {
+            this.forceMagnitude = forceMagnitude;
+            this.target = target;
+        }
+    }
 
     void Start()
     {
         body = GetComponent<Rigidbody>();
+        forceVectors = new ForceVector[0];
     }
 
     void Update ()
     {
-        if (Mathf.Pow(Vector3.Distance(transform.position, target), 2) != 0)
+        compoundForce = Vector3.zero;
+        for (int i = 0; i < forceVectors.Length; i++)
         {
-            body.AddForce(forceMagnitude * (transform.position - target) / Mathf.Pow(Vector3.Distance(transform.position, target), 2));
+            if (Mathf.Pow(Vector3.Distance(transform.position, forceVectors[i].target), 2) != 0)
+                    compoundForce += forceVectors[i].forceMagnitude * (transform.position - forceVectors[i].target) / Mathf.Pow(Vector3.Distance(transform.position, forceVectors[i].target), 2);
         }
-    }
-
-    public void SetTarget(Vector3 target)
-    {
-        this.target = target;
+        body.AddForce(compoundForce);
     }
 
     public void SetForce(float forceMagnitude, Vector3 target)
     {
-        this.forceMagnitude = forceMagnitude;
-        this.target = target;
+        forceVectors = new ForceVector[] { new ForceVector(forceMagnitude, target) };
+    }
+
+    public void SetForce(ForceVector[] forceVectors)
+    {
+        this.forceVectors = forceVectors;
     }
 }

@@ -65,6 +65,11 @@ public class Planetesimal : MonoBehaviour {
         Gravity.SetForce(gravityForce, target);
     }
 
+    public void SetGravityForce(Gravity.ForceVector[] forceVectors)
+    {
+        Gravity.SetForce(forceVectors);
+    }
+
     public void SetVelocity(Vector3 velocity)
     {
         Rigidbody.velocity = velocity;
