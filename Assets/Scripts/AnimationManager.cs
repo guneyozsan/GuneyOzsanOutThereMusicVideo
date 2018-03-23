@@ -175,19 +175,26 @@ public class AnimationManager : MonoBehaviour
                 break;
         }
 
-        int firstBarOfTwinGalaxy = 31;
+        int firstBarOfTwinGalaxy = 32;
         int lastBarOfTwinGalaxy = 55;
 
         if ((Sequencer.CurrentBar >= 18) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
             && (Sequencer.CurrentBeat == 1))
         {
-            if (FirstTimeInBarAndBeat())
-            {
-                int k = Sequencer.CurrentBar - 18;
-                float gravityForce = -65f + 1.5f * k;
-                SetGravityPerBar(new float[] { 0f, gravityForce }, new Vector3(0, 0, -17), 1);
-            }
+                SetGravityPerBar(new float[] { -2, -65 }, new Vector3(0, 0, -17), 2);
+            //if (FirstTimeInBarAndBeat())
+            //SetGravity(-65f, new Vector3(0, 0, -17));
         }
+        //else if ((Sequencer.CurrentBar >= 20) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
+        //    && (Sequencer.CurrentBeat == 1))
+        //{
+        //    if (FirstTimeInBarAndBeat())
+        //    {
+        //        int k = Sequencer.CurrentBar - 18;
+        //        float gravityForce = -65f + 1.5f * k;
+        //        SetGravityPerBar(new float[] { 0f, gravityForce }, new Vector3(0, 0, -17), 1);
+        //    }
+        //}
         else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
         {
             TwinGalaxyAnimation.UpdateFrame(firstBarOfTwinGalaxy, lastBarOfTwinGalaxy);
@@ -274,20 +281,18 @@ public class AnimationManager : MonoBehaviour
             else
                 lastPlanetesimalIndex = (i + 1) * planetesimalsPerTarget;
 
-            force = 0;
-
             for (int j = 0; j < gravityForces.Length; j++)
             {
                 if (((float)Sequencer.CurrentBar / perBar) % (float)gravityForces.Length == j)
                 {
                     force = gravityForces[j];
                     print(gravityForces[j]);
-                }
-            }
 
-            for (int j = (i * planetesimalsPerTarget); j < lastPlanetesimalIndex; j++)
-            {
-                Space.planetesimals[j].SetGravityForce(force, targets[i]);
+                    for (int k = (i * planetesimalsPerTarget); k < lastPlanetesimalIndex; k++)
+                    {
+                        Space.planetesimals[k].SetGravityForce(force, targets[i]);
+                    }
+                }
             }
 
 #if UNITY_EDITOR

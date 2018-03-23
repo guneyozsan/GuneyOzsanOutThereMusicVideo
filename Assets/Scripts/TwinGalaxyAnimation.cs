@@ -14,14 +14,14 @@ public class TwinGalaxyAnimation {
 	public static void UpdateFrame(int firstBar, int lastBar)
     {
         float sequenceLength = Sequencer.BarDuration * (lastBar + 1 - firstBar);
-        float rotationSpeed = 0.00105f;
+        float rotationSpeed = 0.002f;
 
         float initialR = 18f;
         float maxR = 55f;
         float rGrowthPower = 0.5f;
         float r = initialR + (maxR - initialR) * (Mathf.Pow(t, rGrowthPower) / Mathf.Pow(sequenceLength, rGrowthPower));
 
-        float radialOffset = 1.2f;
+        float radialOffset = 0.6f;
         Vector3 orbit = new Vector3(
                     r * Mathf.Cos(radian + radialOffset),
             0.37f * r * Mathf.Cos(radian + radialOffset),
