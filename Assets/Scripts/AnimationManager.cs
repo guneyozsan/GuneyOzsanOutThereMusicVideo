@@ -84,7 +84,7 @@ public class AnimationManager : MonoBehaviour
         });
 
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
-        planetesimalParent.gameObject.AddComponent<Rotator>().Initialize(0.005f, 10f);
+        //planetesimalParent.gameObject.AddComponent<Rotator>().Initialize(0.005f, 10f);
 
         //int cubeSideLength = MathUtility.ClosestCubeRoot(
         //    openingTitlesMusic.ParticleCount
@@ -129,7 +129,7 @@ public class AnimationManager : MonoBehaviour
             case 16:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.002f, true, false);
+                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.001f, true, false);
                     partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
                     partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
                 }
@@ -175,16 +175,17 @@ public class AnimationManager : MonoBehaviour
                 break;
         }
 
-        int firstBarOfTwinGalaxy = 30;
+        int firstBarOfTwinGalaxy = 31;
         int lastBarOfTwinGalaxy = 55;
 
-        if ((Sequencer.CurrentBar >= 16) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
+        if ((Sequencer.CurrentBar >= 18) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
             && (Sequencer.CurrentBeat == 1))
         {
             if (FirstTimeInBarAndBeat())
             {
-                int k = Sequencer.CurrentBar - 16;
-                SwitchAnimation(new float[] { -1f * (10f + 2.5f * k), k / 30f }, Vector3.zero);
+                int k = Sequencer.CurrentBar - 18;
+                float gravityForce = -65f + 1.5f * k;
+                SetGravityPerBar(new float[] { 0f, gravityForce }, new Vector3(0, 0, -17), 1);
             }
         }
         else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
@@ -200,7 +201,7 @@ public class AnimationManager : MonoBehaviour
             && (Sequencer.CurrentBeat == 1))
         {
             if (FirstTimeInBarAndBeat())
-                SwitchAnimation(new float[] { -300, 0 }, Vector3.zero);
+                SetGravityPerBar(new float[] { 0, -300f }, Vector3.zero, 1);
         }
 
         currentAnimationBar = Sequencer.CurrentBar;
@@ -242,13 +243,14 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    void SwitchAnimation(float[] gravityForce, Vector3 target)
+    public static void SetGravityPerBar(float[] gravityForces, Vector3 target, int perBar)
     {
         List<Vector3> targets = new List<Vector3> { target };
-        SwitchAnimation(gravityForce, targets);
+        SetGravityPerBar(gravityForces, targets, perBar);
     }
 
-    public static void SwitchAnimation(float[] gravityForce, List<Vector3> targets)
+    // Takes an array of gravity forces and sets it each bar.
+    public static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets, int perBar)
     {
 #if UNITY_EDITOR
         if (pilotObjects.Count > targets.Count)
@@ -274,10 +276,13 @@ public class AnimationManager : MonoBehaviour
 
             force = 0;
 
-            for (int j = 0; j < gravityForce.Length; j++)
+            for (int j = 0; j < gravityForces.Length; j++)
             {
-                if (currentAnimationBar % gravityForce.Length == j)
-                    force = gravityForce[j];
+                if (((float)Sequencer.CurrentBar / perBar) % (float)gravityForces.Length == j)
+                {
+                    force = gravityForces[j];
+                    print(gravityForces[j]);
+                }
             }
 
             for (int j = (i * planetesimalsPerTarget); j < lastPlanetesimalIndex; j++)

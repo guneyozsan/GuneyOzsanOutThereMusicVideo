@@ -31,6 +31,8 @@ public class Debugging : MonoBehaviour {
     float playbackSpeed;
     [Header("Fast Forward")]
     [SerializeField]
+    bool fastForwardEnabled;
+    [SerializeField]
     int fastForwardToBar;
     [SerializeField]
     float fastForwardSpeed;
@@ -50,6 +52,11 @@ public class Debugging : MonoBehaviour {
     void Update()
     {
         PlaybackSpeed = playbackSpeed;
+
+        if (fastForwardEnabled)
+            FastForwardSpeed = fastForwardSpeed;
+        else
+            FastForwardSpeed = 1;
     }
 
     void OnGUI()

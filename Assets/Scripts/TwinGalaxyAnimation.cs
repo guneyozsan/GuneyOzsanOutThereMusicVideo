@@ -4,34 +4,40 @@ using UnityEngine;
 
 public class TwinGalaxyAnimation {
 
-    static float rad = 0;
+    static float radian = 0;
     static float t = 0;
+
     static List<Vector3> targets = new List<Vector3>() {
         Vector3.zero
     };
 	
 	public static void UpdateFrame(int firstBar, int lastBar)
     {
-        float sequenceLength = Sequencer.BarDuration * (lastBar+ 1 - firstBar);
-        int k = 1 + Sequencer.CurrentBar - firstBar;
-        float speed = 0.0016f;
+        float sequenceLength = Sequencer.BarDuration * (lastBar + 1 - firstBar);
+        float rotationSpeed = 0.00105f;
 
-        float initialR = 20f;
-        float maxR = 35f;
-        float rPower = 0.5f;
-        float r = initialR + (maxR - initialR) * (Mathf.Pow(t, rPower) / Mathf.Pow(sequenceLength, rPower));
+        float initialR = 18f;
+        float maxR = 55f;
+        float rGrowthPower = 0.5f;
+        float r = initialR + (maxR - initialR) * (Mathf.Pow(t, rGrowthPower) / Mathf.Pow(sequenceLength, rGrowthPower));
 
-        float zOffset = -9.4f;
+        float radialOffset = 1.2f;
+        Vector3 orbit = new Vector3(
+                    r * Mathf.Cos(radian + radialOffset),
+            0.37f * r * Mathf.Cos(radian + radialOffset),
+                   -r * Mathf.Sin(radian + radialOffset));
+        Vector3 offset = new Vector3(0, 0, +10f);
         targets = new List<Vector3>() {
-            new Vector3( r * Mathf.Cos(rad), -0.5f * r * Mathf.Cos(rad), -r * Mathf.Sin(rad) + zOffset),
-            new Vector3(-r * Mathf.Cos(rad),  0.5f * r * Mathf.Cos(rad),  r * Mathf.Sin(rad) + zOffset)
+             orbit + offset,
+            -orbit + offset
         };
-        rad = speed * 60f * t;
+        radian = rotationSpeed * 60f * t;
 
-        float forcePower = 1f / 3f;
-        float force = -1f * Mathf.Pow(t, forcePower) * 100f / Mathf.Pow(sequenceLength, forcePower);
+        float maxGravityForce = -100f;
+        float forceGrowthPower = 1f / 2.8f;
+        float force = maxGravityForce * Mathf.Pow(t, forceGrowthPower) / Mathf.Pow(sequenceLength, forceGrowthPower);
 
-        AnimationManager.SwitchAnimation(new float[] { 1.85f * force, 0.70f * force }, targets);
+        AnimationManager.SetGravityPerBar(new float[] { 0.65f * force, 1.70f * force}, targets, 1);
         t += Time.deltaTime;
     }
 }
