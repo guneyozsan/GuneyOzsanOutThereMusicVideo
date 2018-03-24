@@ -534,8 +534,8 @@ MonoBehaviour:
   displayGui: 1
   playbackSpeed: 1
   fastForwardEnabled: 1
-  fastForwardToBar: 15
-  fastForwardSpeed: 3
+  fastForwardToBar: 31
+  fastForwardSpeed: 2.8
 --- !u!4 &1256199838
 Transform:
   m_ObjectHideFlags: 0

@@ -283,7 +283,6 @@ public class AnimationManager : MonoBehaviour
                 for (int j = 0; j < targets.Count; j++)
                 {
                     forceVectors[j] = new Gravity.ForceVector(gravityForces[i], targets[j]);
-                    print(gravityForces[i] + " " + targets[j]);
                     //if ((i + 1) * planetesimalsPerTarget >= Space.planetesimals.Count)
                     //    lastPlanetesimalIndex = Space.planetesimals.Count;
                     //else
