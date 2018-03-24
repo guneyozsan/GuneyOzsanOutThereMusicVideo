@@ -225,40 +225,13 @@ public class AnimationManager : MonoBehaviour
             return false;
     }
 
-    void SetGravity(float gravityForce, Vector3 target)
+    public static void SetGravity(float gravityForce, Vector3 target)
     {
         List<Vector3> targets = new List<Vector3> { target };
         SetGravity(gravityForce, targets);
     }
 
-    void SetGravity(float gravityForce, List<Vector3> targets)
-    {
-        int planetesimalsPerTarget = Space.planetesimals.Count / targets.Count;
-
-        for (int i = 0; i < targets.Count; i++)
-        {
-            int lastPlanetesimalIndex;
-
-            if ((i + 1) * planetesimalsPerTarget >= Space.planetesimals.Count)
-                lastPlanetesimalIndex = Space.planetesimals.Count;
-            else
-                lastPlanetesimalIndex = (i + 1) * planetesimalsPerTarget;
-
-            for (int j = (i * planetesimalsPerTarget); j < lastPlanetesimalIndex; j++)
-            {
-                Space.planetesimals[j].SetGravityForce(gravityForce, targets[i]);
-            }
-        }
-    }
-
-    public static void SetGravityPerBar(float[] gravityForces, Vector3 target, int perBar, int initialBar)
-    {
-        List<Vector3> targets = new List<Vector3> { target };
-        SetGravityPerBar(gravityForces, targets, perBar, initialBar);
-    }
-
-    // Takes an array of gravity forces and sets it each bar.
-    public static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets, int perBar, int initialBar)
+    public static void SetGravity(float gravityForce, List<Vector3> targets)
     {
 #if UNITY_EDITOR
         if (pilotObjects.Count > targets.Count)
@@ -271,52 +244,44 @@ public class AnimationManager : MonoBehaviour
         }
 #endif // UNITY_EDITOR
 
-        //int planetesimalsPerTarget = Space.planetesimals.Count / targets.Count;
-        //int lastPlanetesimalIndex;
+        Gravity.ForceVector[] forceVectors = new Gravity.ForceVector[targets.Count];
 
+        for (int j = 0; j < targets.Count; j++)
+        {
+            forceVectors[j] = new Gravity.ForceVector(gravityForce, targets[j]);
+#if UNITY_EDITOR
+            if (j > pilotObjects.Count - 1)
+            {
+                pilotObjects.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+                Destroy(pilotObjects[j].GetComponent<SphereCollider>());
+            }
+            pilotObjects[j].transform.position = targets[j];
+#endif // UNITY_EDITOR
+        }
+
+        for (int k = 0; k < Space.planetesimals.Count; k++)
+        {
+            Space.planetesimals[k].SetGravityForce(forceVectors);
+        }
+    }
+
+    public static void SetGravityPerBar(float[] gravityForces, Vector3 target, int perBar, int initialBar)
+    {
+        List<Vector3> targets = new List<Vector3> { target };
+        SetGravityPerBar(gravityForces, targets, perBar, initialBar);
+    }
+
+    // Takes an array of gravity forces and sets it each bar.
+    public static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets, int perBar, int initialBar)
+    {
         Gravity.ForceVector[] forceVectors = new Gravity.ForceVector[targets.Count];
 
         for (int i = 0; i < gravityForces.Length; i++)
         {
             if (((float)(Sequencer.CurrentBar - initialBar) / perBar) % (float)gravityForces.Length == i)
             {
-                for (int j = 0; j < targets.Count; j++)
-                {
-                    forceVectors[j] = new Gravity.ForceVector(gravityForces[i], targets[j]);
-                    //if ((i + 1) * planetesimalsPerTarget >= Space.planetesimals.Count)
-                    //    lastPlanetesimalIndex = Space.planetesimals.Count;
-                    //else
-                    //    lastPlanetesimalIndex = (i + 1) * planetesimalsPerTarget;
-
-                    //for (int j = 0; j < gravityForces.Length; j++)
-                    //{
-                    //    if (((float)Sequencer.CurrentBar / perBar) % (float)gravityForces.Length == j)
-                    //    {
-                    //        force = gravityForces[j];
-                    //        print(gravityForces[j]);
-
-                    //        for (int k = (i * planetesimalsPerTarget); k < lastPlanetesimalIndex; k++)
-                    //        {
-                    //            Space.planetesimals[k].SetGravityForce(force, targets[i]);
-                    //        }
-                    //    }
-                    //}
-#if UNITY_EDITOR
-                    if (j > pilotObjects.Count - 1)
-                    {
-                        pilotObjects.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
-                        Destroy(pilotObjects[j].GetComponent<SphereCollider>());
-                    }
-                    pilotObjects[j].transform.position = targets[j];
-#endif // UNITY_EDITOR
-                }
-
-                for (int k = 0; k < Space.planetesimals.Count; k++)
-                {
-                    Space.planetesimals[k].SetGravityForce(forceVectors);
-                }
+                SetGravity(gravityForces[i], targets);
             }
         }
-
     }
 }
