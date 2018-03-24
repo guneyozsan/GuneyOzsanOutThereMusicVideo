@@ -76,7 +76,7 @@ public class AnimationManager : MonoBehaviour
         });
 
         partTwoTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-39.5f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART II"),
+            new Word(new Vector3(-46.65f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART II"),
         });
 
         partTwoTitlesPartName = new Title(new Word[] {
