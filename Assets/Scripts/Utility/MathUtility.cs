@@ -19,9 +19,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class MathUtility {
+public static class MathUtility
+{
+    // Interpolates on parameter t exponentially between 0 to 1. 
+    public static float ExponentialInterpolation(float initialValue, float maxValue, float exponentialGrowthPower, float t)
+    {
+        return initialValue + (maxValue - initialValue) * Mathf.Pow(t, exponentialGrowthPower);
+    }
 
-	public static int ClosestCubeRoot(int source, bool inclusive)
+    public static int ClosestCubeRoot(int source, bool inclusive)
     {
         int root = 0;
         float rootPower = Mathf.Pow(root, 3);
@@ -41,5 +47,4 @@ public static class MathUtility {
             return root - 1;
         }
     }
-
 }
