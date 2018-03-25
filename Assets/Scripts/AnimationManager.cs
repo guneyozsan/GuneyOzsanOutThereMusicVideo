@@ -160,8 +160,8 @@ public class AnimationManager : MonoBehaviour
             case 61:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, false);
-                    partTwoTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10, .5f * Sequencer.BarDuration, 0.0025f, false);
+                    partTwoTitlesPartName.SpreadTitle(10, .5f * Sequencer.BarDuration, 0.0025f, false);
                 }
                 break;
 
