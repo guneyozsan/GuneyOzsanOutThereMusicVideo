@@ -145,7 +145,7 @@ public class Title
         }
     }
 
-    public void SpreadTitle(float range, float time, float delay, bool randomSelection, bool sphericalLerp)
+    public void SpreadTitle(float range, float time, float delay, bool sphericalLerp)
     {
         for (int i = 0; i < planetesimalsUsed.Count; i++)
         {

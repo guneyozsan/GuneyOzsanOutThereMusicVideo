@@ -129,7 +129,7 @@ public class AnimationManager : MonoBehaviour
             case 16:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.001f, true, false);
+                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.001f, false);
                     partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
                     partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
                 }
@@ -138,14 +138,14 @@ public class AnimationManager : MonoBehaviour
             case 32:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false, false);
+                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false);
                 }
                 break;
 
             case 36:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false, false);
+                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false);
                 }
                 break;
                 
@@ -160,8 +160,8 @@ public class AnimationManager : MonoBehaviour
             case 61:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, true, false);
-                    partTwoTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, true, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, false);
+                    partTwoTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, false);
                 }
                 break;
 
