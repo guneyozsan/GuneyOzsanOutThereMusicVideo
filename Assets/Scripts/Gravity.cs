@@ -53,7 +53,7 @@ public class Gravity : MonoBehaviour
         for (int i = 0; i < forceVectors.Length; i++)
         {
             if (Mathf.Pow(Vector3.Distance(transform.position, forceVectors[i].target), 2) != 0)
-                    compoundForce += forceVectors[i].forceMagnitude * (transform.position - forceVectors[i].target) / Mathf.Pow(Vector3.Distance(transform.position, forceVectors[i].target), 2);
+                compoundForce += forceVectors[i].forceMagnitude * (transform.position - forceVectors[i].target) / Mathf.Pow(Vector3.Distance(transform.position, forceVectors[i].target), 2);
         }
         body.AddForce(compoundForce);
     }

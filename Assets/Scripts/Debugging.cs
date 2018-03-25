@@ -35,6 +35,7 @@ public class Debugging : MonoBehaviour {
     [SerializeField]
     int fastForwardToBar;
     [SerializeField]
+    [Range(0, 5)]
     float fastForwardSpeed;
 
     public static float PlaybackSpeed { get; private set; }

@@ -267,9 +267,7 @@ public class AnimationManager : MonoBehaviour
         for (int i = 0; i < gravityForces.Length; i++)
         {
             if (((float)(Sequencer.CurrentBar - initialBar) / perBar) % (float)gravityForces.Length == i)
-            {
                 SetGravity(gravityForces[i], targets);
-            }
         }
     }
 }

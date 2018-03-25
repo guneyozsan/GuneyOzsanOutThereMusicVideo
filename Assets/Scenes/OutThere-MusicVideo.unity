@@ -533,9 +533,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayGui: 1
   playbackSpeed: 1
-  fastForwardEnabled: 1
-  fastForwardToBar: 31
-  fastForwardSpeed: 2.8
+  fastForwardEnabled: 0
+  fastForwardToBar: 59
+  fastForwardSpeed: 3
 --- !u!4 &1256199838
 Transform:
   m_ObjectHideFlags: 0
