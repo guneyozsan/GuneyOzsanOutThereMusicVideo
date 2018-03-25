@@ -22,9 +22,9 @@ using UnityEngine;
 public static class MathUtility
 {
     // Interpolates on parameter t exponentially between 0 to 1. 
-    public static float ExponentialInterpolation(float initialValue, float maxValue, float exponentialGrowthPower, float t)
+    public static float ExponentialInterpolation(float initialValue, float finalValue, float exponentialGrowthPower, float t)
     {
-        return initialValue + (maxValue - initialValue) * Mathf.Pow(t, exponentialGrowthPower);
+        return initialValue + (finalValue - initialValue) * Mathf.Pow(t, exponentialGrowthPower);
     }
 
     public static int ClosestCubeRoot(int source, bool inclusive)
