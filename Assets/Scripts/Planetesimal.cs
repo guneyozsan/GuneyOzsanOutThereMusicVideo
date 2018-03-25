@@ -44,19 +44,19 @@ public class Planetesimal : MonoBehaviour {
 
     public void OnMoverFinished(Vector3 velocity)
     {
-        InUse = false;
+        SetAllocation(false);
         SetVelocity(velocity);
     }
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
-        InUse = true;
+        SetAllocation(true);
         mover.MoveTo(target, time, delay, sphericalLerp);
     }
 
     public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
-        InUse = true;
+        SetAllocation(true);
         mover.SpreadAround(range, time, delay, sphericalLerp);
     }
 
@@ -79,6 +79,12 @@ public class Planetesimal : MonoBehaviour {
 
     public void SetFree()
     {
-        InUse = false;
+        SetAllocation(false);
+    }
+
+    void SetAllocation(bool value)
+    {
+        InUse = value;
+        gravity.enabled = !value;
     }
 }
