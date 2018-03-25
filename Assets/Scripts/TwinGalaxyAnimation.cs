@@ -22,7 +22,7 @@ public class TwinGalaxyAnimation {
 	public static void UpdateFrame(int firstBar, int lastBar)
     {
         normalizedT = t / (Sequencer.BarDuration * (lastBar - firstBar + 1));
-        radius = MathUtility.ExponentialInterpolation(55f, 3f, 7f, normalizedT);
+        radius = MathUtility.ExponentialInterpolation(55f, 0, 2.6f, normalizedT);
         radialOffset = 0.6f;
         orbit = new Vector3(
                     radius * Mathf.Cos(radian + radialOffset),
@@ -33,9 +33,9 @@ public class TwinGalaxyAnimation {
              orbit + offset,
             -orbit + offset
         };
-        force = MathUtility.ExponentialInterpolation(0f, -200f, 0.36f, normalizedT);
+        force = MathUtility.ExponentialInterpolation(0f, -220f, 0.40f, normalizedT);
         AnimationManager.SetGravity(force, targets);
-        rotationSpeed = MathUtility.ExponentialInterpolation(0.0029f, 0.0045f, 7f, normalizedT);
+        rotationSpeed = MathUtility.ExponentialInterpolation(0.0029f, 0.0095f, 14f, normalizedT);
         radian = rotationSpeed * 60f * t;
         t += Time.deltaTime;
     }

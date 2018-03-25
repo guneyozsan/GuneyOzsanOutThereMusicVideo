@@ -149,19 +149,19 @@ public class AnimationManager : MonoBehaviour
                 }
                 break;
                 
-            case 60:
+            case 57:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.FormTitle(3f * Sequencer.BarDuration, 0.007f, true, true);
-                    partTwoTitlesPartName.FormTitle(3f * Sequencer.BarDuration, 0.014f, true, true);
+                    partTwoTitlesPartNumber.FormTitle(2f * Sequencer.BarDuration, 0.007f, true, true);
+                    partTwoTitlesPartName.FormTitle(2f * Sequencer.BarDuration, 0.014f, true, true);
                 }
                 break;
 
-            case 65:
+            case 61:
                 if (currentAnimationBar != Sequencer.CurrentBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, 0.5f * Sequencer.BarDuration, 0.0025f, true, false);
-                    partTwoTitlesPartName.SpreadTitle(10, 0.5f * Sequencer.BarDuration, 0.0025f, true, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, true, false);
+                    partTwoTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.0025f, true, false);
                 }
                 break;
 
@@ -175,27 +175,15 @@ public class AnimationManager : MonoBehaviour
                 break;
         }
 
-        int firstBarOfSequence = 18;
-        int firstBarOfTwinGalaxy = 32;
-        int lastBarOfTwinGalaxy = 55;
+        const int firstBarOfSequence = 18;
+        const int firstBarOfTwinGalaxy = 32;
+        const int lastBarOfTwinGalaxy = 57;
 
         if ((Sequencer.CurrentBar >= firstBarOfSequence) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
             && (Sequencer.CurrentBeat == 1))
         {
-            SetGravityPerBar(new float[] { -65, 0, -65, 0 }, new Vector3(0, 0, -17), 2, firstBarOfSequence);
-            //if (FirstTimeInBarAndBeat())
-            //SetGravity(-65f, new Vector3(0, 0, -17));
+            SetGravityPerBar(new float[] { -65, 0 }, new Vector3(0, 0, -17), 2, firstBarOfSequence);
         }
-        //else if ((Sequencer.CurrentBar >= 20) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
-        //    && (Sequencer.CurrentBeat == 1))
-        //{
-        //    if (FirstTimeInBarAndBeat())
-        //    {
-        //        int k = Sequencer.CurrentBar - 18;
-        //        float gravityForce = -65f + 1.5f * k;
-        //        SetGravityPerBar(new float[] { 0f, gravityForce }, new Vector3(0, 0, -17), 1);
-        //    }
-        //}
         else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
         {
             TwinGalaxyAnimation.UpdateFrame(firstBarOfTwinGalaxy, lastBarOfTwinGalaxy);
@@ -203,7 +191,7 @@ public class AnimationManager : MonoBehaviour
         else if (Sequencer.CurrentBar >= lastBarOfTwinGalaxy && Sequencer.CurrentBar < 60)
         {
             if (FirstTimeInBarAndBeat())
-                SetGravity(0, Vector3.zero);
+                SetGravity(-30, Vector3.zero);
         }
         else if (Sequencer.CurrentBar >= 60
             && (Sequencer.CurrentBeat == 1))
