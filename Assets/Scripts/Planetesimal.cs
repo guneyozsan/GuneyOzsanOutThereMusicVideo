@@ -26,7 +26,7 @@ public class Planetesimal : MonoBehaviour {
     Mover mover;
 
     // If the planetesimal is being used for constructing a shape or free.
-    public bool InUse { get; private set; }
+    public bool IsAllocated { get; private set; }
 
     void Awake()
     {
@@ -84,7 +84,7 @@ public class Planetesimal : MonoBehaviour {
 
     void SetAllocation(bool value)
     {
-        InUse = value;
+        IsAllocated = value;
         gravity.enabled = !value;
     }
 }
