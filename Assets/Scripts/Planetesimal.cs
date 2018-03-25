@@ -72,9 +72,11 @@ public class Planetesimal : MonoBehaviour {
 
     public void SetVelocity(Vector3 velocity)
     {
+        Vector3 position = transform.position;
         rigidbody.velocity = velocity;
+        transform.position = position;
     }
-    
+
     public void SetFree()
     {
         InUse = false;
