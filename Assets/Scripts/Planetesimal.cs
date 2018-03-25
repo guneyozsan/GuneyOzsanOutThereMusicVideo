@@ -21,62 +21,70 @@ using UnityEngine;
 
 public class Planetesimal : MonoBehaviour {
 
-    Rigidbody Rigidbody { get; set; }
-    Gravity Gravity { get; set; }
-    Mover Mover { get; set; }
+    new Rigidbody rigidbody;
+    Gravity gravity;
+    Mover mover;
 
     // If the planetesimal is being used for constructing a shape or free.
-    public bool InUse { get; private set; }
+    public bool IsAllocated { get; private set; }
 
     void Awake()
     {
-        Rigidbody = GetComponent<Rigidbody>();
-        Gravity = GetComponent<Gravity>();
-        Mover = GetComponent<Mover>();
+        rigidbody = GetComponent<Rigidbody>();
+        gravity = GetComponent<Gravity>();
+        mover = GetComponent<Mover>();
 
-        Mover.MoverFinished += OnMoverFinished;
+        mover.MoverFinished += OnMoverFinished;
     }
 
     void OnDestroy()
     {
-        Mover.MoverFinished -= OnMoverFinished;
+        mover.MoverFinished -= OnMoverFinished;
     }
 
     public void OnMoverFinished(Vector3 velocity)
     {
-        InUse = false;
+        SetAllocation(false);
         SetVelocity(velocity);
     }
 
     public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
     {
-        InUse = true;
-        Mover.MoveTo(target, time, delay, sphericalLerp);
+        SetAllocation(true);
+        mover.MoveTo(target, time, delay, sphericalLerp);
     }
 
     public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
-        InUse = true;
-        Mover.SpreadAround(range, time, delay, sphericalLerp);
+        SetAllocation(true);
+        mover.SpreadAround(range, time, delay, sphericalLerp);
     }
 
     public void SetGravityForce(float gravityForce, Vector3 target)
     {
-        Gravity.SetForce(gravityForce, target);
+        gravity.SetForce(gravityForce, target);
     }
 
     public void SetGravityForce(Gravity.ForceVector[] forceVectors)
     {
-        Gravity.SetForce(forceVectors);
+        gravity.SetForce(forceVectors);
     }
 
     public void SetVelocity(Vector3 velocity)
     {
-        Rigidbody.velocity = velocity;
+        Vector3 position = transform.position;
+        rigidbody.velocity = velocity;
+        transform.position = position;
     }
-    
+
     public void SetFree()
     {
-        InUse = false;
+        SetAllocation(false);
+    }
+
+    void SetAllocation(bool value)
+    {
+        IsAllocated = value;
+        gravity.enabled = !value;
     }
 }

@@ -47,13 +47,10 @@ public class Mover : MonoBehaviour
         while (t <= 1)
         {
             if (sphericalLerp)
-            {
                 transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
-            }
             else
-            {
                 transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
-            }
+
             t += Time.deltaTime / time;
             yield return null;
         }
@@ -65,14 +62,10 @@ public class Mover : MonoBehaviour
         }
     }
 
-
-
     public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
         StartCoroutine(DelaySpreadAround(range, time, delay, sphericalLerp));
     }
-
-
 
     IEnumerator DelaySpreadAround(float range, float time, float delay, bool sphericalLerp)
     {
@@ -92,13 +85,9 @@ public class Mover : MonoBehaviour
         while (t <= 1)
         {
             if (sphericalLerp)
-            {
                 transform.position = Vector3.Slerp(start, target, t);
-            }
             else
-            {
                 transform.position = Vector3.Lerp(start, target, t);
-            }
 
             t += Time.deltaTime / time;
             yield return null;
