@@ -1,4 +1,13 @@
 RELEASE NOTES
+v0.7.0
+------
+- Introduced a merging twin galaxy animation between bars 32-56.
+- Scene is colored using lights.
+- Now supports multiple gravity points, which made available twin galaxy simulation.
+- Animation tweaks for Part I, bars 1-60.
+- Fix title formation timings are incorrect when debug playback speed is not 1.
+- Fix planetesimals of a title make a jump at the end of some spread title animations.
+
 ------
 v0.6.0
 - Animation of "Part 1" is near complete. General flow is almost fixed.

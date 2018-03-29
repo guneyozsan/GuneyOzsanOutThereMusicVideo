@@ -23,27 +23,26 @@ using UnityEngine;
 public class Sequencer : MonoBehaviour
 {
     AudioSource music;
+
 #if UNITY_EDITOR
     public static AudioSource MusicDebug { get; private set; }
 
     public static Part CurrentPart { get; private set; }
     public static string CurrentRegionDescription { get; private set; }
 
-    public enum Part { Intro, Part1Approach, Part2Probe };
+    public enum Part {
+        Intro,
+        Part1Approach,
+        Part2Probe
+    };
+#endif // UNITY_EDITOR
 
-#endif
     public static int CurrentBeat { get; private set; }
     public static int CurrentBar { get; private set; }
 
     int BPM;
     public static double BeatDuration { get; private set; }
-    public static double BarDuration {
-        get
-        {
-            return 4 * BeatDuration;
-        }
-    }
-    public static float BarDurationF
+    public static float BarDuration
     {
         get
         {
@@ -53,89 +52,53 @@ public class Sequencer : MonoBehaviour
 
     int loopToBar;
 
-#if UNITY_EDITOR
-    public int fastForwardToBar;
-    int fastForwardSpeed;
-    bool doFastForward;
-#endif
-
-
-
     void Start()
     {
-#if UNITY_EDITOR
-        // InitializeFastForward();
-#endif
         BPM = 77;
         BeatDuration = 60d / BPM;
 
         loopToBar = 60;
 
         music = GetComponent<AudioSource>();
-        //music.time = (fastForwardToBar - 1)*4*beatDuration;
         music.time = 0;
         music.Play();
+
 #if UNITY_EDITOR
         MusicDebug = music;
-#endif
+#endif // UNITY_EDITOR
 
         CurrentBar = 1;
         CurrentBeat = 1;
     }
 
-
-
     void Update()
     {
 #if UNITY_EDITOR
-        if (doFastForward)
-        {
-            FastForward();
-        }
-
+        AdjustPlaybackSpeed();
         SetCurrentRegion();
-#endif
+#endif // UNITY_EDITOR
+
         SetBeats();
         LoopMusicTo(loopToBar);
     }
 
 
-
 #if UNITY_EDITOR
-    void InitializeFastForward()
+    void AdjustPlaybackSpeed()
     {
-        throw new NotImplementedException();
-        doFastForward = true;
-
-        fastForwardToBar = 4;
-        fastForwardSpeed = 3;
-
-        if (fastForwardToBar <= 1 || fastForwardToBar > 191)
+        if (CurrentBar < Debugging.FastForwardToBar
+            && Debugging.FastForwardSpeed != 1)
         {
-            fastForwardToBar = 1;
-            doFastForward = false;
-        }
-    }
-#endif
-
-
-
-#if UNITY_EDITOR
-    void FastForward()
-    {
-        throw new NotImplementedException();
-        //Debug.Log(Time.timeScale + " " + doFastForward);
-        if (CurrentBar < fastForwardToBar && Time.timeScale != fastForwardSpeed)
-        {
-            Time.timeScale = fastForwardSpeed;
+            music.volume = 0;
+            Time.timeScale = Debugging.FastForwardSpeed;
         }
         else
         {
-            doFastForward = false;
-            Time.timeScale = 1;
+            music.volume = 1;
+            Time.timeScale = Debugging.PlaybackSpeed;
         }
     }
-#endif
+#endif // UNITY_EDITOR
 
 
 #if UNITY_EDITOR
@@ -267,12 +230,19 @@ public class Sequencer : MonoBehaviour
             CurrentRegionDescription = "Part 1 to 2 bridge";
         }
     }
-#endif
+#endif // UNITY_EDITOR
+
 
 
     void SetBeats()
     {
-        if (music.time > ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration)
+        double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
+
+#if UNITY_EDITOR
+        timeOfCurrentBeat -= BeatDuration * (1 - 1/ Time.timeScale);
+#endif // UNITY_EDITOR
+
+        if (music.time > timeOfCurrentBeat)
         {
             if (CurrentBeat < 4)
             {
@@ -283,15 +253,15 @@ public class Sequencer : MonoBehaviour
                 CurrentBeat = 1;
                 CurrentBar++;
             }
-        }
 
 #if UNITY_EDITOR
-        if (Time.timeScale != 1 && (music.time + Time.deltaTime * (Time.timeScale - 1)) >= 0)
-        {
-            music.time += Time.deltaTime * (Time.timeScale - 1);
+            if (Time.timeScale != 1)
+                music.time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / Time.timeScale));
+#endif // UNITY_EDITOR
+
         }
-#endif
     }
+
 
 
     void LoopMusicTo(int loopToBar)

@@ -29,12 +29,35 @@ public class Debugging : MonoBehaviour {
     [SerializeField]
     [Range(0, 5)]
     float playbackSpeed;
+    [Header("Fast Forward")]
+    [SerializeField]
+    bool fastForwardEnabled;
+    [SerializeField]
+    int fastForwardToBar;
+    [SerializeField]
+    [Range(0, 5)]
+    float fastForwardSpeed;
 
     public static float PlaybackSpeed { get; private set; }
+
+    public static bool DoFastForward { get; private set; }
+    public static float FastForwardToBar { get; private set; }
+    public static float FastForwardSpeed { get; private set; }
+
+    void Start()
+    {
+        FastForwardToBar = fastForwardToBar;
+        FastForwardSpeed = fastForwardSpeed;
+    }
 
     void Update()
     {
         PlaybackSpeed = playbackSpeed;
+
+        if (fastForwardEnabled)
+            FastForwardSpeed = fastForwardSpeed;
+        else
+            FastForwardSpeed = 1;
     }
 
     void OnGUI()

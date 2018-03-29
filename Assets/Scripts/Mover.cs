@@ -47,13 +47,10 @@ public class Mover : MonoBehaviour
         while (t <= 1)
         {
             if (sphericalLerp)
-            {
                 transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
-            }
             else
-            {
                 transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
-            }
+
             t += Time.deltaTime / time;
             yield return null;
         }
@@ -81,19 +78,16 @@ public class Mover : MonoBehaviour
     {
         transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Vector3 start = transform.position;
-        Vector3 target = transform.position + range * (new Vector3(Random.value, Random.value, Random.value) - halfVector);
+        Vector3 randomVector = new Vector3(Random.value, Random.value, Random.value);
+        Vector3 target = transform.position + range * (randomVector - halfVector);
         float t = 0;
 
         while (t <= 1)
         {
             if (sphericalLerp)
-            {
                 transform.position = Vector3.Slerp(start, target, t);
-            }
             else
-            {
                 transform.position = Vector3.Lerp(start, target, t);
-            }
 
             t += Time.deltaTime / time;
             yield return null;
