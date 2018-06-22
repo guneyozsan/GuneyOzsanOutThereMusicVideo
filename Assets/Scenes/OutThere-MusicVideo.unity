@@ -603,6 +603,7 @@ GameObject:
   - component: {fileID: 1368347924}
   - component: {fileID: 1368347922}
   - component: {fileID: 1368347921}
+  - component: {fileID: 1368347920}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -630,6 +631,20 @@ AudioListener:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1368347917}
   m_Enabled: 1
+--- !u!114 &1368347920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1368347917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24634b69e005aaa41ac0b53a6abb2661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enabled: 1
+  folder: CapturedRecordings
+  frameRate: 15
 --- !u!114 &1368347921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,7 +680,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 2e82e2dc00b98684b8e4d1f187e40010, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
   Loop: 0
   Mute: 0
