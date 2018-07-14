@@ -35,12 +35,6 @@ public class FrameRecorder : MonoBehaviour
 
     [Space]
 
-    [Header("Options")]
-    [SerializeField]
-    private         bool            updateDisplay;
-
-    [Space]
-
     [Header("Setup")]
     [SerializeField]
     private         Camera          renderCamera;
@@ -181,6 +175,7 @@ public class FrameRecorder : MonoBehaviour
             renderCamera.targetTexture = originalTargetTexture;
 
             RenderTexture.active = outputRenderTexture;
+
             FormatOutputTexture(ref outputTexture, targetRes);
             outputTexture.ReadPixels(new Rect(0, 0, targetRes.Width, targetRes.Height), 0, 0);
             outputTexture.Apply();
@@ -204,13 +199,6 @@ public class FrameRecorder : MonoBehaviour
         }
 
         frameCount++;
-
-        if (updateDisplay)
-        {
-            RenderTexture.active        = null;
-            renderCamera.targetTexture  = null;
-            renderCamera.Render();
-        }
     }
 
     // From https://github.com/Chman/FrameCapture/
