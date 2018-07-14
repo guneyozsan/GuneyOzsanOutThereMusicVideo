@@ -540,6 +540,15 @@ Prefab:
       propertyPath: renderCamera
       value: 
       objectReference: {fileID: 1210266820}
+    - target: {fileID: 114083234666942478, guid: 0ca1979804de6194abdcc9156f17fd15,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1037602966244776, guid: 0ca1979804de6194abdcc9156f17fd15, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0ca1979804de6194abdcc9156f17fd15, type: 2}
   m_IsPrefabParent: 0
@@ -835,7 +844,7 @@ AudioSource:
   m_Volume: 0
   m_Pitch: 1
   Loop: 0
-  Mute: 1
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
