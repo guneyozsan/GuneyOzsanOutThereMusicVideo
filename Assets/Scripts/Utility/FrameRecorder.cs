@@ -223,7 +223,7 @@ public class FrameRecorder : MonoBehaviour
         if (displayRender)
         {
             if (displayRectTransform.sizeDelta != targetRes.Size)
-                renderDisplay.GetComponent<RectTransform>().sizeDelta = targetRes.Size;
+                displayRectTransform.sizeDelta = targetRes.Size;
 
             renderDisplay.color     = Color.white;
             renderDisplay.texture   = outputTexture;
