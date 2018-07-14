@@ -12,193 +12,313 @@ using System;
 /// </summary>
 public class FrameRecorder : MonoBehaviour
 {
-    // Parameters
+    [Header("Parameters")]
     [SerializeField]
-    Resolution resolution;
-    
-    [SerializeField, Range(1, 120)]
-    int frameRate;
+    private         Resolution      targetRes;
 
-    [SerializeField, Range(1, 16)]
-    int samples;
+    private const   int             minFrameRate = 1;
+    private const   int             maxFrameRate = 120;
+    [SerializeField, Range(minFrameRate, maxFrameRate)]
+    private         int             frameRate;
 
-    [SerializeField]
-    bool supersample = false;
+
+    private const   int             minSamples = 1;
+    private const   int             maxSamples = 16;
+
+    [Space]
+
+    [SerializeField, Range(minSamples, maxSamples)]
+    private         int             samples = 1;
 
     [Space]
 
     [SerializeField]
-    bool updateDisplay;
+    private         bool            supersample = false;
 
+    [Space]
+
+    [Header("Options")]
     [SerializeField]
-    Camera renderCamera;
+    private         bool            updateDisplay;
 
-    [SerializeField, HideInInspector]
-    Shader resolveShader;
-    
-    // Members
-    bool recordingEnabled = false;
+    [Space]
 
-    Material resolverMaterial;
+    [Header("Setup")]
+    [SerializeField]
+    private         Camera          renderCamera;
 
-    RenderTexture originalRenderTexture;
-    RenderTexture originalTargetTexture;
+    private         Material        resolverMaterial;
+    private         int             frameCount;
+    private         DirectoryInfo   outputFolder;
+    private         RenderTexture[] renderTargets;
+    private         Texture2D       outputTexture;
 
-    int frameCount;
-
-    DirectoryInfo outputFolder;
-
-    // Variable cache
-    Resolution superResolution;
-    RenderTextureFormat outputFormat;
-    RenderTextureFormat renderFormat;
-    RenderTexture[] renderTargets;
-    RenderTexture tempRenderTexture;
-
+    [Serializable]
     struct Resolution
     {
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        [SerializeField]
+        private int width;
+        public  int Width { get { return width; } private set { width = value; } }
+        [SerializeField]
+        private int height;
+        public  int Height { get { return height; } private set { height = value; } }
+
+        public Resolution(int width, int height)
+        {
+            this.width  = width;
+            this.height = height;
+        }
 
         public static Resolution operator *(Resolution resolution, float t)
         {
-            Resolution r = resolution;
-            r.Width = (int)(t * r.Width);
-            r.Height = (int)(t * r.Height);
-            return r;
+            return t * resolution;
         }
-    }
 
-    void Start()
-    {
-        if (!recordingEnabled)
-            enabled = false;
+        public static Resolution operator *(float t, Resolution resolution)
+        {
+            return new Resolution((int)(t * resolution.Width), (int)(t * resolution.Height));
+        }
     }
 
     void OnEnable()
     {
-        frameCount = 0;
-        int minFrameRate = 1;
-        int maxFrameRate = 120;
-        Time.captureFramerate = Mathf.Clamp(frameRate, minFrameRate, maxFrameRate);
+        print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
+        print("Texture " + Resources.FindObjectsOfTypeAll(typeof(Texture2D)).Length);
 
-        resolverMaterial = new Material(resolveShader);
-        samples = Mathf.Clamp(samples, 1, 16);
+        frameCount              = 0;
+        Time.captureFramerate   = Mathf.Clamp(frameRate, minFrameRate, maxFrameRate);
+
+        resolverMaterial        = new Material(Shader.Find("Hidden/Tools/Resolve"));
+        samples                 = Mathf.Clamp(samples, minSamples, maxSamples);
         resolverMaterial.SetFloat("_Samples", samples);
-
-        originalRenderTexture = RenderTexture.active;
-        originalTargetTexture = renderCamera.targetTexture;
-
-        outputFormat = RenderTextureFormat.ARGB32;
-        renderFormat = renderCamera.allowHDR
-            ? RenderTextureFormat.ARGBHalf
-            : RenderTextureFormat.ARGB32;
-
-        RenderTexture.active = renderTexture;
-
-        renderTargets = new[]
+        
         {
-            RenderTexture.GetTemporary(superResolution.Width, superResolution.Height, 24, renderFormat),
-            RenderTexture.GetTemporary(superResolution.Width, superResolution.Height, 0, outputFormat),
-            RenderTexture.GetTemporary(superResolution.Width, superResolution.Height, 0, outputFormat),
-            RenderTexture.GetTemporary(resolution.Width, resolution.Height, 0, outputFormat)
-        };
+            string  outputRoot      = new DirectoryInfo(Application.dataPath).Parent.Parent.FullName;
+            string  date            = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffff");
+                    outputFolder    = new DirectoryInfo(Path.Combine(outputRoot, date));
 
-        if (supersample)
-            superResolution *= 2;
-        else
-            superResolution = resolution;
-
-        string outputRoot = new DirectoryInfo(Application.dataPath).Parent.Parent.FullName;
-        string date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffff");
-        outputFolder = new DirectoryInfo(Path.Combine(outputRoot, date));
-
-        try
-        {
-            Directory.CreateDirectory(outputFolder.FullName);
+            try
+            {
+                Directory.CreateDirectory(outputFolder.FullName);
+                Debug.Log("Output folder: " + outputFolder.FullName);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                enabled = false;
+            }
         }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-            enabled = false;
-        }
+    }
+
+    void OnDisable()
+    {
+        Time.captureFramerate   = 0;
+        frameCount              = 0;
+
+        Destroy(resolverMaterial);
+        Destroy(outputTexture);
+
+        print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
+        print("Texture " + Resources.FindObjectsOfTypeAll(typeof(Texture2D)).Length);
     }
 
     void LateUpdate()
     {
-        if (recordingEnabled)
+        RenderTexture originalRenderTexture = RenderTexture.active;
+        RenderTexture originalTargetTexture = renderCamera.targetTexture;
+
         {
+            RenderTextureFormat outputFormat = RenderTextureFormat.ARGB32;
+            RenderTextureFormat renderFormat = renderCamera.allowHDR
+                ? RenderTextureFormat.ARGBHalf
+                : RenderTextureFormat.ARGB32;
 
-            for (int sample = 0; sample < samples; sample++)
-            {
-                renderCamera.targetTexture = renderTargets[0];
-                renderCamera.Render();
-
-                if (samples > 1)
-                    SetProjectionMatrix(renderCamera, sample);
-
-                renderCamera.Render();
-
-                if (sample == 0)
-                {
-                    Graphics.Blit(renderTargets[0], renderTargets[1]);
-                }
-                else
-                {
-                    resolverMaterial.SetTexture("_HistoryTex", renderTargets[1]);
-                    Graphics.Blit(renderTargets[0], renderTargets[2], resolverMaterial, 0);
-
-                    // Swap history targets
-                    tempRenderTexture = renderTargets[1];
-                    renderTargets[1] = renderTargets[2];
-                    renderTargets[2] = tempRenderTexture;
-                }
-            }
-
-            outputTexture = renderTargets[1];
+            Resolution superRes;
 
             if (supersample)
+                superRes = 2f * targetRes;
+            else
+                superRes = targetRes;
+
+            renderTargets = new[]
             {
-                Graphics.Blit(renderTargets[1], renderTargets[3], resolverMaterial, 1);
-                outputTexture = renderTargets[3];
+                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 24, renderFormat),
+                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
+                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
+                RenderTexture.GetTemporary(targetRes.Width, targetRes.Height, 0, outputFormat)
+            };
+        }
+
+        for (int sample = 0; sample < samples; sample++)
+        {
+            renderCamera.targetTexture = renderTargets[0];
+
+            // Only jitters if we're actually using the temporal filter
+            if (samples > 1)
+                SetProjectionMatrix(renderCamera, sample);
+
+            renderCamera.Render();
+
+            if (sample == 0)
+            {
+                Graphics.Blit(renderTargets[0], renderTargets[1]);
             }
-
-            renderCamera.ResetProjectionMatrix();
-            renderCamera.targetTexture = originalTargetTexture;
-
-
-
-
-
-
-
-
-
-
-            if (updateDisplay)
-                RenderTexture.active = renderTexture;
-
-            readTexture.ReadPixels(new Rect(0.0f, 0.0f, (int)resolution.x, (int)resolution.y), 0, 0);
-            readTexture.Apply();
-
-            byte[] pngByteArray = readTexture.EncodeToPNG();
-            string path = string.Format("{0}/Frame-{0:D06}.png", outputFolder, Time.frameCount);
-            File.WriteAllBytes(path, pngByteArray);
-
-            if (updateDisplay)
+            else
             {
-                RenderTexture.active = null;
-                renderCamera.targetTexture = null;
-                renderCamera.Render();
-            }
+                resolverMaterial.SetTexture("_HistoryTex", renderTargets[1]);
+                Graphics.Blit(renderTargets[0], renderTargets[2], resolverMaterial, 0);
 
-            if (Time.frameCount > frameCount)
-            {
-                Application.Quit();
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#endif
+                // Swap history targets
+                RenderTexture   tempRenderTexture   = renderTargets[1];
+                                renderTargets[1]    = renderTargets[2];
+                                renderTargets[2]    = tempRenderTexture;
             }
         }
+
+        RenderTexture outputRenderTexture = renderTargets[1];
+
+        if (supersample)
+        {
+            Graphics.Blit(renderTargets[1], renderTargets[3], resolverMaterial, 1);
+            outputRenderTexture = renderTargets[3];
+        }
+
+        renderCamera.ResetProjectionMatrix();
+        renderCamera.targetTexture = originalTargetTexture;
+
+        RenderTexture.active = outputRenderTexture;
+        FormatOutputTexture(ref outputTexture, targetRes);
+        outputTexture.ReadPixels(new Rect(0, 0, targetRes.Width, targetRes.Height), 0, 0);
+        outputTexture.Apply();
+
+        RenderTexture.active = originalRenderTexture;
+
+        foreach (RenderTexture renderTarget in renderTargets)
+            RenderTexture.ReleaseTemporary(renderTarget);
+
+        try
+        {
+            byte[]  frameBytes  = outputTexture.EncodeToPNG();
+            string  path        = Path.Combine(outputFolder.FullName, string.Format("Frame-{0:D06}.png", frameCount));
+            File.WriteAllBytes(path, frameBytes);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            enabled = false;
+        }
+
+        frameCount++;
+
+        if (updateDisplay)
+        {
+            RenderTexture.active        = null;
+            renderCamera.targetTexture  = null;
+            renderCamera.Render();
+        }
+    }
+
+    // From https://github.com/Chman/FrameCapture/
+    void SetProjectionMatrix(Camera cam, int sample)
+    {
+        const   float   kJitterScale    = 1f;
+                Vector2 jitter          = kJitterScale * new Vector2(
+                    HaltonSeq(sample & 1023, 2),
+                    HaltonSeq(sample & 1023, 3)
+                );
+
+        cam.nonJitteredProjectionMatrix = cam.projectionMatrix;
+
+        if (cam.orthographic)
+            cam.projectionMatrix = GetOrthoProjectionMatrix(cam, jitter);
+        else
+            cam.projectionMatrix = GetPerspProjectionMatrix(cam, jitter);
+
+        cam.useJitteredProjectionMatrixForTransparentRendering = false;
+    }
+
+    // From https://github.com/Chman/FrameCapture/
+    float HaltonSeq(int index, int radix)
+    {
+        float result    = 0f;
+        float fraction  = 1f / (float)radix;
+
+        while (index > 0)
+        {
+            result      += (float)(index % radix) * fraction;
+
+            index       /= radix;
+            fraction    /= (float)radix;
+        }
+
+        return result;
+    }
+
+    // From https://github.com/Chman/FrameCapture/
+    Matrix4x4 GetPerspProjectionMatrix(Camera cam, Vector2 offset)
+    {
+        float       vertical        =   Mathf.Tan(0.5f * Mathf.Deg2Rad * cam.fieldOfView);
+        float       horizontal      =   vertical * cam.aspect;
+        float       near            =   cam.nearClipPlane;
+        float       far             =   cam.farClipPlane;
+
+                    offset.x        *=  horizontal / (0.5f * cam.pixelWidth);
+                    offset.y        *=  vertical / (0.5f * cam.pixelHeight);
+
+        float       left            =   (offset.x - horizontal) * near;
+        float       right           =   (offset.x + horizontal) * near;
+        float       top             =   (offset.y + vertical) * near;
+        float       bottom          =   (offset.y - vertical) * near;
+
+        Matrix4x4   matrix          =   new Matrix4x4();
+
+                    matrix[0, 0]    =   (2f * near) / (right - left);
+                    matrix[0, 1]    =   0f;
+                    matrix[0, 2]    =   (right + left) / (right - left);
+                    matrix[0, 3]    =   0f;
+
+                    matrix[1, 0]    =   0f;
+                    matrix[1, 1]    =   (2f * near) / (top - bottom);
+                    matrix[1, 2]    =   (top + bottom) / (top - bottom);
+                    matrix[1, 3]    =   0f;
+
+                    matrix[2, 0]    =   0f;
+                    matrix[2, 1]    =   0f;
+                    matrix[2, 2]    =   -(far + near) / (far - near);
+                    matrix[2, 3]    =   -(2f * far * near) / (far - near);
+
+                    matrix[3, 0]    =   0f;
+                    matrix[3, 1]    =   0f;
+                    matrix[3, 2]    =   -1f;
+                    matrix[3, 3]    =   0f;
+
+        return matrix;
+    }
+
+    // From https://github.com/Chman/FrameCapture/
+    Matrix4x4 GetOrthoProjectionMatrix(Camera cam, Vector2 offset)
+    {
+        float   vertical    =   cam.orthographicSize;
+        float   horizontal  =   vertical * cam.aspect;
+
+                offset.x    *=  horizontal / (0.5f * cam.pixelWidth);
+                offset.y    *=  vertical / (0.5f * cam.pixelHeight);
+
+        float   left        =   offset.x - horizontal;
+        float   right       =   offset.x + horizontal;
+        float   top         =   offset.y + vertical;
+        float   bottom      =   offset.y - vertical;
+
+        return Matrix4x4.Ortho(left, right, bottom, top, cam.nearClipPlane, cam.farClipPlane);
+    }
+
+    // From https://github.com/Chman/FrameCapture/
+    void FormatOutputTexture(ref Texture2D texture, Resolution resolution)
+    {
+        if ((texture != null) && (texture.width == resolution.Width) && (texture.height == resolution.Height))
+            return;
+
+        Destroy(texture);
+        texture = new Texture2D(resolution.Width, resolution.Height, TextureFormat.ARGB32, false);
     }
 }

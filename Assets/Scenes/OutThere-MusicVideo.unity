@@ -642,9 +642,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24634b69e005aaa41ac0b53a6abb2661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabled: 1
-  folder: CapturedRecordings
-  frameRate: 15
+  targetRes:
+    width: 1920
+    height: 1080
+  frameRate: 30
+  samples: 16
+  supersample: 1
+  updateDisplay: 1
+  renderCamera: {fileID: 1210266820}
+  resolveShader: {fileID: 0}
 --- !u!114 &1368347921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -683,7 +689,7 @@ AudioSource:
   m_Volume: 0
   m_Pitch: 1
   Loop: 0
-  Mute: 0
+  Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
