@@ -3,9 +3,10 @@ using System.Collections;
 using System.IO;
 using System;
 
-// Based on
-// https://docs.unity3d.com/ScriptReference/Time-captureFramerate.html
+// Based mostly on:
 // https://github.com/Chman/FrameCapture/
+// and also:
+// https://docs.unity3d.com/ScriptReference/Time-captureFramerate.html
 
 /// <summary>
 /// Captures frames as a PNG screenshot sequence.
@@ -21,12 +22,9 @@ public class FrameRecorder : MonoBehaviour
     [SerializeField, Range(minFrameRate, maxFrameRate)]
     private         int             frameRate;
 
-
     private const   int             minSamples = 1;
     private const   int             maxSamples = 16;
-
     [Space]
-
     [SerializeField, Range(minSamples, maxSamples)]
     private         int             samples = 1;
 
@@ -47,11 +45,10 @@ public class FrameRecorder : MonoBehaviour
     [SerializeField]
     private         Camera          renderCamera;
 
-    private         Material        resolverMaterial;
     private         int             frameCount;
-    private         DirectoryInfo   outputFolder;
-    private         RenderTexture[] renderTargets;
+    private         Material        resolverMaterial;
     private         Texture2D       outputTexture;
+    private         DirectoryInfo   outputFolder;
 
     [Serializable]
     struct Resolution
@@ -82,9 +79,6 @@ public class FrameRecorder : MonoBehaviour
 
     void OnEnable()
     {
-        print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
-        print("Texture " + Resources.FindObjectsOfTypeAll(typeof(Texture2D)).Length);
-
         frameCount              = 0;
         Time.captureFramerate   = Mathf.Clamp(frameRate, minFrameRate, maxFrameRate);
 
@@ -117,84 +111,85 @@ public class FrameRecorder : MonoBehaviour
 
         Destroy(resolverMaterial);
         Destroy(outputTexture);
-
-        print("Materials " + Resources.FindObjectsOfTypeAll(typeof(Material)).Length);
-        print("Texture " + Resources.FindObjectsOfTypeAll(typeof(Texture2D)).Length);
     }
 
     void LateUpdate()
     {
-        RenderTexture originalRenderTexture = RenderTexture.active;
-        RenderTexture originalTargetTexture = renderCamera.targetTexture;
-
         {
-            RenderTextureFormat outputFormat = RenderTextureFormat.ARGB32;
-            RenderTextureFormat renderFormat = renderCamera.allowHDR
-                ? RenderTextureFormat.ARGBHalf
-                : RenderTextureFormat.ARGB32;
+            RenderTexture originalRenderTexture = RenderTexture.active;
+            RenderTexture originalTargetTexture = renderCamera.targetTexture;
 
-            Resolution superRes;
+            RenderTexture[] renderTargets;
+
+            {
+                RenderTextureFormat outputFormat = RenderTextureFormat.ARGB32;
+                RenderTextureFormat renderFormat = renderCamera.allowHDR
+                    ? RenderTextureFormat.ARGBHalf
+                    : RenderTextureFormat.ARGB32;
+
+                Resolution superRes;
+
+                if (supersample)
+                    superRes = 2f * targetRes;
+                else
+                    superRes = targetRes;
+
+                renderTargets = new[]
+                {
+                    RenderTexture.GetTemporary(superRes.Width, superRes.Height, 24, renderFormat),
+                    RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
+                    RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
+                    RenderTexture.GetTemporary(targetRes.Width, targetRes.Height, 0, outputFormat)
+                };
+            }
+
+            for (int sample = 0; sample < samples; sample++)
+            {
+                renderCamera.targetTexture = renderTargets[0];
+
+                // Only jitters if we're actually using the temporal filter
+                if (samples > 1)
+                    SetProjectionMatrix(renderCamera, sample);
+
+                renderCamera.Render();
+
+                if (sample == 0)
+                {
+                    Graphics.Blit(renderTargets[0], renderTargets[1]);
+                }
+                else
+                {
+                    resolverMaterial.SetTexture("_HistoryTex", renderTargets[1]);
+                    Graphics.Blit(renderTargets[0], renderTargets[2], resolverMaterial, 0);
+
+                    // Swap history targets
+                    RenderTexture   tempRenderTexture   = renderTargets[1];
+                                    renderTargets[1]    = renderTargets[2];
+                                    renderTargets[2]    = tempRenderTexture;
+                }
+            }
+
+            RenderTexture outputRenderTexture = renderTargets[1];
 
             if (supersample)
-                superRes = 2f * targetRes;
-            else
-                superRes = targetRes;
-
-            renderTargets = new[]
             {
-                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 24, renderFormat),
-                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
-                RenderTexture.GetTemporary(superRes.Width, superRes.Height, 0, outputFormat),
-                RenderTexture.GetTemporary(targetRes.Width, targetRes.Height, 0, outputFormat)
-            };
-        }
-
-        for (int sample = 0; sample < samples; sample++)
-        {
-            renderCamera.targetTexture = renderTargets[0];
-
-            // Only jitters if we're actually using the temporal filter
-            if (samples > 1)
-                SetProjectionMatrix(renderCamera, sample);
-
-            renderCamera.Render();
-
-            if (sample == 0)
-            {
-                Graphics.Blit(renderTargets[0], renderTargets[1]);
+                Graphics.Blit(renderTargets[1], renderTargets[3], resolverMaterial, 1);
+                outputRenderTexture = renderTargets[3];
             }
-            else
-            {
-                resolverMaterial.SetTexture("_HistoryTex", renderTargets[1]);
-                Graphics.Blit(renderTargets[0], renderTargets[2], resolverMaterial, 0);
 
-                // Swap history targets
-                RenderTexture   tempRenderTexture   = renderTargets[1];
-                                renderTargets[1]    = renderTargets[2];
-                                renderTargets[2]    = tempRenderTexture;
-            }
+            renderCamera.ResetProjectionMatrix();
+            renderCamera.targetTexture = originalTargetTexture;
+
+            RenderTexture.active = outputRenderTexture;
+            FormatOutputTexture(ref outputTexture, targetRes);
+            outputTexture.ReadPixels(new Rect(0, 0, targetRes.Width, targetRes.Height), 0, 0);
+            outputTexture.Apply();
+
+            RenderTexture.active = originalRenderTexture;
+
+            foreach (RenderTexture renderTarget in renderTargets)
+                RenderTexture.ReleaseTemporary(renderTarget);
         }
-
-        RenderTexture outputRenderTexture = renderTargets[1];
-
-        if (supersample)
-        {
-            Graphics.Blit(renderTargets[1], renderTargets[3], resolverMaterial, 1);
-            outputRenderTexture = renderTargets[3];
-        }
-
-        renderCamera.ResetProjectionMatrix();
-        renderCamera.targetTexture = originalTargetTexture;
-
-        RenderTexture.active = outputRenderTexture;
-        FormatOutputTexture(ref outputTexture, targetRes);
-        outputTexture.ReadPixels(new Rect(0, 0, targetRes.Width, targetRes.Height), 0, 0);
-        outputTexture.Apply();
-
-        RenderTexture.active = originalRenderTexture;
-
-        foreach (RenderTexture renderTarget in renderTargets)
-            RenderTexture.ReleaseTemporary(renderTarget);
 
         try
         {

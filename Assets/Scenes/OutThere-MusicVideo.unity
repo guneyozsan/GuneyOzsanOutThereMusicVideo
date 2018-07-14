@@ -645,12 +645,11 @@ MonoBehaviour:
   targetRes:
     width: 1920
     height: 1080
-  frameRate: 30
+  frameRate: 60
   samples: 16
   supersample: 1
-  updateDisplay: 1
+  updateDisplay: 0
   renderCamera: {fileID: 1210266820}
-  resolveShader: {fileID: 0}
 --- !u!114 &1368347921
 MonoBehaviour:
   m_ObjectHideFlags: 0
