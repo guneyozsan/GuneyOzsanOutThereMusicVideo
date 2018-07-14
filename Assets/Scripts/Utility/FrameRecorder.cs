@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System;
+using UnityEngine.UI;
 
 // Based mostly on:
 // https://github.com/Chman/FrameCapture/
@@ -35,24 +36,36 @@ public class FrameRecorder : MonoBehaviour
 
     [Space]
 
+    [Header("Display")]
+    [SerializeField]
+    private         bool            displayRender;
+
+    [Space]
+
     [Header("Setup")]
     [SerializeField]
     private         Camera          renderCamera;
+    [SerializeField]
+    private         RawImage        renderDisplay;
 
     private         int             frameCount;
     private         Material        resolverMaterial;
     private         Texture2D       outputTexture;
     private         DirectoryInfo   outputFolder;
+    private         RectTransform   displayRectTransform;
+    private         Color           transparentColor = new Color(0, 0, 0, 0);
 
     [Serializable]
-    struct Resolution
+    private struct Resolution
     {
         [SerializeField]
-        private int width;
-        public  int Width { get { return width; } private set { width = value; } }
+        private int     width;
+        public  int     Width { get { return width; } private set { width = value; } }
         [SerializeField]
-        private int height;
-        public  int Height { get { return height; } private set { height = value; } }
+        private int     height;
+        public  int     Height { get { return height; } private set { height = value; } }
+
+        public  Vector2 Size { get { return new Vector2(width, height); } }
 
         public Resolution(int width, int height)
         {
@@ -71,6 +84,11 @@ public class FrameRecorder : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        displayRectTransform = renderDisplay.GetComponent<RectTransform>();
+    }
+
     void OnEnable()
     {
         frameCount              = 0;
@@ -79,7 +97,7 @@ public class FrameRecorder : MonoBehaviour
         resolverMaterial        = new Material(Shader.Find("Hidden/Tools/Resolve"));
         samples                 = Mathf.Clamp(samples, minSamples, maxSamples);
         resolverMaterial.SetFloat("_Samples", samples);
-        
+
         {
             string  outputRoot      = new DirectoryInfo(Application.dataPath).Parent.Parent.FullName;
             string  date            = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffff");
@@ -102,6 +120,8 @@ public class FrameRecorder : MonoBehaviour
     {
         Time.captureFramerate   = 0;
         frameCount              = 0;
+
+        renderDisplay.color = new Color(0, 0, 0, 0);
 
         Destroy(resolverMaterial);
         Destroy(outputTexture);
@@ -199,6 +219,20 @@ public class FrameRecorder : MonoBehaviour
         }
 
         frameCount++;
+
+        if (displayRender)
+        {
+            if (displayRectTransform.sizeDelta != targetRes.Size)
+                renderDisplay.GetComponent<RectTransform>().sizeDelta = targetRes.Size;
+
+            renderDisplay.color     = Color.white;
+            renderDisplay.texture   = outputTexture;
+        }
+        else
+        {
+            if (renderDisplay.color != transparentColor)
+                renderDisplay.color = transparentColor;
+        }
     }
 
     // From https://github.com/Chman/FrameCapture/
