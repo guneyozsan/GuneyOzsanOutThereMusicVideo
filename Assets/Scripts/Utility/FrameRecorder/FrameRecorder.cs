@@ -276,7 +276,6 @@ namespace PostIllusions.Utility
             }
         }
 
-        // From https://github.com/Chman/FrameCapture/
         void SetProjectionMatrix(Camera cam, int sample)
         {
             const   float   kJitterScale    = 1f;
@@ -295,7 +294,6 @@ namespace PostIllusions.Utility
             cam.useJitteredProjectionMatrixForTransparentRendering = false;
         }
 
-        // From https://github.com/Chman/FrameCapture/
         float HaltonSeq(int index, int radix)
         {
             float result    = 0f;
@@ -312,7 +310,6 @@ namespace PostIllusions.Utility
             return result;
         }
 
-        // From https://github.com/Chman/FrameCapture/
         Matrix4x4 GetPerspProjectionMatrix(Camera cam, Vector2 offset)
         {
             float       vertical        =   Mathf.Tan(0.5f * Mathf.Deg2Rad * cam.fieldOfView);
@@ -353,7 +350,6 @@ namespace PostIllusions.Utility
             return matrix;
         }
 
-        // From https://github.com/Chman/FrameCapture/
         Matrix4x4 GetOrthoProjectionMatrix(Camera cam, Vector2 offset)
         {
             float   vertical    =   cam.orthographicSize;
@@ -370,7 +366,6 @@ namespace PostIllusions.Utility
             return Matrix4x4.Ortho(left, right, bottom, top, cam.nearClipPlane, cam.farClipPlane);
         }
 
-        // From https://github.com/Chman/FrameCapture/
         void FormatOutputTexture(ref Texture2D texture, Resolution resolution)
         {
             if ((texture != null) && (texture.width == resolution.Width) && (texture.height == resolution.Height))
