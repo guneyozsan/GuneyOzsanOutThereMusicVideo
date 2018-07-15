@@ -60,41 +60,43 @@ namespace PostIllusions.Utility
     {
         [Header("Parameters")]
         [SerializeField]
-        private         Resolution      targetRes;
+        private         Resolution          targetRes;
 
-        private const   int             minFrameRate = 1;
-        private const   int             maxFrameRate = 120;
+        private const   int                 minFrameRate = 1;
+        private const   int                 maxFrameRate = 120;
         [SerializeField, Range(minFrameRate, maxFrameRate)]
-        private         int             frameRate;
+        private         int                 frameRate;
 
-        private const   int             minSamples = 1;
-        private const   int             maxSamples = 16;
+        private const   int                 minSamples = 1;
+        private const   int                 maxSamples = 16;
         [Space]
         [SerializeField, Range(minSamples, maxSamples)]
-        private         int             samples = 1;
+        private         int                 samples = 1;
 
         [Space]
         [SerializeField]
-        private         bool            supersample = false;
+        private         bool                supersample = false;
 
         [Space]
         [Header("Display")]
         [SerializeField]
-        private         bool            displayRender;
+        private         bool                displayRender;
 
         [Space]
         [Header("Setup")]
         [SerializeField]
-        private         Camera          renderCamera;
+        private         Camera              renderCamera;
         [SerializeField]
-        private         RawImage        renderDisplay;
+        private         RawImage            renderDisplay;
 
-        private         int             frameCount;
-        private         Material        resolverMaterial;
-        private         Texture2D       outputTexture;
-        private         DirectoryInfo   outputFolder;
-        private         RectTransform   displayRectTransform;
-        private         Color           transparentColor = new Color(0, 0, 0, 0);
+        private         int                 frameCount;
+        private         Material            resolverMaterial;
+        private         Texture2D           outputTexture;
+        private         DirectoryInfo       outputFolder;
+        private         RectTransform       displayRectTransform;
+        private         Color               transparentColor = new Color(0, 0, 0, 0);
+
+        private         WaitForEndOfFrame   waitForEndOfFrame;
 
         [Serializable]
         private struct Resolution
@@ -168,8 +170,15 @@ namespace PostIllusions.Utility
             Destroy(outputTexture);
         }
 
-        void LateUpdate()
+        void Update()
         {
+            StartCoroutine(CaptureFrame());
+        }
+
+        IEnumerator CaptureFrame()
+        {
+            yield return waitForEndOfFrame;
+
             {
                 RenderTexture originalRenderTexture = RenderTexture.active;
                 RenderTexture originalTargetTexture = renderCamera.targetTexture;
@@ -233,15 +242,15 @@ namespace PostIllusions.Utility
                 }
 
                 renderCamera.ResetProjectionMatrix();
-                renderCamera.targetTexture = originalTargetTexture;
+                renderCamera.targetTexture  = originalTargetTexture;
 
-                RenderTexture.active = outputRenderTexture;
+                RenderTexture.active        = outputRenderTexture;
 
                 FormatOutputTexture(ref outputTexture, targetRes);
                 outputTexture.ReadPixels(new Rect(0, 0, targetRes.Width, targetRes.Height), 0, 0);
                 outputTexture.Apply();
 
-                RenderTexture.active = originalRenderTexture;
+                RenderTexture.active        = originalRenderTexture;
 
                 foreach (RenderTexture renderTarget in renderTargets)
                     RenderTexture.ReleaseTemporary(renderTarget);
