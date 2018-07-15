@@ -65,9 +65,9 @@ public class Debugging : MonoBehaviour {
         if (displayGui)
         {
             GUI.Label(
-                new Rect(10, 10, 200, 100),
+                new Rect(10f, 10f, 200f, 100f),
                 "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-                + "      Time:   " + (int)(Sequencer.MusicDebug.time * 1000) + " ms" + Environment.NewLine
+                + "      Time:   " + (int)(Sequencer.Time * 1000f) + " ms" + Environment.NewLine
                 + "-------------------------------------------" + Environment.NewLine
                 + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
                 + Sequencer.CurrentRegionDescription

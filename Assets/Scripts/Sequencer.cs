@@ -23,10 +23,9 @@ using UnityEngine;
 public class Sequencer : MonoBehaviour
 {
     AudioSource music;
+    public static float Time { get; private set; }
 
 #if UNITY_EDITOR
-    public static AudioSource MusicDebug { get; private set; }
-
     public static Part CurrentPart { get; private set; }
     public static string CurrentRegionDescription { get; private set; }
 
@@ -49,7 +48,6 @@ public class Sequencer : MonoBehaviour
         }
     }
 
-    float time;
     int bpm;
     int loopToBar;
 
@@ -63,23 +61,17 @@ public class Sequencer : MonoBehaviour
         music = GetComponent<AudioSource>();
         music.time = 0f;
         music.Play();
-        time = 0f;
-
-#if UNITY_EDITOR
-        MusicDebug = music;
-#endif // UNITY_EDITOR
+        Time = 0f;
 
         CurrentBar = 1;
         CurrentBeat = 1;
     }
 
-    float t = 0;
-
     void Update()
     {
         // Syncs time with music time.
-        if (Time.frameCount != 1 && Time.frameCount != 2)
-            time += Time.deltaTime;
+        if (UnityEngine.Time.frameCount != 1 && UnityEngine.Time.frameCount != 2)
+            Time += UnityEngine.Time.deltaTime;
 
 #if UNITY_EDITOR
         AdjustPlaybackSpeed();
@@ -97,12 +89,12 @@ public class Sequencer : MonoBehaviour
             && Debugging.FastForwardSpeed != 1)
         {
             music.volume = 0;
-            Time.timeScale = Debugging.FastForwardSpeed;
+            UnityEngine.Time.timeScale = Debugging.FastForwardSpeed;
         }
         else
         {
             music.volume = 1;
-            Time.timeScale = Debugging.PlaybackSpeed;
+            UnityEngine.Time.timeScale = Debugging.PlaybackSpeed;
         }
     }
 #endif // UNITY_EDITOR
@@ -110,122 +102,122 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void SetCurrentRegion()
     {
-        if (time < 9.350)
+        if (Time < 9.350)
         {
             CurrentPart = Part.Intro;
             CurrentRegionDescription = "wind intro";
         }
-        else if (time < 15.584)
+        else if (Time < 15.584)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "explosion";
         }
-        else if (time < 21.818)
+        else if (Time < 21.818)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "ping sound!";
         }
-        else if (time < 46.753)
+        else if (Time < 46.753)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "musical base";
         }
-        else if (time < 96.623)
+        else if (Time < 96.623)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "melody";
         }
-        else if (time < 121.558)
+        else if (Time < 121.558)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "bass";
         }
-        else if (time < 146.493)
+        else if (Time < 146.493)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "hihat and full bass";
         }
-        else if (time < 171.428)
+        else if (Time < 171.428)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "bass syncopation";
         }
-        else if (time < 183.896)
+        else if (Time < 183.896)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 to 2 bridge";
         }
-        else if (time < 233.766)
+        else if (Time < 233.766)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: musical base";
         }
-        else if (time < 258.701)
+        else if (Time < 258.701)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: melody";
         }
-        else if (time < 283.636)
+        else if (Time < 283.636)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
         }
-        else if (time < 308.571)
+        else if (Time < 308.571)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: musical base";
         }
-        else if (time < 333.506)
+        else if (Time < 333.506)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: melody";
         }
-        else if (time < 358.441)
+        else if (Time < 358.441)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
         }
-        else if (time < 383.376)
+        else if (Time < 383.376)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "B: melody";
         }
-        else if (time < 408.311)
+        else if (Time < 408.311)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
         }
-        else if (time < 433.246)
+        else if (Time < 433.246)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "A: melody";
         }
-        else if (time < 458.181)
+        else if (Time < 458.181)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "AB bridge";
         }
-        else if (time < 483.116)
+        else if (Time < 483.116)
         {
             CurrentPart = Part.Part2Probe;
             CurrentRegionDescription = "Part 2 to 1 bridge";
         }
-        else if (time < 508.051)
+        else if (Time < 508.051)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 rhythm + melody + hihat";
         }
-        else if (time < 532.986)
+        else if (Time < 532.986)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 rhythm + melody";
         }
-        else if (time < 557.922)
+        else if (Time < 557.922)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 melody + bass";
         }
-        else if (time < 582.857)
+        else if (Time < 582.857)
         {
             CurrentPart = Part.Part1Approach;
             CurrentRegionDescription = "Part 1 melody + bass + hihat";
@@ -243,10 +235,10 @@ public class Sequencer : MonoBehaviour
         double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
 
 #if UNITY_EDITOR
-        timeOfCurrentBeat -= BeatDuration * (1 - 1/ Time.timeScale);
+        timeOfCurrentBeat -= BeatDuration * (1 - 1/ UnityEngine.Time.timeScale);
 #endif // UNITY_EDITOR
 
-        if (time > timeOfCurrentBeat)
+        if (Time > timeOfCurrentBeat)
         {
             if (CurrentBeat < 4)
             {
@@ -259,8 +251,8 @@ public class Sequencer : MonoBehaviour
             }
 
 #if UNITY_EDITOR
-            if (Time.timeScale != 1)
-                time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / Time.timeScale));
+            if (UnityEngine.Time.timeScale != 1)
+                Time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / UnityEngine.Time.timeScale));
 #endif // UNITY_EDITOR
 
         }
@@ -268,10 +260,10 @@ public class Sequencer : MonoBehaviour
 
     void LoopMusicTo(int loopToBar)
     {
-        if (time >= 595.324)
+        if (Time >= 595.324)
         {
             music.time = (float)((loopToBar - 1d) * 4d * BeatDuration);
-            time = music.time;
+            Time = music.time;
             music.Play();
             CurrentBar = loopToBar;
 
