@@ -5,7 +5,9 @@
 
 ## Release
 
-The project is still in progress and not released yet. But the binaries for the latest state are available at the [releases section](https://github.com/guneyozsan/Guney-Ozsan-Out-There-Music-Video-Unity-3D-Demo/releases) (Windows, Mac, Linux).
+The project is still in progress and **not** released yet. You can watch some previews of it on this [YouTube playlist](https://www.youtube.com/playlist?list=PLBYE9YLbsJSD-Seaq95rhKokDs5wc5nim).
+
+Still, the binaries for the latest state are available at the [releases section](https://github.com/guneyozsan/Guney-Ozsan-Out-There-Music-Video-Unity-3D-Demo/releases) (Windows, Mac, Linux).
 
 Check out to development branch to see the latest state. It is mostly stable.
 
@@ -48,7 +50,8 @@ The basic implementation of the idea for this was written in 2014 but it couldn'
 - Part II composition **(in progress)**
 - Explore visual effect possibilities through color, shader, post-processing.
 - Experiment with various user interactions.
-- Take screen recording.
+- Take screen recording as music video.
+- Introduce a main menu for different modes.
 - Publish the music video on web and self-publish the runtime version.
 - Look for publishing opportunities for the runtime version such as Steam, mobile...etc.
 - Make a VR version.
