@@ -28,8 +28,11 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     public static Part CurrentPart { get; private set; }
     public static string CurrentRegionDescription { get; private set; }
+#endif // UNITY_EDITOR
 
-    public enum Part {
+#if UNITY_EDITOR
+    public enum Part
+    {
         Intro,
         Part1Approach,
         Part2Probe

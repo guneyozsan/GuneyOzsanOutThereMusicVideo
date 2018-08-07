@@ -1,9 +1,9 @@
-﻿// Audio Sequencer - An audio sequencer tool for Unity 3D
-// Copyright (C) 2018 Guney Ozsan
+﻿// PI Sequencer - Audio sequencer for Unity 3D
+// Copyright (C) 2018 Soyut-Lama Medya Yapim Ltd. Sti.
 
-// This file is part of Audio Sequencer.
+// This file is part of PI Sequencer.
 
-// Audio Sequencer is free software: you can redistribute it and/or modify
+// PI Sequencer is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
@@ -17,70 +17,116 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PostIllusions.Audio
+namespace PostIllusions.Audio.Sequencer
 {
-    public partial class Sequencer : MonoBehaviour
+    public class Sequencer : MonoBehaviour
     {
-        public static   MusicTime   MusicTime { get; private set; }
-        
-        [SerializeField]
-        private         float       bpm;
-        public          float       Bpm { get { return bpm; } }
+        private Measure     measure;
+        private MusicTime   musicTime;
+        private bool        isPlaying;
 
-        private         bool        isPlaying;
+        private void Awake()
+        {
+            Playback.OnSetPlaybackState += SetPlaybackState;
+        }
+
+        private void OnDestroy()
+        {
+            Playback.OnSetPlaybackState -= SetPlaybackState;
+        }
+
+        [SerializeField]
+        Region[] regions;
+
+        public static event Action<MusicTime> OnUpdateBeat;
 
         private void Update()
         {
             if (isPlaying)
-                MusicTime.AddTime(Time.deltaTime);
+            {
+                musicTime.AddTime(Time.deltaTime);
+            }
         }
 
-        public void Play()
+        private void SetPlaybackState(Playback.Event playbackEvent)
+        {
+            switch (playbackEvent)
+            {
+                case Playback.Event.Play:
+                    Play();
+                    break;
+                case Playback.Event.Pause:
+                    Pause();
+                    break;
+                case Playback.Event.Stop:
+                    Stop();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private void Play()
         {
             isPlaying = true;
         }
 
-        public void Pause()
+        private void Pause()
         {
             isPlaying = false;
         }
 
-        public void Stop()
+        private void Stop()
         {
             isPlaying = false;
-            MusicTime.Reset();
+            musicTime.Reset();
         }
 
-        void SetBeats()
+        private void SetBeats()
         {
-            double timeOfCurrentBeat = ((MusicTime.Bar - 1) * 4 + MusicTime.Beat) * BeatDuration;
+            double timeOfCurrentBeat = ((musicTime.Bar - 1) * 4 + musicTime.Beat) * musicTime.BeatDuration;
 
 #if UNITY_EDITOR
-            timeOfCurrentBeat -= BeatDuration * (1 - 1 / Time.timeScale);
+            timeOfCurrentBeat -= musicTime.BeatDuration * (1d - 1d / Time.timeScale);
 #endif // UNITY_EDITOR
 
-            if (MusicTime.Miliseconds > timeOfCurrentBeat)
+            if (musicTime.Miliseconds > timeOfCurrentBeat)
             {
-                if (MusicTime.Beat < 4)
+                if (musicTime.Beat < 4)
                 {
-                    MusicTime.AddBeat(1);
+                    musicTime.AddBeat(1);
                 }
                 else
                 {
-                    MusicTime.SetBeat(1);
-                    MusicTime.AddBar(1);
+                    musicTime.SetBeat(1);
+                    musicTime.AddBar(1);
                 }
 
 #if UNITY_EDITOR
-                if (UnityEngine.Time.timeScale != 1)
-                    MusicTime.SetMiliseconds((float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / Time.timeScale)));
+                if (Time.timeScale != 1)
+                {
+                    musicTime.SetTime((float)(timeOfCurrentBeat + musicTime.BeatDuration * (1f - 1f / Time.timeScale)));
+                }
 #endif // UNITY_EDITOR
 
+                if (OnUpdateBeat != null)
+                {
+                    OnUpdateBeat(musicTime);
+                }
             }
+        }
+
+        [Serializable]
+        public struct Region
+        {
+            int     startBar;
+            int     endBar;
+            string  name;
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿// Audio Sequencer - An audio sequencer tool for Unity 3D
-// Copyright (C) 2018 Guney Ozsan
+﻿// PI Sequencer - Audio sequencer for Unity 3D
+// Copyright (C) 2018 Soyut-Lama Medya Yapim Ltd. Sti.
 
-// This file is part of Audio Sequencer.
+// This file is part of PI Sequencer.
 
-// Audio Sequencer is free software: you can redistribute it and/or modify
+// PI Sequencer is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
@@ -17,13 +17,26 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-namespace PostIllusions.Audio
+namespace PostIllusions.Audio.Sequencer
 {
+    using System;
+
+    [Serializable]
     public struct MusicTime
     {
-        public  int     Bar     { get; set; }
-        public  int     Beat    { get; set; }
-        public  float   Miliseconds { get; set; }
+        public MusicTime(int bpm)
+        {
+            Bpm         = bpm;
+            Bar         = 1;
+            Beat        = 1;
+            Miliseconds = 0;
+        }
+
+        public  int     Bpm { get; private set; }
+        public  int     Bar { get; private set; }
+        public  int     Beat { get; private set; }
+        public  float   Miliseconds { get; private set; }
+        public  double  BeatDuration { get { return 60d / Bpm; } }
 
         public void AddBeat(int value)
         {
@@ -35,26 +48,26 @@ namespace PostIllusions.Audio
             Bar += value;
         }
 
-        public void AddTime(float value)
-        {
-            Miliseconds += value;
-        }
-
         public void SetBeat(int value)
         {
             Beat = value;
         }
 
-        public void SetMiliseconds(float value)
+        public void AddTime(float value)
+        {
+            Miliseconds += value;
+        }
+
+        public void SetTime(float value)
         {
             Miliseconds = value;
         }
 
         public void Reset()
         {
-            Bar     = 1;
-            Beat    = 1;
-            Miliseconds = 0;
+            Bar         = 1;
+            Beat        = 1;
+            Miliseconds = 0f;
         }
     }
 }
