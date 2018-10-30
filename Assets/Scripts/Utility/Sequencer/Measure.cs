@@ -17,18 +17,48 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-
-namespace PostIllusions.Audio.Sequencer
+namespace PostIllusions.Audio.Music
 {
+    /// <summary>
+    /// Musical measure.
+    /// </summary>
     public struct Measure
     {
-        public Measure(int count, int noteValue)
+        /// <summary>
+        /// Construct a measure in standart musical format ("3/4", "4/4", "6/8"...etc.).
+        /// </summary>
+        /// <param name="measure">"3/4", "4/4", "6/8"...etc.</param>
+        public Measure(string measure)
         {
-            Count       = count;
-            NoteValue   = noteValue;
+            int slashIndex = measure.IndexOf("/");
+            Count = int.Parse(measure.Substring(0, slashIndex));
+            NoteValue = int.Parse(measure.Substring(slashIndex + 1, measure.Length - (slashIndex + 1)));
         }
 
-        public int Count { get; set; }
-        public int NoteValue { get; set; }
+        /// <summary>
+        /// Construct a measure by explicitly defining count and noteValue.
+        /// </summary>
+        /// <param name="count">Count of notes. For example "3" in standart notation "3/4".</param>
+        /// <param name="noteValue">Note value where 1 is a whole note. For example "4" in standart notation "3/4".</param>
+        public Measure(int count, int noteValue)
+        {
+            Count = count;
+            NoteValue = noteValue;
+        }
+
+        /// <summary>
+        /// Count of notes. For example "3" in standart notation "3/4".
+        /// </summary>
+        public int Count { get; private set; }
+
+        /// <summary>
+        /// Note value where 1 is a whole note. For example "4" in standart notation "3/4".
+        /// </summary>
+        public int NoteValue { get; private set; }
+
+        public string GetMeasure()
+        {
+            return (Count.ToString() + "/" + NoteValue.ToString());
+        }
     }
 }
