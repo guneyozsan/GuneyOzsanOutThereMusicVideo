@@ -17,57 +17,69 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    using PostIllusions.Audio.Music;
+    using UnityEngine;
+
     public class Sequencer : MonoBehaviour
     {
-        private Measure     measure;
-        private MusicTime   musicTime;
-        private bool        isPlaying;
+        [SerializeField]
+        private Region[] regions;
+
+        private Measure measure;
+        private MusicalTime musicTime;
+        private bool isPlaying;
 
         private void Awake()
         {
-            Playback.OnSetPlaybackState += SetPlaybackState;
+            Playback.PlaybackStateSet += HandlePlaybackStateSet;
         }
 
         private void OnDestroy()
         {
-            Playback.OnSetPlaybackState -= SetPlaybackState;
+            Playback.PlaybackStateSet -= HandlePlaybackStateSet;
         }
 
-        [SerializeField]
-        Region[] regions;
-
-        public static event Action<MusicTime> OnUpdateBeat;
+        public static event Action<MusicAudioTime> UpdateBeat;
 
         private void Update()
         {
             if (isPlaying)
             {
                 musicTime.AddTime(Time.deltaTime);
+                SetCurrentRegion();
             }
         }
 
-        private void SetPlaybackState(Playback.Event playbackEvent)
+        private void SetCurrentRegion()
+        {
+            foreach (Region region in regions)
+            {
+                if (region.StartBar > musicTime.)
+            }
+        }
+
+        private void HandlePlaybackStateSet(Playback.State playbackEvent)
         {
             switch (playbackEvent)
             {
-                case Playback.Event.Play:
+                case Playback.State.Play:
                     Play();
                     break;
-                case Playback.Event.Pause:
+                case Playback.State.Pause:
                     Pause();
                     break;
-                case Playback.Event.Stop:
+                case Playback.State.Stop:
                     Stop();
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new NotSupportedException("Undefined playback state: " + playbackEvent);
             }
         }
 
@@ -92,7 +104,7 @@ namespace PostIllusions.Audio.Sequencer
             double timeOfCurrentBeat = ((musicTime.Bar - 1) * 4 + musicTime.Beat) * musicTime.BeatDuration;
 
 #if UNITY_EDITOR
-            timeOfCurrentBeat -= musicTime.BeatDuration * (1d - 1d / Time.timeScale);
+            timeOfCurrentBeat -= musicTime.BeatDuration* (1d - 1d / Time.timeScale);
 #endif // UNITY_EDITOR
 
             if (musicTime.Miliseconds > timeOfCurrentBeat)
@@ -110,23 +122,29 @@ namespace PostIllusions.Audio.Sequencer
 #if UNITY_EDITOR
                 if (Time.timeScale != 1)
                 {
-                    musicTime.SetTime((float)(timeOfCurrentBeat + musicTime.BeatDuration * (1f - 1f / Time.timeScale)));
+                    musicTime.SetTime((float)(timeOfCurrentBeat + musicTime.BeatDuration* (1f - 1f / Time.timeScale)));
                 }
 #endif // UNITY_EDITOR
 
-                if (OnUpdateBeat != null)
+                if (UpdateBeat != null)
                 {
-                    OnUpdateBeat(musicTime);
+                    UpdateBeat(musicTime);
                 }
             }
         }
+    }
 
-        [Serializable]
-        public struct Region
-        {
-            int     startBar;
-            int     endBar;
-            string  name;
-        }
+    [Serializable]
+    public struct Region
+    {
+        [SerializeField]
+        private MusicalTime   start;
+        public  MusicalTime   Start { get { return start; } }
+        [SerializeField]
+        private MusicalTime   end;
+        public  MusicalTime   End { get { return end; } }
+        [SerializeField]
+        private string          name;
+        public  string          Name { get { return name; } }
     }
 }
