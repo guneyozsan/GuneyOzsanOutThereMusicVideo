@@ -17,33 +17,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-using System;
-using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
-    public class Playback : MonoBehaviour
+    public enum PlaybackState
     {
-        public static event Action<PlaybackState> PlaybackStateSet;
-
-        public void Play()
-        {
-            OnSetPlaybackState(PlaybackState.Play);
-        }
-
-        public void Pause()
-        {
-            OnSetPlaybackState(PlaybackState.Pause);
-        }
-
-        public void Stop()
-        {
-            OnSetPlaybackState(PlaybackState.Stop);
-        }
-
-        private void OnSetPlaybackState(PlaybackState state)
-        {
-            if (PlaybackStateSet != null) PlaybackStateSet(state);
-        }
+        Play,
+        Pause,
+        Stop
     }
 }
