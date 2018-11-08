@@ -20,7 +20,7 @@
 namespace PostIllusions.Audio.Music
 {
     /// <summary>
-    /// Musical measure.
+    /// Represents a musical measure (Example: 3/4, 4/4, 6/8...etc.).
     /// </summary>
     public struct Measure
     {
@@ -31,34 +31,34 @@ namespace PostIllusions.Audio.Music
         public Measure(string measure)
         {
             int slashIndex = measure.IndexOf("/");
-            Count = int.Parse(measure.Substring(0, slashIndex));
-            NoteValue = int.Parse(measure.Substring(slashIndex + 1, measure.Length - (slashIndex + 1)));
+            BeatCount = int.Parse(measure.Substring(0, slashIndex));
+            BeatNoteValue = int.Parse(measure.Substring(slashIndex + 1, measure.Length - (slashIndex + 1)));
         }
 
         /// <summary>
         /// Construct a measure by explicitly defining count and noteValue.
         /// </summary>
-        /// <param name="count">Count of notes. For example "3" in standart notation "3/4".</param>
-        /// <param name="noteValue">Note value where 1 is a whole note. For example "4" in standart notation "3/4".</param>
-        public Measure(int count, int noteValue)
+        /// <param name="beatCount">Count of notes. For example "3" in standart notation "3/4".</param>
+        /// <param name="beatNoteValue">Musical note value where 1 is a whole note. For example "4" in standart notation "3/4".</param>
+        public Measure(int beatCount, int beatNoteValue)
         {
-            Count = count;
-            NoteValue = noteValue;
+            BeatCount = beatCount;
+            BeatNoteValue = beatNoteValue;
         }
 
         /// <summary>
-        /// Count of notes. For example "3" in standart notation "3/4".
+        /// Count of beats with <paramref name="BeatNoteValue"/> in a single bar. For example "3" in standart notation "3/4".
         /// </summary>
-        public int Count { get; private set; }
+        public int BeatCount { get; private set; }
 
         /// <summary>
-        /// Note value where 1 is a whole note. For example "4" in standart notation "3/4".
+        /// Note value of the beat where 1 is a whole note. For example "4" in standart notation "3/4".
         /// </summary>
-        public int NoteValue { get; private set; }
+        public int BeatNoteValue { get; private set; }
 
         public string GetMeasure()
         {
-            return (Count.ToString() + "/" + NoteValue.ToString());
+            return (BeatCount.ToString() + "/" + BeatNoteValue.ToString());
         }
     }
 }
