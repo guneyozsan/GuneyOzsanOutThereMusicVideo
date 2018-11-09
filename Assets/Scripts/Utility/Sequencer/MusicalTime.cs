@@ -40,7 +40,7 @@ namespace PostIllusions.Audio.Music
         public int Beat { get; protected set; }
 
         /// <summary>
-        /// Increases beat number by 1.
+        /// Increments beat number by 1.
         /// </summary>
         public void IncrementBeat()
         {
@@ -55,7 +55,7 @@ namespace PostIllusions.Audio.Music
         }
 
         /// <summary>
-        /// Decreases beat number by 1.
+        /// Decrements beat number by 1.
         /// </summary>
         public void DecrementBeat()
         {
