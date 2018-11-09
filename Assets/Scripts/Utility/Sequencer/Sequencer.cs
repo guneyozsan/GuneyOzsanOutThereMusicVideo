@@ -133,18 +133,4 @@ namespace PostIllusions.Audio.Sequencer
             }
         }
     }
-
-    [Serializable]
-    public struct Region
-    {
-        [SerializeField]
-        private MusicalTime   start;
-        public  MusicalTime   Start { get { return start; } }
-        [SerializeField]
-        private MusicalTime   end;
-        public  MusicalTime   End { get { return end; } }
-        [SerializeField]
-        private string          name;
-        public  string          Name { get { return name; } }
-    }
 }
