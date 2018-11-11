@@ -17,40 +17,46 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
+
 namespace PostIllusions.Audio.Music
 {
     /// <summary>
     /// Represents a moment in music domain with given measure in terms of bars and beats.
     /// </summary>
+    [Serializable]
     public class MusicalTime
     {
+        protected int bar;
+        protected int beat;
+
         /// <summary>
-        /// 
+        /// Creates a musical time with given measure.
         /// </summary>
         /// <param name="measure"></param>
         public MusicalTime(Measure measure)
         {
             Measure = measure;
-            Bar = 1;
-            Beat = 1;
+            bar = 1;
+            beat = 1;
         }
 
         public Measure Measure { get; protected set; }
-        public int Bar { get; protected set; }
-        public int Beat { get; protected set; }
+        public int Bar { get { return bar; } }
+        public int Beat { get { return beat; } }
 
         /// <summary>
         /// Increments beat number by 1.
         /// </summary>
         public void IncrementBeat()
         {
-            if (Beat == Measure.BeatCount)
+            if (beat == Measure.BeatCount)
             {
-                Beat = 1;
+                beat = 1;
             }
             else
             {
-                Beat++;
+                beat++;
             }
         }
 
@@ -59,13 +65,13 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         public void DecrementBeat()
         {
-            if (Beat == 1)
+            if (beat == 1)
             {
-                Beat = Measure.BeatCount;
+                beat = Measure.BeatCount;
             }
             else
             {
-                Beat--;
+                beat--;
             }
         }
 
@@ -75,7 +81,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value"></param>
         public void SetBar(int value)
         {
-            Bar = value;
+            bar = value;
         }
 
         /// <summary>
@@ -84,7 +90,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value"></param>
         public void SetBeat(int value)
         {
-            Beat = value;
+            beat = value;
         }
 
         /// <summary>
@@ -93,7 +99,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value"></param>
         public void AddBar(int value)
         {
-            Bar += value;
+            bar += value;
         }
 
         /// <summary>
@@ -105,21 +111,21 @@ namespace PostIllusions.Audio.Music
         /// <para>Zero: Equal down to Beat.</para></returns>
         public int CompareTo(MusicalTime obj)
         {
-            if (Bar > obj.Bar)
+            if (bar > obj.Bar)
             {
                 return 1;
             }
-            else if (Bar < obj.Bar)
+            else if (bar < obj.Bar)
             {
                 return -1;
             }
             else
             {
-                if (Beat > obj.Beat)
+                if (beat > obj.Beat)
                 {
                     return 1;
                 }
-                else if (Beat < obj.Beat)
+                else if (beat < obj.Beat)
                 {
                     return -1;
                 }

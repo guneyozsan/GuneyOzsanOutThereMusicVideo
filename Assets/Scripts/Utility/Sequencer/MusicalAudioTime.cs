@@ -98,8 +98,8 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         public void ResetToBeginning()
         {
-            Bar = 1;
-            Beat = 1;
+            bar = 1;
+            beat = 1;
             Time = 0f;
         }
     }
