@@ -29,11 +29,11 @@ namespace PostIllusions.Audio.Sequencer
     public struct MusicRegion
     {
         [SerializeField]
+        private string name;
+        [SerializeField]
         private MusicalTime start;
         [SerializeField]
         private MusicalTime end;
-        [SerializeField]
-        private string name;
 
         public MusicalTime Start { get { return start; } }
         public MusicalTime End { get { return end; } }
