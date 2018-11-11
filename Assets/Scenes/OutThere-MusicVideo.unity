@@ -244,7 +244,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &184312932
 GameObject:
@@ -273,7 +273,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &184312934
 Light:
@@ -338,7 +338,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &204063248
 Light:
@@ -436,7 +436,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1125916902
 Prefab:
@@ -483,7 +483,7 @@ Prefab:
     - target: {fileID: 224941649340213530, guid: 0ca1979804de6194abdcc9156f17fd15,
         type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 224941649340213530, guid: 0ca1979804de6194abdcc9156f17fd15,
         type: 2}
@@ -593,7 +593,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4322075477480712, guid: a05da252833173548b75d5ac30027aa1, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a05da252833173548b75d5ac30027aa1, type: 2}
@@ -628,7 +628,7 @@ Transform:
   m_Children:
   - {fileID: 87642040}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1210266820
 Camera:
@@ -710,7 +710,7 @@ MonoBehaviour:
   displayGui: 1
   playbackSpeed: 1
   fastForwardEnabled: 0
-  fastForwardToBar: 59
+  fastForwardToBar: 187
   fastForwardSpeed: 3
 --- !u!4 &1256199838
 Transform:
@@ -723,7 +723,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1304810660
 Prefab:
@@ -762,7 +762,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4703135246899406, guid: 5ca1776d11c87a24faae2d069c795ab3, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5ca1776d11c87a24faae2d069c795ab3, type: 2}
@@ -797,7 +797,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1368347919
 AudioListener:
@@ -910,6 +910,222 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!1 &1464147749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1464147751}
+  - component: {fileID: 1464147750}
+  m_Layer: 0
+  m_Name: Sequencer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1464147750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1464147749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c37398bfc8f6acc4aa9e11f9bd8b2fe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  regions:
+  - name: Wind Intro
+    start:
+      bar: 1
+      beat: 1
+    end:
+      bar: 4
+      beat: 1
+  - name: Explosion
+    start:
+      bar: 4
+      beat: 1
+    end:
+      bar: 6
+      beat: 1
+  - name: Ping sound
+    start:
+      bar: 6
+      beat: 1
+    end:
+      bar: 8
+      beat: 1
+  - name: Musical base
+    start:
+      bar: 8
+      beat: 1
+    end:
+      bar: 16
+      beat: 1
+  - name: Melody
+    start:
+      bar: 16
+      beat: 1
+    end:
+      bar: 32
+      beat: 1
+  - name: Bass
+    start:
+      bar: 32
+      beat: 1
+    end:
+      bar: 40
+      beat: 1
+  - name: Hihat and full bass
+    start:
+      bar: 40
+      beat: 1
+    end:
+      bar: 48
+      beat: 1
+  - name: Bass syncopation
+    start:
+      bar: 48
+      beat: 1
+    end:
+      bar: 56
+      beat: 1
+  - name: Part 1 to 2 bridge
+    start:
+      bar: 56
+      beat: 1
+    end:
+      bar: 60
+      beat: 1
+  - name: A - Musical base
+    start:
+      bar: 60
+      beat: 1
+    end:
+      bar: 76
+      beat: 1
+  - name: Melody
+    start:
+      bar: 76
+      beat: 1
+    end:
+      bar: 84
+      beat: 1
+  - name: AB Bridge
+    start:
+      bar: 84
+      beat: 1
+    end:
+      bar: 92
+      beat: 1
+  - name: B - Musical base
+    start:
+      bar: 92
+      beat: 1
+    end:
+      bar: 100
+      beat: 1
+  - name: B - Melody
+    start:
+      bar: 100
+      beat: 1
+    end:
+      bar: 108
+      beat: 1
+  - name: AB Bridge
+    start:
+      bar: 108
+      beat: 1
+    end:
+      bar: 116
+      beat: 1
+  - name: B - Melody
+    start:
+      bar: 116
+      beat: 1
+    end:
+      bar: 124
+      beat: 1
+  - name: AB Bridge
+    start:
+      bar: 124
+      beat: 1
+    end:
+      bar: 132
+      beat: 1
+  - name: A - Melody
+    start:
+      bar: 132
+      beat: 1
+    end:
+      bar: 140
+      beat: 1
+  - name: AB - Bridge
+    start:
+      bar: 140
+      beat: 1
+    end:
+      bar: 148
+      beat: 1
+  - name: Part 2 to 1 bridge
+    start:
+      bar: 148
+      beat: 1
+    end:
+      bar: 156
+      beat: 1
+  - name: Part 1 rhythm + melody + hihat
+    start:
+      bar: 156
+      beat: 1
+    end:
+      bar: 164
+      beat: 1
+  - name: Part 1 rhythm + melody
+    start:
+      bar: 164
+      beat: 1
+    end:
+      bar: 172
+      beat: 1
+  - name: Part 1 melody + bass
+    start:
+      bar: 172
+      beat: 1
+    end:
+      bar: 180
+      beat: 1
+  - name: Part 1 melody + bass + hihat
+    start:
+      bar: 180
+      beat: 1
+    end:
+      bar: 188
+      beat: 1
+  - name: Part 1 to 2 bridge
+    start:
+      bar: 188
+      beat: 1
+    end:
+      bar: 192
+      beat: 1
+--- !u!4 &1464147751
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1464147749}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1875497754
 Prefab:
   m_ObjectHideFlags: 0
@@ -947,7 +1163,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4889211252426570, guid: 71a1c4c33f419dc4bb70c9440d04c374, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 71a1c4c33f419dc4bb70c9440d04c374, type: 2}
