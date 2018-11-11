@@ -18,6 +18,7 @@
 // ---------------------------------------------------------------------
 
 using System;
+using UnityEngine;
 
 namespace PostIllusions.Audio.Music
 {
@@ -27,7 +28,9 @@ namespace PostIllusions.Audio.Music
     [Serializable]
     public class MusicalTime
     {
+        [SerializeField]
         protected int bar;
+        [SerializeField]
         protected int beat;
 
         /// <summary>
