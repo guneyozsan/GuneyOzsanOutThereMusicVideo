@@ -3,6 +3,18 @@
 
 ![Screenshot](https://i.imgur.com/6bidGGB.gif?1 "Screenshot")
 
+## Notice
+
+After becoming a dad last year the project had it place in shelves for quite a long time. To prevent the project failing all together I am changing the course a little bit.
+
+This was my first big C# project and I was focused more on the video result than code itself. Meanwhile C# became my main language in my career that I'm currently not comfortable with the code quality as it appears that there are a few useful tools that can be extracted out of this project.
+
+However, I am also not comfortable that turning into this project into a software tool is blocking the path to finalize the music video as an art form.
+
+At this point it turns out that assigning two separate functionality to the project had became harmful (Dope! Single responsibility principle everywhere huh?). So I decided to split the paths, and the first goal will be to finalize the video as fast as possible without thinking about the condition of the current code.
+
+Only after releasing the music video, my intention is to refactor the code to extract some useful tools for people that may want to work with music tracks in Unity. 
+
 ## Release
 
 The project is still in progress and **not** released yet. You can watch some previews of it on this [YouTube playlist](https://www.youtube.com/playlist?list=PLBYE9YLbsJSD-Seaq95rhKokDs5wc5nim).
