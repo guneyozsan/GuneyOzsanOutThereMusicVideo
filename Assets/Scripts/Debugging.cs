@@ -15,17 +15,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-// Displays the current time, measure and song part for tracking our place in the song and debugging.
 # if UNITY_EDITOR
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Debugging : MonoBehaviour {
 
-    [SerializeField]
-    bool displayGui;
     [SerializeField]
     [Range(0, 5)]
     float playbackSpeed;
@@ -58,21 +54,6 @@ public class Debugging : MonoBehaviour {
             FastForwardSpeed = fastForwardSpeed;
         else
             FastForwardSpeed = 1;
-    }
-
-    void OnGUI()
-    {
-        if (displayGui)
-        {
-            GUI.Label(
-                new Rect(10f, 10f, 200f, 100f),
-                "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-                + "      Time:   " + (int)(Sequencer.Time * 1000f) + " ms" + Environment.NewLine
-                + "-------------------------------------------" + Environment.NewLine
-                + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-                + Sequencer.CurrentRegionDescription
-            );
-        }
     }
 }
 #endif // UNITY_EDITOR

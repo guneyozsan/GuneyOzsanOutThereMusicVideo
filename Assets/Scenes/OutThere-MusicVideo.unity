@@ -691,7 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45112382adf96ec4b9c50be2fa4cc572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayGui: 1
   playbackSpeed: 1
   fastForwardEnabled: 0
   fastForwardToBar: 187
@@ -903,6 +902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1464147751}
   - component: {fileID: 1464147750}
+  - component: {fileID: 1464147752}
   m_Layer: 0
   m_Name: Sequencer
   m_TagString: Untagged
@@ -1110,6 +1110,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1464147752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1464147749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24a7e9ba60c171744bf9b28f0194f2ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayGui: 1
 --- !u!1001 &1875497754
 Prefab:
   m_ObjectHideFlags: 0
