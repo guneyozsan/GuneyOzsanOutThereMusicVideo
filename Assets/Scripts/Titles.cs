@@ -16,11 +16,8 @@
 // ---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
 
 public class Title
 {
@@ -154,7 +151,26 @@ public class Title
     }
 }
 
-
+public class WordArgs
+{
+    public WordArgs(int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter,
+        int horizontalParticlesPerSlot, int verticalParticlesPerSlot, int slotPadding, float particlePadding)
+    {
+        VerticalParticleSlotsPerLetter = verticalParticleSlotsPerLetter;
+        HorizontalParticleSlotsPerLetter = horizontalParticleSlotsPerLetter;
+        HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
+        VerticalParticlesPerSlot = verticalParticlesPerSlot;
+        SlotPadding = slotPadding;
+        ParticlePadding = particlePadding;
+    }
+    
+    public int VerticalParticleSlotsPerLetter { get; private set; } // letter height and width in particle slots
+    public int HorizontalParticleSlotsPerLetter { get; private set; }
+    public int HorizontalParticlesPerSlot { get; private set; }
+    public int VerticalParticlesPerSlot { get; private set; }
+    public float SlotPadding { get; private set; } // space between each particle slot
+    public float ParticlePadding { get; private set; } // space between each particle in a single slot
+}
 
 public class Word
 {
@@ -165,30 +181,26 @@ public class Word
     public int VerticalParticlesPerSlot { get; private set; }
     public float SlotPadding { get; private set; } // space between each particle slot
     public float ParticlePadding { get; private set; } // space between each particle in a single slot
-    public string Code { get; private set; } // the letters written in empty and non-empty characters.
+    public string Content { get; private set; } // the letters written in empty and non-empty characters.
                                              // code should fit the parameters for particle slots per letter.
     Letter[] letters;
 
-    public Word(Vector3 location,
-        int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter,
-        int horizontalParticlesPerSlot, int verticalParticlesPerSlot,
-        int slotPadding, float particlePadding,
-        string code)
+    public Word(Vector3 location, WordArgs args, string content)
     {
         Location = location;
-        VerticalParticleSlotsPerLetter = verticalParticleSlotsPerLetter;
-        HorizontalParticleSlotsPerLetter = horizontalParticleSlotsPerLetter;
-        HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
-        VerticalParticlesPerSlot = verticalParticlesPerSlot;
-        SlotPadding = slotPadding;
-        ParticlePadding = particlePadding;
-        Code = code;
+        VerticalParticleSlotsPerLetter = args.VerticalParticleSlotsPerLetter;
+        HorizontalParticleSlotsPerLetter = args.HorizontalParticleSlotsPerLetter;
+        HorizontalParticlesPerSlot = args.HorizontalParticlesPerSlot;
+        VerticalParticlesPerSlot = args.VerticalParticlesPerSlot;
+        SlotPadding = args.SlotPadding;
+        ParticlePadding = args.ParticlePadding;
+        Content = content;
 
-        letters = new Letter[Code.Length];
+        letters = new Letter[Content.Length];
 
         for (int i = 0; i < letters.Length; i++)
         {
-            letters[i] = new Letter(Code[i]);
+            letters[i] = new Letter(Content[i]);
         }
     }
 
@@ -212,8 +224,6 @@ public class Word
         }
     }
 }
-
-
 
 public class Letter
 {
@@ -244,8 +254,6 @@ public class Letter
         }
     }
 
-
-
     public int OccupiedSlotsCount
     {
         get
@@ -253,8 +261,6 @@ public class Letter
             return occupiedSlotsCount;
         }
     }
-
-
 
     Dictionary<char, string[]> alphabet = new Dictionary<char, string[]>
     {

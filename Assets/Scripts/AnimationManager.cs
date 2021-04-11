@@ -16,85 +16,157 @@
 // ---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    [SerializeField]
-    Transform planetesimalPrefab;
-    [SerializeField]
-    Camera mainCamera;
+    [SerializeField] private Planetesimal planetesimalPrefab;
+    [SerializeField] private Camera mainCamera;
 
-    public static Title openingTitlesMusic;
-    public static Title openingTitlesBy;
-    public static Title openingTitlesComposer;
-    public static Title partOneTitlesPartNumber;
-    public static Title partOneTitlesPartName;
-    public static Title partTwoTitlesPartNumber;
-    public static Title partTwoTitlesPartName;
+    private Title openingTitlesMusic;
+    private Title openingTitlesBy;
+    private Title openingTitlesComposer;
+    private Title partOneTitlesPartNumber;
+    private Title partOneTitlesPartName;
+    private Title partTwoTitlesPartNumber;
+    private Title partTwoTitlesPartName;
 
-    float alignY = 0;
-    static int currentAnimationBar = 0;
-    static int currentAnimationBeat = 0;
-    Vector3 defaultCameraLocation;
+    private int currentBar;
+    private int currentBeat;
 
-    Vector3 target = Vector3.zero;
-    List<Vector3> targets = new List<Vector3>() {
-        Vector3.zero
-    };
-    
 #if UNITY_EDITOR
-    static List<GameObject> pilotObjects = new List<GameObject>();
-#endif // UNITY_EDITOR
+    private static List<GameObject> pilotObjects = new List<GameObject>();
+#endif
 
-    void Start()
+    private void Awake()
     {
-        defaultCameraLocation = mainCamera.transform.position;
+        InitializeTitles();
+        InstantiatePlanetesimals();
+    }
+
+    private void Update()
+    {
+        int currentSequencerBar = Sequencer.CurrentBar;
+        int currentSequencerBeat = Sequencer.CurrentBeat;
+        
+        UpdateTitleAnimations(currentSequencerBar);
+        UpdateGravityAnimations(currentSequencerBar, currentSequencerBeat);
+
+        currentBar = currentSequencerBar;
+        currentBeat = currentSequencerBeat;
+    }
+
+    public static void SetGravity(float gravityForce, List<Vector3> targets)
+    {
+#if UNITY_EDITOR
+        if (pilotObjects.Count > targets.Count)
+        {
+            for (int i = targets.Count; i < pilotObjects.Count; i++)
+            {
+                Destroy(pilotObjects[i]);
+            }
+            
+            pilotObjects = pilotObjects.GetRange(0, targets.Count);
+        }
+#endif
+
+        var forceVectors = new Gravity.ForceVector[targets.Count];
+
+        for (int j = 0; j < targets.Count; j++)
+        {
+            forceVectors[j] = new Gravity.ForceVector(gravityForce, targets[j]);
+#if UNITY_EDITOR
+            if (j > pilotObjects.Count - 1)
+            {
+                GameObject pilot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                Collider pilotCollider = pilot.GetComponent<Collider>();
+                
+                if (pilotCollider != null)
+                {
+                    Destroy(pilotCollider);
+                }
+                
+                pilotObjects.Add(pilot);
+            }
+            
+            pilotObjects[j].transform.position = targets[j];
+#endif
+        }
+
+        foreach (Planetesimal planetesimal in Space.planetesimals)
+        {
+            planetesimal.SetGravityForce(forceVectors);
+        }
+    }
+
+    private static void SetGravity(float gravityForce, Vector3 target)
+    {
+        var targets = new List<Vector3> { target };
+        SetGravity(gravityForce, targets);
+    }
+
+    private static void SetGravityPerBar(float[] gravityForces, Vector3 target, int periodBars,
+        int initialBar)
+    {
+        var targets = new List<Vector3> { target };
+        SetGravityPerBar(gravityForces, targets, periodBars, initialBar);
+    }
+
+    private static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets,
+        int periodBars, int initialBar)
+    {
+        int forceCount = gravityForces.Length;
+        float currentBarInSlice = (float) (Sequencer.CurrentBar - initialBar) / periodBars;
+        
+        for (int i = 0; i < forceCount; i++)
+        {
+            if (!Mathf.Approximately(i, currentBarInSlice % forceCount))
+            {
+                continue;
+            }
+            
+            SetGravity(gravityForces[i], targets);
+            break;
+        }
+    }
+
+    private void InitializeTitles()
+    {
+        var wordArgs = new WordArgs(5, 5,
+            2, 2, 2, 1.3f);
 
         openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-19.1f, 15f, 0), 5, 5, 2, 2, 2, 1.3f, "OUT"),
-            new Word(new Vector3(-32.85f, -5.2f, 0), 5, 5, 2, 2, 2, 1.3f, "THERE"),
+            new Word(new Vector3(-19.1f, 15f, 0f), wordArgs, "OUT"),
+            new Word(new Vector3(-32.85f, -5.2f, 0f), wordArgs, "THERE"),
         });
-
         openingTitlesBy = new Title(new Word[] {
-            new Word(new Vector3(-11f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "BY"),
+            new Word(new Vector3(-11f, 7f, -9.4f), wordArgs, "BY"),
         });
-
         openingTitlesComposer = new Title(new Word[] {
-            new Word(new Vector3(-66f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "GUNEY"),
-            new Word(new Vector3(8f, 7f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "OZSAN"),
+            new Word(new Vector3(-66f, 7f, -9.4f), wordArgs, "GUNEY"),
+            new Word(new Vector3(8f, 7f, -9.4f), wordArgs, "OZSAN"),
         });
-
         partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-39.5f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART I"),
+            new Word(new Vector3(-39.5f, 18f, -9.4f), wordArgs, "PART I"),
         });
-
         partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-53.45f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "APPROACH"),
+            new Word(new Vector3(-53.45f, -11.3f, -9.4f), wordArgs, "APPROACH"),
         });
-
         partTwoTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-46.65f, 18f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PART II"),
+            new Word(new Vector3(-46.65f, 18f, -9.4f), wordArgs, "PART II"),
         });
-
         partTwoTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-32.85f, -11.3f, -9.4f), 5, 5, 2, 2, 2, 1.3f, "PROBE"),
+            new Word(new Vector3(-32.85f, -11.3f, -9.4f), wordArgs, "PROBE"),
         });
+    }
 
+    private void InstantiatePlanetesimals()
+    {
+        const int cubeSideLength = 11;
+        const float particlePadding = 1f;
+        const float alignmentAdjustment = cubeSideLength / 2f;
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
-        //planetesimalParent.gameObject.AddComponent<Rotator>().Initialize(0.005f, 10f);
-
-        //int cubeSideLength = MathUtility.ClosestCubeRoot(
-        //    openingTitlesMusic.ParticleCount
-        //    + partOneTitlesPartNumber.ParticleCount
-        //    + partOneTitlesPartName.ParticleCount, true);
-        //print(cubeSideLength);
-        int cubeSideLength = 11;
-
-        float particlePadding = 1f;
-        float alignmentAdjustment = cubeSideLength / 2;
 
         for (int i = 0; i < cubeSideLength; i++)
         {
@@ -107,167 +179,121 @@ public class AnimationManager : MonoBehaviour
                 for (int k = 0; k < cubeSideLength; k++)
                 {
                     float z = k * particlePadding - alignmentAdjustment;
-                    Space.planetesimals.Add(Instantiate(planetesimalPrefab, new Vector3(x, y + alignY, z), Quaternion.identity, planetesimalParent).GetComponent<Planetesimal>());
+                    
+                    Planetesimal planetesimal = Instantiate(planetesimalPrefab,
+                        new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
+                    Space.planetesimals.Add(planetesimal);
                 }
             }
         }
     }
 
-    void Update()
+    private void UpdateTitleAnimations(int currentSequencerBar)
     {
-        switch (Sequencer.CurrentBar)
+        
+        switch (currentSequencerBar)
         {
             case 4:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 0.005f, true, false);
-                    SetGravity(0, Vector3.zero);
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 0.005f,
+                        true, false);
+                    SetGravity(0f, Vector3.zero);
                 }
-
                 break;
 
             case 16:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    openingTitlesMusic.SpreadTitle(10, 0.8f * Sequencer.BarDuration, 0.001f, false);
-                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
-                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration, 0.001f, true, true);
+                    openingTitlesMusic.SpreadTitle(10f, 0.8f * Sequencer.BarDuration,
+                        0.001f, false);
+                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration,
+                        0.001f, true, true);
+                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration,
+                        0.001f, true, true);
                 }
                 break;
 
             case 32:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    partOneTitlesPartNumber.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false);
+                    partOneTitlesPartNumber.SpreadTitle(10f, 1f * Sequencer.BarDuration,
+                        0.05f, false);
                 }
                 break;
 
             case 36:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    partOneTitlesPartName.SpreadTitle(10, 1f * Sequencer.BarDuration, 0.05f, false);
+                    partOneTitlesPartName.SpreadTitle(10f, 1f * Sequencer.BarDuration,
+                        0.05f, false);
                 }
                 break;
                 
             case 57:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    partTwoTitlesPartNumber.FormTitle(2f * Sequencer.BarDuration, 0.007f, true, true);
-                    partTwoTitlesPartName.FormTitle(2f * Sequencer.BarDuration, 0.014f, true, true);
+                    partTwoTitlesPartNumber.FormTitle(2f * Sequencer.BarDuration,
+                        0.007f, true, true);
+                    partTwoTitlesPartName.FormTitle(2f * Sequencer.BarDuration,
+                        0.014f, true, true);
                 }
                 break;
 
             case 61:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    partTwoTitlesPartNumber.SpreadTitle(10, .5f * Sequencer.BarDuration, 0.0025f, false);
-                    partTwoTitlesPartName.SpreadTitle(10, .5f * Sequencer.BarDuration, 0.0025f, false);
+                    partTwoTitlesPartNumber.SpreadTitle(10f, .5f * Sequencer.BarDuration,
+                        0.0025f, false);
+                    partTwoTitlesPartName.SpreadTitle(10f, .5f * Sequencer.BarDuration,
+                        0.0025f, false);
                 }
                 break;
 
             case 100:
-                if (currentAnimationBar != Sequencer.CurrentBar)
+                if (currentBar != currentSequencerBar)
                 {
-                    Transform cameraPlanetesimal = Instantiate(planetesimalPrefab, mainCamera.transform.position, Quaternion.identity);
-                    Space.planetesimals.Add(cameraPlanetesimal.GetComponent<Planetesimal>());
-                    mainCamera.transform.SetParent(cameraPlanetesimal);
+                    Planetesimal cameraPlanetesimal = Instantiate(planetesimalPrefab,
+                        mainCamera.transform.position, Quaternion.identity);
+                    Space.planetesimals.Add(cameraPlanetesimal);
+                    mainCamera.transform.SetParent(cameraPlanetesimal.transform);
                 }
                 break;
         }
+    }
 
+    private void UpdateGravityAnimations(int currentSequencerBar, int currentSequencerBeat)
+    {
         const int firstBarOfSequence = 18;
         const int firstBarOfTwinGalaxy = 32;
         const int lastBarOfTwinGalaxy = 57;
+        bool firstTimeInBarAndBeat = currentBar != Sequencer.CurrentBar 
+                                     || currentBeat != Sequencer.CurrentBeat;
 
-        if ((Sequencer.CurrentBar >= firstBarOfSequence) && (Sequencer.CurrentBar < firstBarOfTwinGalaxy)
-            && (Sequencer.CurrentBeat == 1))
+        if (currentSequencerBar >= firstBarOfSequence && currentSequencerBar < firstBarOfTwinGalaxy
+                                                      && currentSequencerBeat == 1)
         {
-            SetGravityPerBar(new float[] { -65, 0 }, new Vector3(0, 0, -17), 2, firstBarOfSequence);
+            SetGravityPerBar(new[] { -65f, 0f }, new Vector3(0f, 0f, -17f),
+                2, firstBarOfSequence);
         }
-        else if ((Sequencer.CurrentBar >= firstBarOfTwinGalaxy) && (Sequencer.CurrentBar < (lastBarOfTwinGalaxy + 1)))
+        else if (currentSequencerBar >= firstBarOfTwinGalaxy
+                 && currentSequencerBar < lastBarOfTwinGalaxy + 1)
         {
             TwinGalaxyAnimation.UpdateFrame(firstBarOfTwinGalaxy, lastBarOfTwinGalaxy);
         }
-        else if (Sequencer.CurrentBar >= lastBarOfTwinGalaxy && Sequencer.CurrentBar < 60)
+        else if (currentSequencerBar >= lastBarOfTwinGalaxy && currentSequencerBar < 60)
         {
-            if (FirstTimeInBarAndBeat())
-                SetGravity(-30, Vector3.zero);
-        }
-        else if (Sequencer.CurrentBar >= 60
-            && (Sequencer.CurrentBeat == 1))
-        {
-            if (FirstTimeInBarAndBeat())
-                SetGravityPerBar(new float[] { 0, -300f }, Vector3.zero, 1, 60);
-        }
-
-        currentAnimationBar = Sequencer.CurrentBar;
-        currentAnimationBeat = Sequencer.CurrentBeat;
-    }
-
-    bool FirstTimeInBarAndBeat()
-    {
-        if ((currentAnimationBar != Sequencer.CurrentBar)
-            || (currentAnimationBeat != Sequencer.CurrentBeat))
-            return true;
-        else
-            return false;
-    }
-
-    public static void SetGravity(float gravityForce, Vector3 target)
-    {
-        List<Vector3> targets = new List<Vector3> { target };
-        SetGravity(gravityForce, targets);
-    }
-
-    public static void SetGravity(float gravityForce, List<Vector3> targets)
-    {
-#if UNITY_EDITOR
-        if (pilotObjects.Count > targets.Count)
-        {
-            for (int i = targets.Count; i < pilotObjects.Count; i++)
+            if (firstTimeInBarAndBeat)
             {
-                Destroy(pilotObjects[i]);
+                SetGravity(-30f, Vector3.zero);
             }
-            pilotObjects = pilotObjects.GetRange(0, targets.Count);
         }
-#endif // UNITY_EDITOR
-
-        Gravity.ForceVector[] forceVectors = new Gravity.ForceVector[targets.Count];
-
-        for (int j = 0; j < targets.Count; j++)
+        else if (currentSequencerBar >= 60 && currentSequencerBeat == 1)
         {
-            forceVectors[j] = new Gravity.ForceVector(gravityForce, targets[j]);
-#if UNITY_EDITOR
-            if (j > pilotObjects.Count - 1)
+            if (firstTimeInBarAndBeat)
             {
-                pilotObjects.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
-                Destroy(pilotObjects[j].GetComponent<SphereCollider>());
+                SetGravityPerBar(new[] { 0f, -300f }, Vector3.zero, 1, 60);
             }
-            pilotObjects[j].transform.position = targets[j];
-#endif // UNITY_EDITOR
-        }
-
-        for (int k = 0; k < Space.planetesimals.Count; k++)
-        {
-            Space.planetesimals[k].SetGravityForce(forceVectors);
-        }
-    }
-
-    public static void SetGravityPerBar(float[] gravityForces, Vector3 target, int perBar, int initialBar)
-    {
-        List<Vector3> targets = new List<Vector3> { target };
-        SetGravityPerBar(gravityForces, targets, perBar, initialBar);
-    }
-
-    // Takes an array of gravity forces and sets it each bar.
-    public static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets, int perBar, int initialBar)
-    {
-        Gravity.ForceVector[] forceVectors = new Gravity.ForceVector[targets.Count];
-
-        for (int i = 0; i < gravityForces.Length; i++)
-        {
-            if (((float)(Sequencer.CurrentBar - initialBar) / perBar) % (float)gravityForces.Length == i)
-                SetGravity(gravityForces[i], targets);
         }
     }
 }
