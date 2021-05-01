@@ -57,27 +57,27 @@ public class AnimationManager : MonoBehaviour
         currentBeat = currentSequencerBeat;
     }
 
-    public static void SetGravity(float gravityForce, List<Vector3> targets)
+    public static void SetForces(float charge, List<Vector3> centers)
     {
 #if UNITY_EDITOR
-        if (pilotObjects.Count > targets.Count)
+        if (pilotObjects.Count > centers.Count)
         {
-            for (int i = targets.Count; i < pilotObjects.Count; i++)
+            for (int i = centers.Count; i < pilotObjects.Count; i++)
             {
                 Destroy(pilotObjects[i]);
             }
             
-            pilotObjects = pilotObjects.GetRange(0, targets.Count);
+            pilotObjects = pilotObjects.GetRange(0, centers.Count);
         }
 #endif
 
-        var forceVectors = new Gravity.ForceVector[targets.Count];
+        var forces = new Force[centers.Count];
 
-        for (int j = 0; j < targets.Count; j++)
+        for (int i = 0; i < centers.Count; i++)
         {
-            forceVectors[j] = new Gravity.ForceVector(gravityForce, targets[j]);
+            forces[i] = new Force(charge, centers[i]);
 #if UNITY_EDITOR
-            if (j > pilotObjects.Count - 1)
+            if (i > pilotObjects.Count - 1)
             {
                 GameObject pilot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 Collider pilotCollider = pilot.GetComponent<Collider>();
@@ -90,33 +90,33 @@ public class AnimationManager : MonoBehaviour
                 pilotObjects.Add(pilot);
             }
             
-            pilotObjects[j].transform.position = targets[j];
+            pilotObjects[i].transform.position = centers[i];
 #endif
         }
 
         foreach (Planetesimal planetesimal in Space.planetesimals)
         {
-            planetesimal.SetGravityForce(forceVectors);
+            planetesimal.SetForces(forces);
         }
     }
 
-    private static void SetGravity(float gravityForce, Vector3 target)
+    private static void SetForces(float charge, Vector3 center)
     {
-        var targets = new List<Vector3> { target };
-        SetGravity(gravityForce, targets);
+        var centers = new List<Vector3> { center };
+        SetForces(charge, centers);
     }
 
-    private static void SetGravityPerBar(float[] gravityForces, Vector3 target, int periodBars,
+    private static void SetForcePerBar(float[] charges, Vector3 center, int periodBars,
         int initialBar)
     {
-        var targets = new List<Vector3> { target };
-        SetGravityPerBar(gravityForces, targets, periodBars, initialBar);
+        var centers = new List<Vector3> { center };
+        SetForcePerBar(charges, centers, periodBars, initialBar);
     }
 
-    private static void SetGravityPerBar(float[] gravityForces, List<Vector3> targets,
+    private static void SetForcePerBar(float[] charges, List<Vector3> centers,
         int periodBars, int initialBar)
     {
-        int forceCount = gravityForces.Length;
+        int forceCount = charges.Length;
         float currentBarInSlice = (float) (Sequencer.CurrentBar - initialBar) / periodBars;
         
         for (int i = 0; i < forceCount; i++)
@@ -126,7 +126,7 @@ public class AnimationManager : MonoBehaviour
                 continue;
             }
             
-            SetGravity(gravityForces[i], targets);
+            SetForces(charges[i], centers);
             break;
         }
     }
@@ -198,7 +198,7 @@ public class AnimationManager : MonoBehaviour
                 {
                     openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 0.005f,
                         true, false);
-                    SetGravity(0f, Vector3.zero);
+                    SetForces(0f, Vector3.zero);
                 }
                 break;
 
@@ -273,7 +273,7 @@ public class AnimationManager : MonoBehaviour
         if (currentSequencerBar >= firstBarOfSequence && currentSequencerBar < firstBarOfTwinGalaxy
                                                       && currentSequencerBeat == 1)
         {
-            SetGravityPerBar(new[] { -65f, 0f }, new Vector3(0f, 0f, -17f),
+            SetForcePerBar(new[] { -65f, 0f }, new Vector3(0f, 0f, -17f),
                 2, firstBarOfSequence);
         }
         else if (currentSequencerBar >= firstBarOfTwinGalaxy
@@ -285,14 +285,14 @@ public class AnimationManager : MonoBehaviour
         {
             if (firstTimeInBarAndBeat)
             {
-                SetGravity(-30f, Vector3.zero);
+                SetForces(-30f, Vector3.zero);
             }
         }
         else if (currentSequencerBar >= 60 && currentSequencerBeat == 1)
         {
             if (firstTimeInBarAndBeat)
             {
-                SetGravityPerBar(new[] { 0f, -300f }, Vector3.zero, 1, 60);
+                SetForcePerBar(new[] { 0f, -300f }, Vector3.zero, 1, 60);
             }
         }
     }

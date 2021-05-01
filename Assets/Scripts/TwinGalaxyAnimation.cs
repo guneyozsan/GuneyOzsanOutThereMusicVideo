@@ -34,7 +34,7 @@ public class TwinGalaxyAnimation {
             -orbit + offset
         };
         force = MathUtility.ExponentialInterpolation(0f, -220f, 0.40f, normalizedT);
-        AnimationManager.SetGravity(force, targets);
+        AnimationManager.SetForces(force, targets);
         rotationSpeed = MathUtility.ExponentialInterpolation(0.0029f, 0.0095f, 14f, normalizedT);
         radian = rotationSpeed * 60f * t;
         t += Time.deltaTime;

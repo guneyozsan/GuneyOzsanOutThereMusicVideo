@@ -22,7 +22,7 @@ using UnityEngine;
 public class Planetesimal : MonoBehaviour {
 
     new Rigidbody rigidbody;
-    Gravity gravity;
+    ForceExecutive forceExecutive;
     Mover mover;
 
     // If the planetesimal is being used for constructing a shape or free.
@@ -31,7 +31,7 @@ public class Planetesimal : MonoBehaviour {
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
-        gravity = GetComponent<Gravity>();
+        forceExecutive = GetComponent<ForceExecutive>();
         mover = GetComponent<Mover>();
 
         mover.MoverFinished += OnMoverFinished;
@@ -60,14 +60,9 @@ public class Planetesimal : MonoBehaviour {
         mover.SpreadAround(range, time, delay, sphericalLerp);
     }
 
-    public void SetGravityForce(float gravityForce, Vector3 target)
+    public void SetForces(Force[] forces)
     {
-        gravity.SetForce(gravityForce, target);
-    }
-
-    public void SetGravityForce(Gravity.ForceVector[] forceVectors)
-    {
-        gravity.SetForce(forceVectors);
+        forceExecutive.SetForces(forces);
     }
 
     public void SetVelocity(Vector3 velocity)
@@ -85,6 +80,6 @@ public class Planetesimal : MonoBehaviour {
     void SetAllocation(bool value)
     {
         IsAllocated = value;
-        gravity.enabled = !value;
+        forceExecutive.enabled = !value;
     }
 }
