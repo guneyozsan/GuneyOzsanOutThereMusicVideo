@@ -15,85 +15,105 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Mover : MonoBehaviour
 {
-    public event System.Action<Vector3> MoverFinished;
+    private Rigidbody myRigidbody;
 
-    Vector3 halfVector = new Vector3(0.5f, 0.5f, 0.5f);
+    public event Action DestinationReached;
 
-    public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    private void Awake()
     {
-        StartCoroutine(DelayMoveTo(target, time, delay, sphericalLerp));
+        myRigidbody = transform.GetComponent<Rigidbody>();
     }
 
-    IEnumerator DelayMoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    public void MoveTo(Vector3 targetPosition, float timeSeconds, bool isSphericalLerp,
+        float delaySeconds)
     {
-        yield return new WaitForSeconds(delay);
+        StartCoroutine(MoveToAfterDelayCoroutine(targetPosition, timeSeconds, isSphericalLerp,
+            delaySeconds));
+    }
+
+    public void SpreadAround(float range, float timeSeconds, bool isSphericalLerp,
+        float delaySeconds)
+    {
+        StartCoroutine(SpreadAroundAfterDelayCoroutine(range, timeSeconds, isSphericalLerp,
+            delaySeconds));
+    }
+
+    private IEnumerator MoveToAfterDelayCoroutine(Vector3 targetPosition, float timeSeconds,
+        bool isSphericalLerp, float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
         StopAllCoroutines();
-        StartCoroutine(PerformMoveTo(target, time, sphericalLerp));
+        StartCoroutine(MoveToCoroutine(targetPosition, timeSeconds, isSphericalLerp));
     }
 
-    IEnumerator PerformMoveTo(Vector3 target, float time, bool sphericalLerp)
+    private IEnumerator MoveToCoroutine(Vector3 targetPosition, float timeSeconds, bool isSphericalLerp)
     {
-        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        Vector3 start = transform.position;
+        myRigidbody.velocity = Vector3.zero;
+        Vector3 initialPosition = transform.position;
 
         float t = 0;
 
         while (t <= 1)
         {
-            if (sphericalLerp)
-                transform.position = Vector3.Slerp(start, target, Mathf.SmoothStep(0, 1, t));
-            else
-                transform.position = Vector3.Lerp(start, target, Mathf.SmoothStep(0, 1, t));
+            transform.position = isSphericalLerp
+                ? Vector3.Slerp(initialPosition, targetPosition, Mathf.SmoothStep(0, 1, t))
+                : Vector3.Lerp(initialPosition, targetPosition, Mathf.SmoothStep(0, 1, t));
 
-            t += Time.deltaTime / time;
+            t += Time.deltaTime / timeSeconds;
             yield return null;
         }
 
         while (true)
         {
-            transform.position = target;
+            transform.position = targetPosition;
             yield return null;
         }
     }
 
-    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
+    private IEnumerator SpreadAroundAfterDelayCoroutine(float range, float timeSeconds, bool isSphericalLerp,
+        float delaySeconds)
     {
-        StartCoroutine(DelaySpreadAround(range, time, delay, sphericalLerp));
-    }
-
-    IEnumerator DelaySpreadAround(float range, float time, float delay, bool sphericalLerp)
-    {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delaySeconds);
         StopAllCoroutines();
-        StartCoroutine(PerformSpreadAround(range, time, sphericalLerp));
+        StartCoroutine(SpreadAroundCoroutine(range, timeSeconds, isSphericalLerp));
     }
 
-    IEnumerator PerformSpreadAround(float range, float time, bool sphericalLerp)
+    private IEnumerator SpreadAroundCoroutine(float range, float timeSeconds, bool isSphericalLerp)
     {
-        transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        Vector3 start = transform.position;
-        Vector3 randomVector = new Vector3(Random.value, Random.value, Random.value);
-        Vector3 target = transform.position + range * (randomVector - halfVector);
+        myRigidbody.velocity = Vector3.zero;
+        Vector3 initialPosition = transform.position;
+        // TODO: Change direction distribution from random point in cube to random point in sphere.
+        var randomDirection = new Vector3(Random.value, Random.value, Random.value);
+        Vector3 targetPosition = initialPosition + range * (randomDirection - Vector3.one / 2f);
         float t = 0;
 
         while (t <= 1)
         {
-            if (sphericalLerp)
-                transform.position = Vector3.Slerp(start, target, t);
-            else
-                transform.position = Vector3.Lerp(start, target, t);
+            transform.position = isSphericalLerp
+                ? Vector3.Slerp(initialPosition, targetPosition, t)
+                : Vector3.Lerp(initialPosition, targetPosition, t);
 
-            t += Time.deltaTime / time;
+            t += Time.deltaTime / timeSeconds;
             yield return null;
         }
-        // Allows the object to keep floating to the direction it is moved.
-        Vector3 velocity = (target - start) / time;
-        if (MoverFinished != null) MoverFinished(velocity);
+        
+        
+        // TODO: Check if re-setting position was a necessary hack or not.
+        Vector3 finalPosition = transform.position;
+        // TODO: Use last-frame velocity vector to match slerp direction.
+        myRigidbody.velocity = (targetPosition - initialPosition) / timeSeconds;
+        transform.position = finalPosition;
+
+        if (DestinationReached != null)
+        {
+            DestinationReached.Invoke();
+        }
     }
 }

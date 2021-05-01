@@ -34,30 +34,24 @@ public class Planetesimal : MonoBehaviour {
         forceExecutive = GetComponent<ForceExecutive>();
         mover = GetComponent<Mover>();
 
-        mover.MoverFinished += OnMoverFinished;
+        mover.DestinationReached += OnDestinationReached;
     }
 
     void OnDestroy()
     {
-        mover.MoverFinished -= OnMoverFinished;
+        mover.DestinationReached -= OnDestinationReached;
     }
 
-    public void OnMoverFinished(Vector3 velocity)
-    {
-        SetAllocation(false);
-        SetVelocity(velocity);
-    }
-
-    public void MoveTo(Vector3 target, float time, float delay, bool sphericalLerp)
+    public void MoveTo(Vector3 target, float time, bool isSphericalLerp, float delayBeforeMoving)
     {
         SetAllocation(true);
-        mover.MoveTo(target, time, delay, sphericalLerp);
+        mover.MoveTo(target, time, isSphericalLerp, delayBeforeMoving);
     }
 
-    public void SpreadAround(float range, float time, float delay, bool sphericalLerp)
+    public void SpreadAround(float range, float time, bool isSphericalLerp, float delay)
     {
         SetAllocation(true);
-        mover.SpreadAround(range, time, delay, sphericalLerp);
+        mover.SpreadAround(range, time, isSphericalLerp, delay);
     }
 
     public void SetForces(Force[] forces)
@@ -65,19 +59,17 @@ public class Planetesimal : MonoBehaviour {
         forceExecutive.SetForces(forces);
     }
 
-    public void SetVelocity(Vector3 velocity)
-    {
-        Vector3 position = transform.position;
-        rigidbody.velocity = velocity;
-        transform.position = position;
-    }
-
     public void SetFree()
     {
         SetAllocation(false);
     }
 
-    void SetAllocation(bool value)
+    private void OnDestinationReached()
+    {
+        SetAllocation(false);
+    }
+
+    private void SetAllocation(bool value)
     {
         IsAllocated = value;
         forceExecutive.enabled = !value;

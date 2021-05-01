@@ -206,7 +206,7 @@ public class AnimationManager : MonoBehaviour
                 if (currentBar != currentSequencerBar)
                 {
                     openingTitlesMusic.SpreadTitle(10f, 0.8f * Sequencer.BarDuration,
-                        0.001f, false);
+                        false, 0.001f);
                     partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration,
                         0.001f, true, true);
                     partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration,
@@ -218,7 +218,7 @@ public class AnimationManager : MonoBehaviour
                 if (currentBar != currentSequencerBar)
                 {
                     partOneTitlesPartNumber.SpreadTitle(10f, 1f * Sequencer.BarDuration,
-                        0.05f, false);
+                        false, 0.05f);
                 }
                 break;
 
@@ -226,7 +226,7 @@ public class AnimationManager : MonoBehaviour
                 if (currentBar != currentSequencerBar)
                 {
                     partOneTitlesPartName.SpreadTitle(10f, 1f * Sequencer.BarDuration,
-                        0.05f, false);
+                        false, 0.05f);
                 }
                 break;
                 
@@ -244,9 +244,9 @@ public class AnimationManager : MonoBehaviour
                 if (currentBar != currentSequencerBar)
                 {
                     partTwoTitlesPartNumber.SpreadTitle(10f, .5f * Sequencer.BarDuration,
-                        0.0025f, false);
+                        false, 0.0025f);
                     partTwoTitlesPartName.SpreadTitle(10f, .5f * Sequencer.BarDuration,
-                        0.0025f, false);
+                        false, 0.0025f);
                 }
                 break;
 

@@ -77,7 +77,7 @@ public class Title
         }
     }
 
-    public void FormTitle(float time, float particleDelay, bool randomSelection, bool sphericalLerp)
+    public void FormTitle(float time, float particleDelay, bool randomSelection, bool isSphericalLerp)
     {
         int planetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
         int currentParticleCount = 0;
@@ -125,7 +125,7 @@ public class Title
                                         while (Space.planetesimals[planetesimalIndex].IsAllocated);
                                     }
 
-                                    Space.planetesimals[planetesimalIndex].MoveTo(target, time, currentParticleCount * particleDelay, sphericalLerp);
+                                    Space.planetesimals[planetesimalIndex].MoveTo(target, time, isSphericalLerp, currentParticleCount * particleDelay);
                                     planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
 
@@ -142,11 +142,11 @@ public class Title
         }
     }
 
-    public void SpreadTitle(float range, float time, float delay, bool sphericalLerp)
+    public void SpreadTitle(float range, float time, bool isSphericalLerp, float delay)
     {
         for (int i = 0; i < planetesimalsUsed.Count; i++)
         {
-            planetesimalsUsed[i].SpreadAround(range, time, i * delay, sphericalLerp);
+            planetesimalsUsed[i].SpreadAround(range, time, isSphericalLerp, i * delay);
         }
     }
 }
