@@ -94,7 +94,7 @@ public class AnimationManager : MonoBehaviour
 #endif
         }
 
-        foreach (Planetesimal planetesimal in Space.planetesimals)
+        foreach (Planetesimal planetesimal in Space.Planetesimals)
         {
             planetesimal.SetForces(forces);
         }
@@ -182,7 +182,7 @@ public class AnimationManager : MonoBehaviour
                     
                     Planetesimal planetesimal = Instantiate(planetesimalPrefab,
                         new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
-                    Space.planetesimals.Add(planetesimal);
+                    Space.Planetesimals.Add(planetesimal);
                 }
             }
         }
@@ -255,7 +255,7 @@ public class AnimationManager : MonoBehaviour
                 {
                     Planetesimal cameraPlanetesimal = Instantiate(planetesimalPrefab,
                         mainCamera.transform.position, Quaternion.identity);
-                    Space.planetesimals.Add(cameraPlanetesimal);
+                    Space.Planetesimals.Add(cameraPlanetesimal);
                     mainCamera.transform.SetParent(cameraPlanetesimal.transform);
                 }
                 break;

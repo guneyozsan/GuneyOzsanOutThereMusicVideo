@@ -79,7 +79,7 @@ public class Title
 
     public void FormTitle(float time, float particleDelay, bool randomSelection, bool isSphericalLerp)
     {
-        int planetesimalIndex = (Space.planetesimals.Count - ParticleCount) / 2;
+        int planetesimalIndex = (Space.Planetesimals.Count - ParticleCount) / 2;
         int currentParticleCount = 0;
 
         Vector3 xVector = new Vector3(1, 0, 0);
@@ -120,13 +120,13 @@ public class Title
                                     {
                                         do
                                         {
-                                            planetesimalIndex = UnityEngine.Random.Range(0, Space.planetesimals.Count - 1);
+                                            planetesimalIndex = UnityEngine.Random.Range(0, Space.Planetesimals.Count - 1);
                                         }
-                                        while (Space.planetesimals[planetesimalIndex].IsAllocated);
+                                        while (Space.Planetesimals[planetesimalIndex].IsAllocated);
                                     }
 
-                                    Space.planetesimals[planetesimalIndex].MoveTo(target, time, isSphericalLerp, currentParticleCount * particleDelay);
-                                    planetesimalsUsed.Add(Space.planetesimals[planetesimalIndex]);
+                                    Space.Planetesimals[planetesimalIndex].MoveTo(target, time, isSphericalLerp, currentParticleCount * particleDelay);
+                                    planetesimalsUsed.Add(Space.Planetesimals[planetesimalIndex]);
                                     currentParticleCount++;
 
                                     if (!randomSelection)

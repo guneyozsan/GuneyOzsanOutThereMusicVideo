@@ -15,19 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public static class Space
 {
-    public static List<Planetesimal> planetesimals = new List<Planetesimal>();
-
-    public static void SetAllFree()
-    {
-        for (int i = 0; i < planetesimals.Count; i++)
-        {
-            planetesimals[i].SetFree();
-        }
-    }
+    public static readonly List<Planetesimal> Planetesimals = new List<Planetesimal>();
 }
