@@ -17,7 +17,7 @@
 
 using UnityEngine;
 
-public class ForceExecutive : MonoBehaviour
+public class ForceApplier : MonoBehaviour
 {
     private Rigidbody myRigidbody;
     private Force[] forces;

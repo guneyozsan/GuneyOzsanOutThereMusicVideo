@@ -15,29 +15,25 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Planetesimal : MonoBehaviour {
-
-    new Rigidbody rigidbody;
-    ForceExecutive forceExecutive;
-    Mover mover;
+public class Planetesimal : MonoBehaviour
+{
+    private ForceApplier forceApplier;
+    private Mover mover;
 
     // If the planetesimal is being used for constructing a shape or free.
     public bool IsAllocated { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        forceExecutive = GetComponent<ForceExecutive>();
+        forceApplier = GetComponent<ForceApplier>();
+        
         mover = GetComponent<Mover>();
-
         mover.DestinationReached += OnDestinationReached;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         mover.DestinationReached -= OnDestinationReached;
     }
@@ -56,7 +52,7 @@ public class Planetesimal : MonoBehaviour {
 
     public void SetForces(Force[] forces)
     {
-        forceExecutive.SetForces(forces);
+        forceApplier.SetForces(forces);
     }
 
     public void SetFree()
@@ -72,6 +68,6 @@ public class Planetesimal : MonoBehaviour {
     private void SetAllocation(bool value)
     {
         IsAllocated = value;
-        forceExecutive.enabled = !value;
+        forceApplier.enabled = !value;
     }
 }
