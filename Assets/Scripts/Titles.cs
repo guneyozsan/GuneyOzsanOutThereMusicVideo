@@ -17,122 +17,98 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class Title
 {
-    Word[] words;
+    private readonly Word[] words;
+    private readonly List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
 
-    Vector3 velocity = Vector3.zero;
-    List<Planetesimal> planetesimalsUsed = new List<Planetesimal>();
+    private readonly int particleCount;
 
-    public Title(Word[] words)
+    public Title(IEnumerable<Word> words)
     {
-        this.words = new Word[words.Length];
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            this.words[i] = words[i];
-        }
+        this.words = words.ToArray();
+        particleCount = GetParticleCount();
     }
 
-    public Word this[int index]
+    private int GetParticleCount()
     {
-        get
-        {
-            return words[index];
-        }
-        set
-        {
-            words[index] = value;
-        }
+        return words.Sum(word => word.ParticleCount);
     }
 
-    public int Length
+    public void FormTitle(float time, float particleDelay, bool isRandomSelection,
+        bool isSphericalLerp)
     {
-        get
-        {
-            return words.Length;
-        }
-    }
-
-    public int ParticleCount
-    {
-        get
-        {
-            int particleCount = 0;
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                int particlesPerSlot = words[i].HorizontalParticlesPerSlot * words[i].VerticalParticlesPerSlot;
-
-                for (int j = 0; j < words[i].Length; j++)
-                {
-                    particleCount += particlesPerSlot * words[i][j].OccupiedSlotsCount;
-                }
-
-            }
-
-            return particleCount;
-        }
-    }
-
-    public void FormTitle(float time, float particleDelay, bool randomSelection, bool isSphericalLerp)
-    {
-        int planetesimalIndex = (Space.Planetesimals.Count - ParticleCount) / 2;
+        List<Planetesimal> planetesimals = Space.Planetesimals;
+        int iPlanetesimal = (planetesimals.Count - particleCount) / 2;
         int currentParticleCount = 0;
 
-        Vector3 xVector = new Vector3(1, 0, 0);
-        Vector3 yVector = new Vector3(0, 1, 0);
-
-        // word
-        for (int i = 0; i < Length; i++)
+        foreach (Word word in words)
         {
-            Vector3 wordLocation = this[i].Location;
-            float letterSize = (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * (this[i].HorizontalParticleSlotsPerLetter + 1);
-
-            // letter
-            for (int j = 0; j < this[i].Length; j++)
+            // TODO: Check if Mathf.Max(0, word.ParticlePadding - 1) should be multiplied by HorizontalParticlesPerSlot.
+            float totalSlotPadding = word.SlotPadding + Mathf.Max(0, word.ParticlePadding - 1);
+            float letterSizeX = (word.HorizontalParticleSlotsPerLetter + 1) * totalSlotPadding;
+            float wordParticlePadding = word.ParticlePadding;
+            Vector3 wordPosition = word.Position;
+            float particlePositionZ = wordPosition.z;
+            
+            for (int letterIndex = 0; letterIndex < word.Letters.Length; letterIndex++)
             {
-                Vector3 letterLocation = (j * letterSize) * xVector;
+                Letter letter = word.Letters[letterIndex];
+                float letterShiftX = letterIndex * letterSizeX;
 
-                // slot y
-                for (int k = 0; k < this[i][j].Slots.GetLength(0); k++)
+                for (int slotRowIndex = 0; slotRowIndex < letter.Slots.GetLength(0);
+                    slotRowIndex++)
                 {
-                    Vector3 slotLocationY = k * (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * yVector;
+                    float slotShiftY = -1 * slotRowIndex * totalSlotPadding;
+                    float particlePositionY = wordPosition.y + slotShiftY;
 
-                    // slot x
-                    for (int l = 0; l < this[i][j].Slots.GetLength(1); l++)
+                    for (int slotColIndex = 0; slotColIndex < letter.Slots.GetLength(1);
+                        slotColIndex++)
                     {
-                        Vector3 slotLocationX = l * (this[i].SlotPadding + Mathf.Max(0, this[i].ParticlePadding - 1)) * xVector;
-                        
-                        if (this[i][j].Slots[k, l])
+                        if (!letter.Slots[slotRowIndex, slotColIndex])
                         {
-                            Vector3 slotLocation = wordLocation + letterLocation + slotLocationX - slotLocationY;
+                            continue;
+                        }
 
-                            for (int m = 0; m < this[i].VerticalParticlesPerSlot; m++)
+                        float slotShiftX = slotColIndex * totalSlotPadding;
+                        float particlePositionX = wordPosition.x + letterShiftX + slotShiftX;
+
+                        for (int particleRowIndex = 0;
+                            particleRowIndex < word.VerticalParticlesPerSlot; particleRowIndex++)
+                        {
+                            for (int particleColumnIndex = 0;
+                                particleColumnIndex < word.HorizontalParticlesPerSlot;
+                                particleColumnIndex++)
                             {
-                                for (int n = 0; n < this[i].HorizontalParticlesPerSlot; n++)
+                                // TODO: Check if particleRowIndex and particleColumnIndex should change places in vector calculation.
+                                var target = new Vector3(
+                                    particlePositionX + particleRowIndex * wordParticlePadding,
+                                    particlePositionY + particleColumnIndex * wordParticlePadding,
+                                    particlePositionZ);
+
+                                if (isRandomSelection)
                                 {
-                                    Vector3 target = slotLocation + new Vector3(m * this[i].ParticlePadding, n * this[i].ParticlePadding, 0);
-
-                                    if(randomSelection)
+                                    do
                                     {
-                                        do
-                                        {
-                                            planetesimalIndex = UnityEngine.Random.Range(0, Space.Planetesimals.Count - 1);
-                                        }
-                                        while (Space.Planetesimals[planetesimalIndex].IsAllocated);
+                                        iPlanetesimal = UnityEngine.Random.Range(0,
+                                            planetesimals.Count - 1);
                                     }
+                                    while (planetesimals[iPlanetesimal].IsAllocated);
+                                }
 
-                                    Space.Planetesimals[planetesimalIndex].MoveTo(target, time, isSphericalLerp, currentParticleCount * particleDelay);
-                                    planetesimalsUsed.Add(Space.Planetesimals[planetesimalIndex]);
-                                    currentParticleCount++;
+                                Planetesimal planetesimal = planetesimals[iPlanetesimal];
+                                planetesimal.MoveTo(target, time, isSphericalLerp, 
+                                    currentParticleCount * particleDelay);
+                                planetesimalsUsed.Add(planetesimal);
+                                currentParticleCount++;
 
-                                    if (!randomSelection)
-                                    {
-                                        planetesimalIndex++;
-                                    }
+                                if (!isRandomSelection)
+                                {
+                                    iPlanetesimal++;
                                 }
                             }
                         }
@@ -149,282 +125,4 @@ public class Title
             planetesimalsUsed[i].SpreadAround(range, time, isSphericalLerp, i * delay);
         }
     }
-}
-
-public class WordArgs
-{
-    public WordArgs(int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter,
-        int horizontalParticlesPerSlot, int verticalParticlesPerSlot, int slotPadding, float particlePadding)
-    {
-        VerticalParticleSlotsPerLetter = verticalParticleSlotsPerLetter;
-        HorizontalParticleSlotsPerLetter = horizontalParticleSlotsPerLetter;
-        HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
-        VerticalParticlesPerSlot = verticalParticlesPerSlot;
-        SlotPadding = slotPadding;
-        ParticlePadding = particlePadding;
-    }
-    
-    public int VerticalParticleSlotsPerLetter { get; private set; } // letter height and width in particle slots
-    public int HorizontalParticleSlotsPerLetter { get; private set; }
-    public int HorizontalParticlesPerSlot { get; private set; }
-    public int VerticalParticlesPerSlot { get; private set; }
-    public float SlotPadding { get; private set; } // space between each particle slot
-    public float ParticlePadding { get; private set; } // space between each particle in a single slot
-}
-
-public class Word
-{
-    public Vector3 Location { get; private set; } // position of the word in 3d space
-    public int VerticalParticleSlotsPerLetter { get; private set; } // letter height and width in particle slots
-    public int HorizontalParticleSlotsPerLetter { get; private set; }
-    public int HorizontalParticlesPerSlot { get; private set; }
-    public int VerticalParticlesPerSlot { get; private set; }
-    public float SlotPadding { get; private set; } // space between each particle slot
-    public float ParticlePadding { get; private set; } // space between each particle in a single slot
-    public string Content { get; private set; } // the letters written in empty and non-empty characters.
-                                             // code should fit the parameters for particle slots per letter.
-    Letter[] letters;
-
-    public Word(Vector3 location, WordArgs args, string content)
-    {
-        Location = location;
-        VerticalParticleSlotsPerLetter = args.VerticalParticleSlotsPerLetter;
-        HorizontalParticleSlotsPerLetter = args.HorizontalParticleSlotsPerLetter;
-        HorizontalParticlesPerSlot = args.HorizontalParticlesPerSlot;
-        VerticalParticlesPerSlot = args.VerticalParticlesPerSlot;
-        SlotPadding = args.SlotPadding;
-        ParticlePadding = args.ParticlePadding;
-        Content = content;
-
-        letters = new Letter[Content.Length];
-
-        for (int i = 0; i < letters.Length; i++)
-        {
-            letters[i] = new Letter(Content[i]);
-        }
-    }
-
-    public Letter this[int index]
-    {
-        get
-        {
-            return letters[index];
-        }
-        set
-        {
-            letters[index] = value;
-        }
-    }
-
-    public int Length
-    {
-        get
-        {
-            return letters.Length;
-        }
-    }
-}
-
-public class Letter
-{
-    public bool[,] Slots { get; private set; }
-
-    int occupiedSlotsCount;
-
-    public Letter(char letter)
-    {
-        Slots = new bool[alphabet[letter][0].Length, alphabet[letter].Length];
-
-        occupiedSlotsCount = 0;
-
-        for (int i = 0; i < alphabet[letter].Length; i++)
-        {
-            for (int j = 0; j < alphabet[letter][i].Length; j++)
-            {
-                if (Char.IsWhiteSpace(alphabet[letter][i][j]))
-                {
-                    Slots[i, j] = false;
-                }
-                else
-                {
-                    Slots[i, j] = true;
-                    occupiedSlotsCount++;
-                }
-            }
-        }
-    }
-
-    public int OccupiedSlotsCount
-    {
-        get
-        {
-            return occupiedSlotsCount;
-        }
-    }
-
-    Dictionary<char, string[]> alphabet = new Dictionary<char, string[]>
-    {
-        { 'A', new string[] {
-            "  0  ",
-            " 0 0 ",
-            " 000 ",
-            "0   0",
-            "0   0"} },
-        { 'B', new string[] {
-            "0000 ",
-            "0   0",
-            "0000 ",
-            "0   0",
-            "0000 "} },
-        { 'C', new string[] {
-            " 0000",
-            "0    ",
-            "0    ",
-            "0    ",
-            " 0000"} },
-        { 'D', new string[] {
-            "0000 ",
-            "0   0",
-            "0   0",
-            "0   0",
-            "0000 "} },
-        { 'E', new string[] {
-            "00000",
-            "0    ",
-            "0000 ",
-            "0    ",
-            "00000"} },
-        { 'F', new string[] {
-            "00000",
-            "0    ",
-            "0000 ",
-            "0    ",
-            "0    "} },
-        { 'G', new string[] {
-            "00000",
-            "0    ",
-            "0  00",
-            "0   0",
-            "00000"} },
-        { 'H', new string[] {
-            "0   0",
-            "0   0",
-            "00000",
-            "0   0",
-            "0   0"} },
-        { 'I', new string[] {
-            "00000",
-            "  0  ",
-            "  0  ",
-            "  0  ",
-            "00000"} },
-        { 'J', new string[] {
-            "00000",
-            "  0  ",
-            "  0  ",
-            "  0  ",
-            "00   "} },
-        { 'K', new string[] {
-            "0   0",
-            "0  0 ",
-            "000  ",
-            "0  0 ",
-            "0   0"} },
-        { 'L', new string[] {
-            "0    ",
-            "0    ",
-            "0    ",
-            "0    ",
-            "00000"} },
-        { 'M', new string[] {
-            "0   0",
-            "00 00",
-            "0 0 0",
-            "0   0",
-            "0   0"} },
-        { 'N', new string[] {
-            "0   0",
-            "00  0",
-            "0 0 0",
-            "0  00",
-            "0   0"} },
-        { 'O', new string[] {
-            " 000 ",
-            "0   0",
-            "0   0",
-            "0   0",
-            " 000 "} },
-        { 'P', new string[] {
-            "0000 ",
-            "0   0",
-            "0000 ",
-            "0    ",
-            "0    "} },
-        { 'Q', new string[] {
-            " 000 ",
-            "0   0",
-            "0 0 0",
-            "0  00",
-            " 0000"} },
-        { 'R', new string[] {
-            "0000 ",
-            "0   0",
-            "0000 ",
-            "0  0 ",
-            "0   0"} },
-        { 'S', new string[] {
-            " 0000",
-            "0    ",
-            " 000 ",
-            "    0",
-            "0000 "} },
-        { 'T', new string[] {
-            "00000",
-            "  0  ",
-            "  0  ",
-            "  0  ",
-            "  0  "} },
-        { 'U', new string[] {
-            "0   0",
-            "0   0",
-            "0   0",
-            "0   0",
-            " 000 "} },
-        { 'V', new string[] {
-            "0   0",
-            "0   0",
-            " 0 0 ",
-            " 0 0 ",
-            "  0  "} },
-        { 'W', new string[] {
-            "0   0",
-            "0   0",
-            "0 0 0",
-            "00 00",
-            "0   0"}  },
-        { 'X', new string[] {
-            "0   0",
-            " 0 0 ",
-            "  0  ",
-            " 0 0 ",
-            "0   0"} },
-        { 'Y', new string[] {
-            "0   0",
-            " 0 0 ",
-            "  0  ",
-            "  0  ",
-            "  0  "} },
-        { 'Z', new string[] {
-            "00000",
-            "   0 ",
-            "  0  ",
-            " 0   ",
-            "00000"}  },
-         { ' ', new string[] {
-            "     ",
-            "     ",
-            "     ",
-            "     ",
-            "     "}  }
-    };
 }
