@@ -1,18 +1,18 @@
 public class WordArgs
 {
-    public WordArgs(int verticalParticleSlotsPerLetter, int horizontalParticleSlotsPerLetter,
+    public WordArgs(int verticalParticleSlotsPerCharacter, int horizontalParticleSlotsPerCharacter,
         int horizontalParticlesPerSlot, int verticalParticlesPerSlot, int slotPadding, float particlePadding)
     {
-        VerticalParticleSlotsPerLetter = verticalParticleSlotsPerLetter;
-        HorizontalParticleSlotsPerLetter = horizontalParticleSlotsPerLetter;
+        VerticalParticleSlotsPerCharacter = verticalParticleSlotsPerCharacter;
+        HorizontalParticleSlotsPerCharacter = horizontalParticleSlotsPerCharacter;
         HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
         VerticalParticlesPerSlot = verticalParticlesPerSlot;
         SlotPadding = slotPadding;
         ParticlePadding = particlePadding;
     }
     
-    public int VerticalParticleSlotsPerLetter { get; private set; } // letter height and width in particle slots
-    public int HorizontalParticleSlotsPerLetter { get; private set; }
+    public int VerticalParticleSlotsPerCharacter { get; private set; } // character height and width in particle slots
+    public int HorizontalParticleSlotsPerCharacter { get; private set; }
     public int HorizontalParticlesPerSlot { get; private set; }
     public int VerticalParticlesPerSlot { get; private set; }
     public float SlotPadding { get; private set; } // space between each particle slot

@@ -50,32 +50,32 @@ public class Title
         {
             // TODO: Check if Mathf.Max(0, word.ParticlePadding - 1) should be multiplied by HorizontalParticlesPerSlot.
             float totalSlotPadding = word.SlotPadding + Mathf.Max(0, word.ParticlePadding - 1);
-            float letterSizeX = (word.HorizontalParticleSlotsPerLetter + 1) * totalSlotPadding;
+            float characterSizeX = (word.HorizontalParticleSlotsPerCharacter + 1) * totalSlotPadding;
             float wordParticlePadding = word.ParticlePadding;
             Vector3 wordPosition = word.Position;
             float particlePositionZ = wordPosition.z;
             
-            for (int letterIndex = 0; letterIndex < word.Letters.Length; letterIndex++)
+            for (int characterIndex = 0; characterIndex < word.Characters.Length; characterIndex++)
             {
-                Letter letter = word.Letters[letterIndex];
-                float letterShiftX = letterIndex * letterSizeX;
+                Character character = word.Characters[characterIndex];
+                float characterShiftX = characterIndex * characterSizeX;
 
-                for (int slotRowIndex = 0; slotRowIndex < letter.Slots.GetLength(0);
+                for (int slotRowIndex = 0; slotRowIndex < character.Slots.GetLength(0);
                     slotRowIndex++)
                 {
                     float slotShiftY = -1 * slotRowIndex * totalSlotPadding;
                     float particlePositionY = wordPosition.y + slotShiftY;
 
-                    for (int slotColIndex = 0; slotColIndex < letter.Slots.GetLength(1);
+                    for (int slotColIndex = 0; slotColIndex < character.Slots.GetLength(1);
                         slotColIndex++)
                     {
-                        if (!letter.Slots[slotRowIndex, slotColIndex])
+                        if (!character.Slots[slotRowIndex, slotColIndex])
                         {
                             continue;
                         }
 
                         float slotShiftX = slotColIndex * totalSlotPadding;
-                        float particlePositionX = wordPosition.x + letterShiftX + slotShiftX;
+                        float particlePositionX = wordPosition.x + characterShiftX + slotShiftX;
 
                         for (int particleRowIndex = 0;
                             particleRowIndex < word.VerticalParticlesPerSlot; particleRowIndex++)

@@ -1,192 +1,166 @@
 ﻿using System.Collections.Generic;
 
-public class Letter
+public static class GridFont
 {
-    public Letter(char letter)
+    public static readonly Dictionary<char, string[]> CharactersMap = new Dictionary<char, string[]>
     {
-        Slots = new bool[Alphabet[letter][0].Length, Alphabet[letter].Length];
-
-        NonemptySlotsCount = 0;
-
-        for (int row = 0; row < Alphabet[letter].Length; row++)
-        {
-            for (int col = 0; col < Alphabet[letter][row].Length; col++)
-            {
-                if (char.IsWhiteSpace(Alphabet[letter][row][col]))
-                {
-                    Slots[row, col] = false;
-                }
-                else
-                {
-                    Slots[row, col] = true;
-                    NonemptySlotsCount++;
-                }
-            }
-        }
-    }
-
-    public int NonemptySlotsCount { get; private set; }
-    public bool[,] Slots { get; private set; }
-
-    private static readonly Dictionary<char, string[]> Alphabet = new Dictionary<char, string[]>
-    {
-        { 'A', new string[] {
+        { 'A', new[] {
             "  0  ",
             " 0 0 ",
             " 000 ",
             "0   0",
             "0   0"} },
-        { 'B', new string[] {
+        { 'B', new[] {
             "0000 ",
             "0   0",
             "0000 ",
             "0   0",
             "0000 "} },
-        { 'C', new string[] {
+        { 'C', new[] {
             " 0000",
             "0    ",
             "0    ",
             "0    ",
             " 0000"} },
-        { 'D', new string[] {
+        { 'D', new[] {
             "0000 ",
             "0   0",
             "0   0",
             "0   0",
             "0000 "} },
-        { 'E', new string[] {
+        { 'E', new[] {
             "00000",
             "0    ",
             "0000 ",
             "0    ",
             "00000"} },
-        { 'F', new string[] {
+        { 'F', new[] {
             "00000",
             "0    ",
             "0000 ",
             "0    ",
             "0    "} },
-        { 'G', new string[] {
+        { 'G', new[] {
             "00000",
             "0    ",
             "0  00",
             "0   0",
             "00000"} },
-        { 'H', new string[] {
+        { 'H', new[] {
             "0   0",
             "0   0",
             "00000",
             "0   0",
             "0   0"} },
-        { 'I', new string[] {
+        { 'I', new[] {
             "00000",
             "  0  ",
             "  0  ",
             "  0  ",
             "00000"} },
-        { 'J', new string[] {
+        { 'J', new[] {
             "00000",
             "  0  ",
             "  0  ",
             "  0  ",
             "00   "} },
-        { 'K', new string[] {
+        { 'K', new[] {
             "0   0",
             "0  0 ",
             "000  ",
             "0  0 ",
             "0   0"} },
-        { 'L', new string[] {
+        { 'L', new[] {
             "0    ",
             "0    ",
             "0    ",
             "0    ",
             "00000"} },
-        { 'M', new string[] {
+        { 'M', new[] {
             "0   0",
             "00 00",
             "0 0 0",
             "0   0",
             "0   0"} },
-        { 'N', new string[] {
+        { 'N', new[] {
             "0   0",
             "00  0",
             "0 0 0",
             "0  00",
             "0   0"} },
-        { 'O', new string[] {
+        { 'O', new[] {
             " 000 ",
             "0   0",
             "0   0",
             "0   0",
             " 000 "} },
-        { 'P', new string[] {
+        { 'P', new[] {
             "0000 ",
             "0   0",
             "0000 ",
             "0    ",
             "0    "} },
-        { 'Q', new string[] {
+        { 'Q', new[] {
             " 000 ",
             "0   0",
             "0 0 0",
             "0  00",
             " 0000"} },
-        { 'R', new string[] {
+        { 'R', new[] {
             "0000 ",
             "0   0",
             "0000 ",
             "0  0 ",
             "0   0"} },
-        { 'S', new string[] {
+        { 'S', new[] {
             " 0000",
             "0    ",
             " 000 ",
             "    0",
             "0000 "} },
-        { 'T', new string[] {
+        { 'T', new[] {
             "00000",
             "  0  ",
             "  0  ",
             "  0  ",
             "  0  "} },
-        { 'U', new string[] {
+        { 'U', new[] {
             "0   0",
             "0   0",
             "0   0",
             "0   0",
             " 000 "} },
-        { 'V', new string[] {
+        { 'V', new[] {
             "0   0",
             "0   0",
             " 0 0 ",
             " 0 0 ",
             "  0  "} },
-        { 'W', new string[] {
+        { 'W', new[] {
             "0   0",
             "0   0",
             "0 0 0",
             "00 00",
             "0   0"}  },
-        { 'X', new string[] {
+        { 'X', new[] {
             "0   0",
             " 0 0 ",
             "  0  ",
             " 0 0 ",
             "0   0"} },
-        { 'Y', new string[] {
+        { 'Y', new[] {
             "0   0",
             " 0 0 ",
             "  0  ",
             "  0  ",
             "  0  "} },
-        { 'Z', new string[] {
+        { 'Z', new[] {
             "00000",
             "   0 ",
             "  0  ",
             " 0   ",
             "00000"}  },
-        { ' ', new string[] {
+        { ' ', new[] {
             "     ",
             "     ",
             "     ",
