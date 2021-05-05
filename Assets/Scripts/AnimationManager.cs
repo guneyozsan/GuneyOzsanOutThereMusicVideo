@@ -148,8 +148,10 @@ public class AnimationManager : MonoBehaviour
 
     private void InitializeTitles()
     {
-        var wordArgs = new WordArgs(5, 5,
-            2, 2, 2, 1.3f);
+        var wordArgs = new WordArgs(
+            5, 5,
+            2, 2,
+            2f, 1.3f);
 
         openingTitlesMusic = new Title(new Word[] {
             new Word(new Vector3(-19.1f, 15f, 0f), wordArgs, "OUT"),

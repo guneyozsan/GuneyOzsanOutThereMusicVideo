@@ -1,20 +1,24 @@
 public class WordArgs
 {
-    public WordArgs(int verticalParticleSlotsPerCharacter, int horizontalParticleSlotsPerCharacter,
-        int horizontalParticlesPerSlot, int verticalParticlesPerSlot, int slotPadding, float particlePadding)
+    public WordArgs(int characterGridSizeHeight, int characterGridSizeWidth,
+        int horizontalParticleCountPerGridCell, int verticalParticleCountPerGridCell,
+        float paddingBetweenGridCells, float paddingBetweenParticlesInCells)
     {
-        VerticalParticleSlotsPerCharacter = verticalParticleSlotsPerCharacter;
-        HorizontalParticleSlotsPerCharacter = horizontalParticleSlotsPerCharacter;
-        HorizontalParticlesPerSlot = horizontalParticlesPerSlot;
-        VerticalParticlesPerSlot = verticalParticlesPerSlot;
-        SlotPadding = slotPadding;
-        ParticlePadding = particlePadding;
+        CharacterGridSizeHeight = characterGridSizeHeight;
+        CharacterGridSizeWidth = characterGridSizeWidth;
+        HorizontalParticleCountPerGridCell = horizontalParticleCountPerGridCell;
+        VerticalParticleCountPerGridCell = verticalParticleCountPerGridCell;
+        PaddingBetweenGridCells = paddingBetweenGridCells;
+        PaddingBetweenParticlesInCells = paddingBetweenParticlesInCells;
     }
-    
-    public int VerticalParticleSlotsPerCharacter { get; private set; } // character height and width in particle slots
-    public int HorizontalParticleSlotsPerCharacter { get; private set; }
-    public int HorizontalParticlesPerSlot { get; private set; }
-    public int VerticalParticlesPerSlot { get; private set; }
-    public float SlotPadding { get; private set; } // space between each particle slot
-    public float ParticlePadding { get; private set; } // space between each particle in a single slot
+
+    // Character height and width
+    public int CharacterGridSizeWidth { get; private set; }
+    public int CharacterGridSizeHeight { get; private set; }
+
+    public int HorizontalParticleCountPerGridCell { get; private set; }
+    public int VerticalParticleCountPerGridCell { get; private set; }
+
+    public float PaddingBetweenGridCells { get; private set; }
+    public float PaddingBetweenParticlesInCells { get; private set; }
 }

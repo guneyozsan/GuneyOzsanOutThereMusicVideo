@@ -6,12 +6,12 @@ public class Word
     public Word(Vector3 position, WordArgs args, string content)
     {
         Position = position;
-        VerticalParticleSlotsPerCharacter = args.VerticalParticleSlotsPerCharacter;
-        HorizontalParticleSlotsPerCharacter = args.HorizontalParticleSlotsPerCharacter;
-        HorizontalParticlesPerSlot = args.HorizontalParticlesPerSlot;
-        VerticalParticlesPerSlot = args.VerticalParticlesPerSlot;
-        SlotPadding = args.SlotPadding;
-        ParticlePadding = args.ParticlePadding;
+        CharacterGridSizeWidth = args.CharacterGridSizeWidth;
+        CharacterGridSizeHeight = args.CharacterGridSizeHeight;
+        HorizontalParticleCountPerGridCell = args.HorizontalParticleCountPerGridCell;
+        VerticalParticleCountPerGridCell = args.VerticalParticleCountPerGridCell;
+        PaddingBetweenGridCells = args.PaddingBetweenGridCells;
+        PaddingBetweenParticlesInCells = args.PaddingBetweenParticlesInCells;
         Content = content;
 
         Characters = new Character[Content.Length];
@@ -26,20 +26,17 @@ public class Word
 
     public Character[] Characters { get; private set; }
 
-    // position of the word in 3d space
     public Vector3 Position { get; private set; }
+
+    public int CharacterGridSizeWidth { get; private set; }
+    public int CharacterGridSizeHeight { get; private set; }
     
-    // character height and width in particle slots
-    public int VerticalParticleSlotsPerCharacter { get; private set; }
-    public int HorizontalParticleSlotsPerCharacter { get; private set; }
-    public int HorizontalParticlesPerSlot { get; private set; }
-    public int VerticalParticlesPerSlot { get; private set; }
+    public int HorizontalParticleCountPerGridCell { get; private set; }
+    public int VerticalParticleCountPerGridCell { get; private set; }
     
-    // space between each particle slot
-    public float SlotPadding { get; private set; }
-    
-    // space between each particle in a single slot
-    public float ParticlePadding { get; private set; }
+    public float PaddingBetweenGridCells { get; private set; }
+    public float PaddingBetweenParticlesInCells { get; private set; }
+
     public int ParticleCount { get; private set; }
 
     // the characters written in empty and non-empty characters.
@@ -47,7 +44,8 @@ public class Word
     
     private int GetParticleCount()
     {
-        int particlesPerSlot = HorizontalParticlesPerSlot * VerticalParticlesPerSlot;
-        return Characters.Sum(character => particlesPerSlot * character.NonemptySlotsCount);
+        int particlesPerGridCell = HorizontalParticleCountPerGridCell * VerticalParticleCountPerGridCell;
+        return Characters.Sum(
+            character => particlesPerGridCell * character.BinaryGrid.GetCellStateCount(true));
     }
 }

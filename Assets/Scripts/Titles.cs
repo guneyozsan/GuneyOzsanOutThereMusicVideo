@@ -15,11 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
 
 public class Title
 {
@@ -43,15 +41,15 @@ public class Title
         bool isSphericalLerp)
     {
         List<Planetesimal> planetesimals = Space.Planetesimals;
-        int iPlanetesimal = (planetesimals.Count - particleCount) / 2;
+        int planetesimalIndex = (planetesimals.Count - particleCount) / 2;
         int currentParticleCount = 0;
 
         foreach (Word word in words)
         {
-            // TODO: Check if Mathf.Max(0, word.ParticlePadding - 1) should be multiplied by HorizontalParticlesPerSlot.
-            float totalSlotPadding = word.SlotPadding + Mathf.Max(0, word.ParticlePadding - 1);
-            float characterSizeX = (word.HorizontalParticleSlotsPerCharacter + 1) * totalSlotPadding;
-            float wordParticlePadding = word.ParticlePadding;
+            // TODO: Check if Mathf.Max(0, word.ParticlePadding - 1) should be multiplied by HorizontalParticlesPerGridCell.
+            float totalGridCellPadding = word.PaddingBetweenGridCells + Mathf.Max(0, word.PaddingBetweenParticlesInCells - 1);
+            float characterSizeX = (word.CharacterGridSizeWidth + 1) * totalGridCellPadding;
+            float paddingBetweenParticlesInCells = word.PaddingBetweenParticlesInCells;
             Vector3 wordPosition = word.Position;
             float particlePositionZ = wordPosition.z;
             
@@ -60,47 +58,44 @@ public class Title
                 Character character = word.Characters[characterIndex];
                 float characterShiftX = characterIndex * characterSizeX;
 
-                for (int slotRowIndex = 0; slotRowIndex < character.Slots.GetLength(0);
-                    slotRowIndex++)
+                for (int gridRow = 0; gridRow < character.BinaryGrid.RowCount; gridRow++)
                 {
-                    float slotShiftY = -1 * slotRowIndex * totalSlotPadding;
-                    float particlePositionY = wordPosition.y + slotShiftY;
+                    float gridOffsetY = -1 * gridRow * totalGridCellPadding;
+                    float particlePositionY = wordPosition.y + gridOffsetY;
 
-                    for (int slotColIndex = 0; slotColIndex < character.Slots.GetLength(1);
-                        slotColIndex++)
+                    for (int gridCol = 0; gridCol < character.BinaryGrid.ColCount; gridCol++)
                     {
-                        if (!character.Slots[slotRowIndex, slotColIndex])
+                        if (!character.BinaryGrid.GetCellState(gridRow, gridCol))
                         {
                             continue;
                         }
 
-                        float slotShiftX = slotColIndex * totalSlotPadding;
-                        float particlePositionX = wordPosition.x + characterShiftX + slotShiftX;
+                        float gridOffsetX = gridCol * totalGridCellPadding;
+                        float particlePositionX = wordPosition.x + characterShiftX + gridOffsetX;
 
-                        for (int particleRowIndex = 0;
-                            particleRowIndex < word.VerticalParticlesPerSlot; particleRowIndex++)
+                        for (int cellRow = 0; cellRow < word.VerticalParticleCountPerGridCell;
+                            cellRow++)
                         {
-                            for (int particleColumnIndex = 0;
-                                particleColumnIndex < word.HorizontalParticlesPerSlot;
-                                particleColumnIndex++)
+                            for (int cellCol = 0; cellCol < word.HorizontalParticleCountPerGridCell;
+                                cellCol++)
                             {
-                                // TODO: Check if particleRowIndex and particleColumnIndex should change places in vector calculation.
+                                // TODO: Check if cellRow and cellCol should change places in vector calculation.
                                 var target = new Vector3(
-                                    particlePositionX + particleRowIndex * wordParticlePadding,
-                                    particlePositionY + particleColumnIndex * wordParticlePadding,
+                                    particlePositionX + cellRow * paddingBetweenParticlesInCells,
+                                    particlePositionY + cellCol * paddingBetweenParticlesInCells,
                                     particlePositionZ);
 
                                 if (isRandomSelection)
                                 {
                                     do
                                     {
-                                        iPlanetesimal = UnityEngine.Random.Range(0,
+                                        planetesimalIndex = UnityEngine.Random.Range(0,
                                             planetesimals.Count - 1);
                                     }
-                                    while (planetesimals[iPlanetesimal].IsAllocated);
+                                    while (planetesimals[planetesimalIndex].IsAllocated);
                                 }
 
-                                Planetesimal planetesimal = planetesimals[iPlanetesimal];
+                                Planetesimal planetesimal = planetesimals[planetesimalIndex];
                                 planetesimal.MoveTo(target, time, isSphericalLerp, 
                                     currentParticleCount * particleDelay);
                                 planetesimalsUsed.Add(planetesimal);
@@ -108,7 +103,7 @@ public class Title
 
                                 if (!isRandomSelection)
                                 {
-                                    iPlanetesimal++;
+                                    planetesimalIndex++;
                                 }
                             }
                         }
