@@ -35,14 +35,24 @@ public class AnimationManager : MonoBehaviour
     private int currentBar;
     private int currentBeat;
 
+    private TwinGalaxyAnimation twinGalaxyAnimation;
+
 #if UNITY_EDITOR
     private static List<GameObject> pilotObjects = new List<GameObject>();
+    private float tTwinGalaxy;
 #endif
 
     private void Awake()
     {
         InitializeTitles();
         InstantiatePlanetesimals();
+
+        twinGalaxyAnimation = new TwinGalaxyAnimation(
+            55f, 0f, 2.6f,
+            0.0029f, 0.0095f, 14f,
+            0.6f, 0.37f, new Vector3(0f, 0f, 50f),
+            0f, -220f, 0.40f);
+        tTwinGalaxy = 0f;
     }
 
     private void Update()
@@ -94,6 +104,11 @@ public class AnimationManager : MonoBehaviour
 #endif
         }
 
+        SetForces(forces);
+    }
+
+    private static void SetForces(Force[] forces)
+    {
         foreach (Planetesimal planetesimal in Space.Planetesimals)
         {
             planetesimal.SetForces(forces);
@@ -279,7 +294,10 @@ public class AnimationManager : MonoBehaviour
         else if (currentSequencerBar >= firstBarOfTwinGalaxy
                  && currentSequencerBar < lastBarOfTwinGalaxy + 1)
         {
-            TwinGalaxyAnimation.UpdateFrame(firstBarOfTwinGalaxy, lastBarOfTwinGalaxy);
+            float animationDuration = Sequencer.BarDuration
+                                      * (lastBarOfTwinGalaxy - firstBarOfTwinGalaxy + 1);
+            SetForces(twinGalaxyAnimation.GetForces(tTwinGalaxy, animationDuration));
+            tTwinGalaxy += Time.deltaTime;
         }
         else if (currentSequencerBar >= lastBarOfTwinGalaxy && currentSequencerBar < 60)
         {
