@@ -39,20 +39,21 @@ public class AnimationManager : MonoBehaviour
 
 #if UNITY_EDITOR
     private static List<GameObject> pilotObjects = new List<GameObject>();
-    private float tTwinGalaxy;
+    private float twinGalaxyTime;
 #endif
 
     private void Awake()
     {
         InitializeTitles();
-        InstantiatePlanetesimals();
+        InstantiatePlanetesimals(planetesimalPrefab, 11 * Vector3.one,
+            Vector3.one);
 
         twinGalaxyAnimation = new TwinGalaxyAnimation(
             55f, 0f, 2.6f,
             0.0029f, 0.0095f, 14f,
             0.6f, 0.37f, new Vector3(0f, 0f, 50f),
             0f, -220f, 0.40f);
-        tTwinGalaxy = 0f;
+        twinGalaxyTime = 0f;
     }
 
     private void Update()
@@ -67,7 +68,7 @@ public class AnimationManager : MonoBehaviour
         currentBeat = currentSequencerBeat;
     }
 
-    public static void SetForces(float charge, List<Vector3> centers)
+    private static void SetForces(float charge, List<Vector3> centers)
     {
 #if UNITY_EDITOR
         if (pilotObjects.Count > centers.Count)
@@ -121,17 +122,17 @@ public class AnimationManager : MonoBehaviour
         SetForces(charge, centers);
     }
 
-    private static void SetForcePerBar(float[] charges, Vector3 center, int periodBars,
+    private static void SetForcePerBar(IList<float> charges, Vector3 center, int periodBars,
         int initialBar)
     {
         var centers = new List<Vector3> { center };
         SetForcePerBar(charges, centers, periodBars, initialBar);
     }
 
-    private static void SetForcePerBar(float[] charges, List<Vector3> centers,
+    private static void SetForcePerBar(IList<float> charges, List<Vector3> centers,
         int periodBars, int initialBar)
     {
-        int forceCount = charges.Length;
+        int forceCount = charges.Count;
         float currentBarInSlice = (float) (Sequencer.CurrentBar - initialBar) / periodBars;
         
         for (int i = 0; i < forceCount; i++)
@@ -146,56 +147,22 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    private void InitializeTitles()
+    private static void InstantiatePlanetesimals(Planetesimal planetesimalPrefab,
+        Vector3 cellCountPerDimension, Vector3 planetesimalCellSize)
     {
-        var wordArgs = new WordArgs(
-            5, 5,
-            2, 2,
-            2f, 1.3f);
-
-        openingTitlesMusic = new Title(new Word[] {
-            new Word(new Vector3(-19.1f, 15f, 0f), wordArgs, "OUT"),
-            new Word(new Vector3(-32.85f, -5.2f, 0f), wordArgs, "THERE"),
-        });
-        openingTitlesBy = new Title(new Word[] {
-            new Word(new Vector3(-11f, 7f, -9.4f), wordArgs, "BY"),
-        });
-        openingTitlesComposer = new Title(new Word[] {
-            new Word(new Vector3(-66f, 7f, -9.4f), wordArgs, "GUNEY"),
-            new Word(new Vector3(8f, 7f, -9.4f), wordArgs, "OZSAN"),
-        });
-        partOneTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-39.5f, 18f, -9.4f), wordArgs, "PART I"),
-        });
-        partOneTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-53.45f, -11.3f, -9.4f), wordArgs, "APPROACH"),
-        });
-        partTwoTitlesPartNumber = new Title(new Word[] {
-            new Word(new Vector3(-46.65f, 18f, -9.4f), wordArgs, "PART II"),
-        });
-        partTwoTitlesPartName = new Title(new Word[] {
-            new Word(new Vector3(-32.85f, -11.3f, -9.4f), wordArgs, "PROBE"),
-        });
-    }
-
-    private void InstantiatePlanetesimals()
-    {
-        const int cubeSideLength = 11;
-        const float particlePadding = 1f;
-        const float alignmentAdjustment = cubeSideLength / 2f;
         Transform planetesimalParent = new GameObject("Planetesimals").transform;
 
-        for (int i = 0; i < cubeSideLength; i++)
+        for (int iX = 0; iX < cellCountPerDimension.x; iX++)
         {
-            float x = i * particlePadding - alignmentAdjustment;
+            float x = - cellCountPerDimension.x / 2f + iX * planetesimalCellSize.x;
 
-            for (int j = 0; j < cubeSideLength; j++)
+            for (int iY = 0; iY < cellCountPerDimension.y; iY++)
             {
-                float y = j * particlePadding - alignmentAdjustment;
+                float y = - cellCountPerDimension.y / 2f + iY * planetesimalCellSize.y;
 
-                for (int k = 0; k < cubeSideLength; k++)
+                for (int iZ = 0; iZ < cellCountPerDimension.z; iZ++)
                 {
-                    float z = k * particlePadding - alignmentAdjustment;
+                    float z = - cellCountPerDimension.z / 2f + iZ * planetesimalCellSize.z;
                     
                     Planetesimal planetesimal = Instantiate(planetesimalPrefab,
                         new Vector3(x, y, z), Quaternion.identity, planetesimalParent);
@@ -205,16 +172,72 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    private void InitializeTitles()
+    {
+        var characterArgs = new CharacterArgs(new Vector2Int(2, 2),
+            new Vector2(1f, 1f), new Vector2(0.3f, 0.3f));
+
+        openingTitlesMusic = new Title(new Word[] {
+            new Word(
+                "OUT", 
+                new Vector3(-19.1f, 15f, 0f),
+                characterArgs),
+            new Word(
+                "THERE",
+                new Vector3(-32.85f, -5.2f, 0f),
+                characterArgs)
+        });
+        openingTitlesBy = new Title(new Word[] {
+            new Word(
+                "BY",
+                new Vector3(-11f, 7f, -9.4f),
+                characterArgs)
+        });
+        openingTitlesComposer = new Title(new Word[] {
+            new Word(
+                "GUNEY",
+                new Vector3(-66f, 7f, -9.4f),
+                characterArgs),
+            new Word(
+                "OZSAN",
+                new Vector3(8f, 7f, -9.4f),
+                characterArgs)
+        });
+        partOneTitlesPartNumber = new Title(new Word[] {
+            new Word(
+                "PART I",
+                new Vector3(-39.5f, 18f, -9.4f),
+                characterArgs)
+        });
+        partOneTitlesPartName = new Title(new Word[] {
+            new Word(
+                "APPROACH", 
+                new Vector3(-53.45f, -11.3f, -9.4f),
+                characterArgs)
+        });
+        partTwoTitlesPartNumber = new Title(new Word[] {
+            new Word(
+                "PART II",
+                new Vector3(-46.65f, 18f, -9.4f),
+                characterArgs)
+        });
+        partTwoTitlesPartName = new Title(new Word[] {
+            new Word(
+                "PROBE",
+                new Vector3(-32.85f, -11.3f, -9.4f),
+                characterArgs)
+        });
+    }
+
     private void UpdateTitleAnimations(int currentSequencerBar)
     {
-        
         switch (currentSequencerBar)
         {
             case 4:
                 if (currentBar != currentSequencerBar)
                 {
-                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 0.005f,
-                        true, false);
+                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 
+                        0.005f, true, false);
                     SetForces(0f, Vector3.zero);
                 }
                 break;
@@ -287,8 +310,9 @@ public class AnimationManager : MonoBehaviour
         bool firstTimeInBarAndBeat = currentBar != Sequencer.CurrentBar 
                                      || currentBeat != Sequencer.CurrentBeat;
 
-        if (currentSequencerBar >= firstBarOfSequence && currentSequencerBar < firstBarOfTwinGalaxy
-                                                      && currentSequencerBeat == 1)
+        if (currentSequencerBar >= firstBarOfSequence
+            && currentSequencerBar < firstBarOfTwinGalaxy
+            && currentSequencerBeat == 1)
         {
             SetForcePerBar(new[] { -65f, 0f }, new Vector3(0f, 0f, -17f),
                 2, firstBarOfSequence);
@@ -298,8 +322,8 @@ public class AnimationManager : MonoBehaviour
         {
             float animationDuration = Sequencer.BarDuration
                                       * (lastBarOfTwinGalaxy - firstBarOfTwinGalaxy + 1);
-            SetForces(twinGalaxyAnimation.GetForces(tTwinGalaxy, animationDuration));
-            tTwinGalaxy += Time.deltaTime;
+            SetForces(twinGalaxyAnimation.GetForces(twinGalaxyTime, animationDuration));
+            twinGalaxyTime += Time.deltaTime;
         }
         else if (currentSequencerBar >= lastBarOfTwinGalaxy && currentSequencerBar < 60)
         {

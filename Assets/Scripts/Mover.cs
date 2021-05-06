@@ -31,11 +31,11 @@ public class Mover : MonoBehaviour
         myRigidbody = transform.GetComponent<Rigidbody>();
     }
 
-    public void MoveTo(Vector3 targetPosition, float timeSeconds, bool isSphericalLerp,
+    public void MoveTo(Vector3 targetPosition, float durationSeconds, bool isSphericalLerp,
         float delaySeconds)
     {
-        StartCoroutine(MoveToAfterDelayCoroutine(targetPosition, timeSeconds, isSphericalLerp,
-            delaySeconds));
+        StartCoroutine(MoveToAfterDelayCoroutine(targetPosition, durationSeconds,
+            isSphericalLerp, delaySeconds));
     }
 
     public void SpreadAround(float range, float timeSeconds, bool isSphericalLerp,
@@ -45,15 +45,16 @@ public class Mover : MonoBehaviour
             delaySeconds));
     }
 
-    private IEnumerator MoveToAfterDelayCoroutine(Vector3 targetPosition, float timeSeconds,
+    private IEnumerator MoveToAfterDelayCoroutine(Vector3 targetPosition, float durationSeconds,
         bool isSphericalLerp, float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
         StopAllCoroutines();
-        StartCoroutine(MoveToCoroutine(targetPosition, timeSeconds, isSphericalLerp));
+        StartCoroutine(MoveToCoroutine(targetPosition, durationSeconds, isSphericalLerp));
     }
 
-    private IEnumerator MoveToCoroutine(Vector3 targetPosition, float timeSeconds, bool isSphericalLerp)
+    private IEnumerator MoveToCoroutine(Vector3 targetPosition, float durationSeconds,
+        bool isSphericalLerp)
     {
         myRigidbody.velocity = Vector3.zero;
         Vector3 initialPosition = transform.position;
@@ -63,10 +64,12 @@ public class Mover : MonoBehaviour
         while (t <= 1)
         {
             transform.position = isSphericalLerp
-                ? Vector3.Slerp(initialPosition, targetPosition, Mathf.SmoothStep(0, 1, t))
-                : Vector3.Lerp(initialPosition, targetPosition, Mathf.SmoothStep(0, 1, t));
+                ? Vector3.Slerp(initialPosition, targetPosition, Mathf.SmoothStep(
+                    0, 1, t))
+                : Vector3.Lerp(initialPosition, targetPosition, Mathf.SmoothStep(
+                    0, 1, t));
 
-            t += Time.deltaTime / timeSeconds;
+            t += Time.deltaTime / durationSeconds;
             yield return null;
         }
 
@@ -77,8 +80,8 @@ public class Mover : MonoBehaviour
         }
     }
 
-    private IEnumerator SpreadAroundAfterDelayCoroutine(float range, float timeSeconds, bool isSphericalLerp,
-        float delaySeconds)
+    private IEnumerator SpreadAroundAfterDelayCoroutine(float range, float timeSeconds,
+        bool isSphericalLerp, float delaySeconds)
     {
         yield return new WaitForSeconds(delaySeconds);
         StopAllCoroutines();

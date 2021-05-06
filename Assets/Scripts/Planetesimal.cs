@@ -38,10 +38,11 @@ public class Planetesimal : MonoBehaviour
         mover.DestinationReached -= OnDestinationReached;
     }
 
-    public void MoveTo(Vector3 target, float time, bool isSphericalLerp, float delayBeforeMoving)
+    public void MoveTo(Vector3 target, float duration, bool isSphericalLerp,
+        float delayBeforeMoving)
     {
         SetAllocation(true);
-        mover.MoveTo(target, time, isSphericalLerp, delayBeforeMoving);
+        mover.MoveTo(target, duration, isSphericalLerp, delayBeforeMoving);
     }
 
     public void SpreadAround(float range, float time, bool isSphericalLerp, float delay)

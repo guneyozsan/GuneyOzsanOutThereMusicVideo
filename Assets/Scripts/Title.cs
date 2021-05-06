@@ -37,7 +37,7 @@ public class Title
         return words.Sum(word => word.ParticleCount);
     }
 
-    public void FormTitle(float time, float particleDelay, bool isRandomSelection,
+    public void FormTitle(float formationDuration, float particleDelay, bool isRandomSelection,
         bool isSphericalLerp)
     {
         List<Planetesimal> planetesimals = Space.Planetesimals;
@@ -46,57 +46,63 @@ public class Title
 
         foreach (Word word in words)
         {
-            // TODO: Check if Mathf.Max(0, word.ParticlePadding - 1) should be multiplied by HorizontalParticlesPerGridCell.
-            float totalGridCellPadding = word.PaddingBetweenGridCells + Mathf.Max(0, word.PaddingBetweenParticlesInCells - 1);
-            float characterSizeX = (word.CharacterGridSizeWidth + 1) * totalGridCellPadding;
-            float paddingBetweenParticlesInCells = word.PaddingBetweenParticlesInCells;
+            CharacterArgs characterArgs = word.CharacterArgs;
+            
+            Vector2 gridCellSize =
+                Vector2.Scale(characterArgs.SubGridSize, characterArgs.SubGridCellSize)
+                + characterArgs.SpaceBetweenGridCells;
+            Debug.Assert(gridCellSize == new Vector2(2.3f, 2.3f));
+            
+            float kerning = 1f * gridCellSize.x;
             Vector3 wordPosition = word.Position;
-            float particlePositionZ = wordPosition.z;
             
             for (int characterIndex = 0; characterIndex < word.Characters.Length; characterIndex++)
             {
                 Character character = word.Characters[characterIndex];
-                float characterShiftX = characterIndex * characterSizeX;
+                float characterSizeX = character.Grid.ColCount * gridCellSize.x;
+                float characterOffsetX = characterIndex * (characterSizeX + kerning);
 
-                for (int gridRow = 0; gridRow < character.BinaryGrid.RowCount; gridRow++)
+                for (int gridRow = 0; gridRow < character.Grid.RowCount; gridRow++)
                 {
-                    float gridOffsetY = -1 * gridRow * totalGridCellPadding;
-                    float particlePositionY = wordPosition.y + gridOffsetY;
+                    float gridOffsetY = -gridRow * gridCellSize.y;
+                    float gridPositionY = wordPosition.y + gridOffsetY;
 
-                    for (int gridCol = 0; gridCol < character.BinaryGrid.ColCount; gridCol++)
+                    for (int gridCol = 0; gridCol < character.Grid.ColCount; gridCol++)
                     {
-                        if (!character.BinaryGrid.GetCellState(gridRow, gridCol))
+                        if (!character.Grid.GetCellState(gridRow, gridCol))
                         {
                             continue;
                         }
 
-                        float gridOffsetX = gridCol * totalGridCellPadding;
-                        float particlePositionX = wordPosition.x + characterShiftX + gridOffsetX;
+                        float gridOffsetX = gridCol * gridCellSize.x;
+                        float gridPositionX = wordPosition.x + characterOffsetX + gridOffsetX;
 
-                        for (int cellRow = 0; cellRow < word.VerticalParticleCountPerGridCell;
-                            cellRow++)
+                        for (int subGridRow = 0; subGridRow < characterArgs.SubGridSize.y; 
+                            subGridRow++)
                         {
-                            for (int cellCol = 0; cellCol < word.HorizontalParticleCountPerGridCell;
-                                cellCol++)
+                            for (int subGridCol = 0; subGridCol < characterArgs.SubGridSize.x;
+                                subGridCol++)
                             {
-                                // TODO: Check if cellRow and cellCol should change places in vector calculation.
-                                var target = new Vector3(
-                                    particlePositionX + cellRow * paddingBetweenParticlesInCells,
-                                    particlePositionY + cellCol * paddingBetweenParticlesInCells,
-                                    particlePositionZ);
+                                var particlePosition = new Vector3(
+                                    gridPositionX
+                                        + subGridCol * characterArgs.SubGridCellSize.x,
+                                    gridPositionY
+                                        + subGridRow * characterArgs.SubGridCellSize.y,
+                                    wordPosition.z);
 
                                 if (isRandomSelection)
                                 {
                                     do
                                     {
-                                        planetesimalIndex = UnityEngine.Random.Range(0,
-                                            planetesimals.Count - 1);
+                                        planetesimalIndex = Random.Range(
+                                            0, planetesimals.Count - 1);
                                     }
                                     while (planetesimals[planetesimalIndex].IsAllocated);
                                 }
 
                                 Planetesimal planetesimal = planetesimals[planetesimalIndex];
-                                planetesimal.MoveTo(target, time, isSphericalLerp, 
+                                planetesimal.MoveTo(particlePosition, formationDuration,
+                                    isSphericalLerp, 
                                     currentParticleCount * particleDelay);
                                 planetesimalsUsed.Add(planetesimal);
                                 currentParticleCount++;

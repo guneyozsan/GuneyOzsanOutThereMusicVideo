@@ -3,15 +3,10 @@ using UnityEngine;
 
 public class Word
 {
-    public Word(Vector3 position, WordArgs args, string content)
+    public Word(string content, Vector3 position, CharacterArgs characterArgs)
     {
         Position = position;
-        CharacterGridSizeWidth = args.CharacterGridSizeWidth;
-        CharacterGridSizeHeight = args.CharacterGridSizeHeight;
-        HorizontalParticleCountPerGridCell = args.HorizontalParticleCountPerGridCell;
-        VerticalParticleCountPerGridCell = args.VerticalParticleCountPerGridCell;
-        PaddingBetweenGridCells = args.PaddingBetweenGridCells;
-        PaddingBetweenParticlesInCells = args.PaddingBetweenParticlesInCells;
+        CharacterArgs = characterArgs;
         Content = content;
 
         Characters = new Character[Content.Length];
@@ -26,16 +21,9 @@ public class Word
 
     public Character[] Characters { get; private set; }
 
-    public Vector3 Position { get; private set; }
+    public CharacterArgs CharacterArgs { get; private set; }
 
-    public int CharacterGridSizeWidth { get; private set; }
-    public int CharacterGridSizeHeight { get; private set; }
-    
-    public int HorizontalParticleCountPerGridCell { get; private set; }
-    public int VerticalParticleCountPerGridCell { get; private set; }
-    
-    public float PaddingBetweenGridCells { get; private set; }
-    public float PaddingBetweenParticlesInCells { get; private set; }
+    public Vector3 Position { get; private set; }
 
     public int ParticleCount { get; private set; }
 
@@ -44,8 +32,9 @@ public class Word
     
     private int GetParticleCount()
     {
-        int particlesPerGridCell = HorizontalParticleCountPerGridCell * VerticalParticleCountPerGridCell;
+        Vector2Int subGridSize = CharacterArgs.SubGridSize;
+        int particlesPerGridCell = subGridSize.x * subGridSize.y;
         return Characters.Sum(
-            character => particlesPerGridCell * character.BinaryGrid.GetCellStateCount(true));
+            character => particlesPerGridCell * character.Grid.GetCellStateCount(true));
     }
 }
