@@ -3,17 +3,15 @@
 
 ![Screenshot](https://i.imgur.com/6bidGGB.gif?1 "Screenshot")
 
-## Notice
+## Notice on the state of the development
 
-After becoming a dad last year the project had it place in shelves for quite a long time. To prevent the project failing all together I am changing the course a little bit.
+After becoming a dad in 2018 the project had it place in shelves for quite a long time. In 2020 we welcomed our second baby, and it wasn't until now that I was able to start making progress again. Now I aim to finish the project and release the music video before the end of 2021.
 
-This was my first big C# project and I was focused more on the video result than code itself. Meanwhile C# became my main language in my career that I'm currently not comfortable with the code quality as it appears that there are a few useful tools that can be extracted out of this project.
+This is my first big software project that I started years ago even before I even became a developer. Main focused had always been on the visual result than the code itself. Meanwhile C# became my main language in my career that currently I am unable to be comfortable with the code quality. Plus, it looks like that there are a few useful tools that can be extracted out of this project.
 
-However, I am also not comfortable that turning into this project into a software tool is blocking the path to finalize the music video as an art form.
+On the other side, I am not comfortable with turning extracting software tools from this project blocking the path to release the music video as an art form. At this point, it turns out that assigning two diverse purposes to the project had became harmful (Dope! Single responsibility principle everywhere huh?).
 
-At this point it turns out that assigning two separate functionality to the project had became harmful (Dope! Single responsibility principle everywhere huh?). So I decided to split the paths, and the first goal will be to finalize the video as fast as possible without thinking about the condition of the current code.
-
-Only after releasing the music video, my intention is to refactor the code to extract some useful tools for people that may want to work with music tracks in Unity. 
+Currently I'm refactoring the code in a limited way so that people can make use of some parts of the project, while the initial goal still being to finalize the music video as fast as possible.
 
 ## Release
 
