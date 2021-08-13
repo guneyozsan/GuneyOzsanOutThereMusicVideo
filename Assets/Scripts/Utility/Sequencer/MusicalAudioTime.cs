@@ -17,10 +17,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
+
 namespace PostIllusions.Audio.Music
 {
-    using System;
-
     /// <summary>
     /// Represents a moment of music with constant measure and BPM
     /// in time domain (seconds) and music domain (bars and beats).
@@ -37,7 +37,7 @@ namespace PostIllusions.Audio.Music
         public MusicalAudioTime(Measure measure, int bpm) : base(measure)
         {
             Bpm = bpm;
-            Time = 0f;
+            TimeSeconds = 0f;
         }
 
         /// <summary>
@@ -48,20 +48,19 @@ namespace PostIllusions.Audio.Music
         /// <summary>
         /// Current time of music in seconds.
         /// </summary>
-        public float Time { get; private set; }
+        public float TimeSeconds { get; private set; }
 
         /// <summary>
         /// Duration of a single beat in seconds.
         /// </summary>
-        public float BeatDuration { get { return 60f / Bpm; } }
+        public float BeatDurationSeconds { get { return 60f / Bpm; } }
 
         /// <summary>
         /// Returns the bar number of the given audio time.
         /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
         private static int GetBar(float time)
         {
+            // TODO
             throw new System.NotImplementedException();
         }
 
@@ -72,6 +71,7 @@ namespace PostIllusions.Audio.Music
         /// <returns></returns>
         private static int GetBeat(float time)
         {
+            // TODO
             throw new System.NotImplementedException();
         }
 
@@ -81,7 +81,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value">Time to add in seconds.</param>
         public void AddTime(float value)
         {
-            Time += value;
+            TimeSeconds += value;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value">Time to set in seconds.</param>
         public void SetTime(float value)
         {
-            Time = value;
+            TimeSeconds = value;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace PostIllusions.Audio.Music
         {
             bar = 1;
             beat = 1;
-            Time = 0f;
+            TimeSeconds = 0f;
         }
     }
 }

@@ -17,13 +17,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
+using PostIllusions.Audio.Music;
+using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
-    using System;
-
-    using PostIllusions.Audio.Music;
-    using UnityEngine;
 
     [Serializable]
     public struct MusicRegion

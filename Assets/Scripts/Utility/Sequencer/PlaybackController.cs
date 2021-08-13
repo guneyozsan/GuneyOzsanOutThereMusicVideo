@@ -22,9 +22,9 @@ using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
-    public class Playback : MonoBehaviour
+    public class PlaybackController : MonoBehaviour
     {
-        public static event Action<PlaybackState> PlaybackStateSet;
+        public event Action<PlaybackState> PlaybackStateSet;
 
         public void Play()
         {

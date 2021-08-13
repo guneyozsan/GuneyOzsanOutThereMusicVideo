@@ -88,16 +88,16 @@ public class Sequencer : MonoBehaviour
 #if UNITY_EDITOR
     void AdjustPlaybackSpeed()
     {
-        if (CurrentBar < Debugging.FastForwardToBar
-            && Debugging.FastForwardSpeed != 1)
+        if (CurrentBar < SequencerEditorController.FastForwardToBar
+            && SequencerEditorController.FastForwardSpeed != 1)
         {
             music.volume = 0;
-            UnityEngine.Time.timeScale = Debugging.FastForwardSpeed;
+            UnityEngine.Time.timeScale = SequencerEditorController.FastForwardSpeed;
         }
         else
         {
             music.volume = 1;
-            UnityEngine.Time.timeScale = Debugging.PlaybackSpeed;
+            UnityEngine.Time.timeScale = SequencerEditorController.PlaybackSpeed;
         }
     }
 #endif // UNITY_EDITOR

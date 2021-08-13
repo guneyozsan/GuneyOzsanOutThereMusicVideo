@@ -28,10 +28,8 @@ namespace PostIllusions.Audio.Music
     [Serializable]
     public class MusicalTime
     {
-        [SerializeField]
-        protected int bar;
-        [SerializeField]
-        protected int beat;
+        [SerializeField] protected int bar;
+        [SerializeField] protected int beat;
 
         /// <summary>
         /// Creates a musical time with given measure.
@@ -53,14 +51,7 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         public void IncrementBeat()
         {
-            if (beat == Measure.BeatCount)
-            {
-                beat = 1;
-            }
-            else
-            {
-                beat++;
-            }
+            beat = beat == Measure.BeatCount ? 1 : beat + 1;
         }
 
         /// <summary>
@@ -68,14 +59,7 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         public void DecrementBeat()
         {
-            if (beat == 1)
-            {
-                beat = Measure.BeatCount;
-            }
-            else
-            {
-                beat--;
-            }
+            beat = beat == 1 ? Measure.BeatCount : beat - 1;
         }
 
         /// <summary>
@@ -108,35 +92,33 @@ namespace PostIllusions.Audio.Music
         /// <summary>
         /// <para>Compares musical times down to Beat being the lowest resolution.</para>
         /// </summary>
-        /// <param name="obj">Musical Time to compareç</param>
+        /// <param name="musicalTime">Musical Time to compare.</param>
         /// <returns><para>Greater than zero: This instance time is larger.</para>
         /// <para>Less than zero: Obj time is larger.</para>
         /// <para>Zero: Equal down to Beat.</para></returns>
-        public int CompareTo(MusicalTime obj)
+        public int CompareTo(MusicalTime musicalTime)
         {
-            if (bar > obj.Bar)
+            if (bar > musicalTime.Bar)
             {
                 return 1;
             }
-            else if (bar < obj.Bar)
+
+            if (bar < musicalTime.Bar)
             {
                 return -1;
             }
-            else
+
+            if (beat > musicalTime.Beat)
             {
-                if (beat > obj.Beat)
-                {
-                    return 1;
-                }
-                else if (beat < obj.Beat)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return 1;
             }
+
+            if (beat < musicalTime.Beat)
+            {
+                return -1;
+            }
+
+            return 0;
         }
     }
 }

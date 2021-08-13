@@ -17,54 +17,55 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ---------------------------------------------------------------------
 
+using System;
+using PostIllusions.Audio.Music;
+using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-
-    using PostIllusions.Audio.Music;
-    using UnityEngine;
-
+    [RequireComponent(typeof(PlaybackController))]
     public class Sequencer : MonoBehaviour
     {
-        [SerializeField]
-        private MusicRegion[] regions;
+        [SerializeField] private MusicRegion[] regions;
 
+        private PlaybackController playbackController;
         private Measure measure;
         private MusicalAudioTime musicTime;
         private bool isPlaying;
 
+        public static event Action<MusicalAudioTime> UpdateBeat;
+
         private void Awake()
         {
-            Playback.PlaybackStateSet += HandlePlaybackStateSet;
+            playbackController = GetComponent<PlaybackController>();
+            playbackController.PlaybackStateSet += PlaybackController_PlaybackStateSet;
         }
 
         private void OnDestroy()
         {
-            Playback.PlaybackStateSet -= HandlePlaybackStateSet;
+            playbackController.PlaybackStateSet -= PlaybackController_PlaybackStateSet;
         }
-
-        public static event Action<MusicalAudioTime> UpdateBeat;
 
         private void Update()
         {
-            if (isPlaying)
+            if (!isPlaying)
             {
-                musicTime.AddTime(Time.deltaTime);
-                SetCurrentRegion();
+                return;
             }
+
+            musicTime.AddTime(Time.deltaTime);
+            SetCurrentRegion();
         }
 
         private void SetCurrentRegion()
         {
+            // TODO
             throw new NotImplementedException();
         }
 
-        private void HandlePlaybackStateSet(PlaybackState playbackEvent)
+        private void PlaybackController_PlaybackStateSet(PlaybackState playbackState)
         {
-            switch (playbackEvent)
+            switch (playbackState)
             {
                 case PlaybackState.Play:
                     Play();
@@ -76,7 +77,7 @@ namespace PostIllusions.Audio.Sequencer
                     Stop();
                     break;
                 default:
-                    throw new NotSupportedException("Undefined playback state: " + playbackEvent);
+                    throw new NotSupportedException(playbackState.ToString());
             }
         }
 
@@ -98,37 +99,39 @@ namespace PostIllusions.Audio.Sequencer
 
         private void SetBeats()
         {
-            float currentBeatTime = ((musicTime.Bar - 1) * musicTime.Measure.BeatCount + musicTime.Beat) * musicTime.BeatDuration;
+            float currentBeatTime = ((musicTime.Bar - 1) * musicTime.Measure.BeatCount + musicTime.Beat) * musicTime.BeatDurationSeconds;
 
 #if UNITY_EDITOR
             // Adjust music time to playback speed.
-            currentBeatTime -= musicTime.BeatDuration * (1f - 1f / Time.timeScale);
+            currentBeatTime -= musicTime.BeatDurationSeconds * (1f - 1f / Time.timeScale);
 #endif // UNITY_EDITOR
 
-            if (musicTime.Time > currentBeatTime)
+            if (musicTime.TimeSeconds <= currentBeatTime)
             {
-                if (musicTime.Beat < musicTime.Measure.BeatCount)
-                {
-                    musicTime.IncrementBeat();
-                }
-                else
-                {
-                    musicTime.SetBeat(1);
-                    musicTime.AddBar(1);
-                }
+                return;
+            }
+
+            if (musicTime.Beat < musicTime.Measure.BeatCount)
+            {
+                musicTime.IncrementBeat();
+            }
+            else
+            {
+                musicTime.SetBeat(1);
+                musicTime.AddBar(1);
+            }
 
 #if UNITY_EDITOR
-                if (Time.timeScale != 1)
-                {
-                    // Adjust music time to playback speed.
-                    musicTime.SetTime((currentBeatTime + musicTime.BeatDuration * (1f - 1f / Time.timeScale)));
-                }
+            if (Time.timeScale != 1)
+            {
+                // Adjust music time to playback speed.
+                musicTime.SetTime((currentBeatTime + musicTime.BeatDurationSeconds * (1f - 1f / Time.timeScale)));
+            }
 #endif // UNITY_EDITOR
 
-                if (UpdateBeat != null)
-                {
-                    UpdateBeat(musicTime);
-                }
+            if (UpdateBeat != null)
+            {
+                UpdateBeat(musicTime);
             }
         }
     }
