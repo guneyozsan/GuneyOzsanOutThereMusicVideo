@@ -26,7 +26,6 @@ namespace PostIllusions.Audio.Music
     /// in time domain (seconds) and music domain (bars and beats).
     /// <seealso cref="MusicalTime"/>.
     /// </summary>
-    [Serializable]
     public class MusicalAudioTime : MusicalTime
     {
         /// <summary>
@@ -34,7 +33,7 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         /// <param name="measure">Measure of the music (Example: 3/4, 4/4...etc.). Constant throughout the audio piece.</param>
         /// <param name="bpm">Bpm of the music. Constant throughout the audio piece.</param>
-        public MusicalAudioTime(Measure measure, int bpm) : base(measure)
+        public MusicalAudioTime(Measure measure, float bpm) : base(measure, 1, 1)
         {
             Bpm = bpm;
             TimeSeconds = 0f;
@@ -43,7 +42,7 @@ namespace PostIllusions.Audio.Music
         /// <summary>
         /// Bpm of the music. Constant throughout the music.
         /// </summary>
-        public int Bpm { get; private set; }
+        public float Bpm { get; private set; }
 
         /// <summary>
         /// Current time of music in seconds.
@@ -88,19 +87,9 @@ namespace PostIllusions.Audio.Music
         /// Sets the current time of the instance in seconds.
         /// </summary>
         /// <param name="value">Time to set in seconds.</param>
-        public void SetTime(float value)
+        public void SetTime(float v)
         {
-            TimeSeconds = value;
-        }
-
-        /// <summary>
-        /// Resets the instance time to beginning of the audio piece: Bar 1, Beat 1 and 0 seconds.
-        /// </summary>
-        public void ResetToBeginning()
-        {
-            bar = 1;
-            beat = 1;
-            TimeSeconds = 0f;
+            TimeSeconds = v;
         }
     }
 }

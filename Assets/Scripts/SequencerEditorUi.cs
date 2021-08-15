@@ -18,17 +18,14 @@
 using System;
 using UnityEngine;
 
-#if UNITY_EDITOR
 /// <summary>
 /// Displays the current time, measure and song region for tracking current position in the song.
 /// </summary>
 public class SequencerEditorUi : MonoBehaviour
 {
-#pragma warning disable 649
-    [SerializeField]
-    private bool displayGui;
-#pragma warning disable 649
+    [SerializeField] private bool displayGui;
 
+#if UNITY_EDITOR
     private void OnGUI()
     {
         if (displayGui)
@@ -43,5 +40,5 @@ public class SequencerEditorUi : MonoBehaviour
             );
         }
     }
+#endif
 }
-#endif // UNITY_EDITOR

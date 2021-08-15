@@ -28,18 +28,17 @@ namespace PostIllusions.Audio.Music
     [Serializable]
     public class MusicalTime
     {
-        [SerializeField] protected int bar;
-        [SerializeField] protected int beat;
+        [SerializeField] private int bar;
+        [SerializeField] private int beat;
 
         /// <summary>
         /// Creates a musical time with given measure.
         /// </summary>
-        /// <param name="measure"></param>
-        public MusicalTime(Measure measure)
+        public MusicalTime(Measure measure, int bar, int beat)
         {
             Measure = measure;
-            bar = 1;
-            beat = 1;
+            this.bar = bar;
+            this.beat = beat;
         }
 
         public Measure Measure { get; protected set; }
@@ -51,42 +50,12 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         public void IncrementBeat()
         {
-            beat = beat == Measure.BeatCount ? 1 : beat + 1;
-        }
-
-        /// <summary>
-        /// Decrements beat number by 1.
-        /// </summary>
-        public void DecrementBeat()
-        {
-            beat = beat == 1 ? Measure.BeatCount : beat - 1;
-        }
-
-        /// <summary>
-        /// Sets the current bar.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetBar(int value)
-        {
-            bar = value;
-        }
-
-        /// <summary>
-        /// Sets the current beat.
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetBeat(int value)
-        {
-            beat = value;
-        }
-
-        /// <summary>
-        /// Adds time in bars.
-        /// </summary>
-        /// <param name="value"></param>
-        public void AddBar(int value)
-        {
-            bar += value;
+            beat = beat % Measure.BeatCount + 1;
+            
+            if (beat == 1)
+            {
+                bar += 1;
+            }
         }
 
         /// <summary>

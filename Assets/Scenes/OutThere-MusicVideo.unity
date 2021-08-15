@@ -756,7 +756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9a79ccf60fd05d4aa55ba645f13ff49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetesimalPrefab: {fileID: 400000, guid: 65d917f28a73d004d89f2d3d12a05876, type: 2}
+  planetesimalPrefab: {fileID: 114184616915234436, guid: 65d917f28a73d004d89f2d3d12a05876,
+    type: 2}
   mainCamera: {fileID: 1210266820}
 --- !u!114 &1368347922
 MonoBehaviour:
@@ -860,6 +861,7 @@ GameObject:
   - component: {fileID: 1464147750}
   - component: {fileID: 1464147752}
   - component: {fileID: 1464147753}
+  - component: {fileID: 1464147754}
   m_Layer: 0
   m_Name: Sequencer
   m_TagString: Untagged
@@ -878,181 +880,224 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c37398bfc8f6acc4aa9e11f9bd8b2fe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  music:
+    name: Out There
+    bpm: 77
+    measure:
+      beatCount: 4
+      beatNoteValue: 4
+    length:
+      bar: 192
+      beat: 0
+    parts:
+    - name: Intro
+      regions:
+      - name: Wind Intro
+        start:
+          bar: 1
+          beat: 1
+    - name: Part 1 - Approach (Intro)
+      regions:
+      - name: Explosion
+        start:
+          bar: 4
+          beat: 1
+      - name: Ping sound
+        start:
+          bar: 6
+          beat: 1
+      - name: Musical base
+        start:
+          bar: 8
+          beat: 1
+      - name: Melody
+        start:
+          bar: 16
+          beat: 1
+      - name: Bass
+        start:
+          bar: 32
+          beat: 1
+      - name: Hihat and full bass
+        start:
+          bar: 40
+          beat: 1
+      - name: Bass syncopation
+        start:
+          bar: 48
+          beat: 1
+      - name: Part 1 to 2 bridge
+        start:
+          bar: 56
+          beat: 1
+    - name: Part 2 - Probe
+      regions:
+      - name: A - Musical base
+        start:
+          bar: 60
+          beat: 1
+      - name: Melody
+        start:
+          bar: 76
+          beat: 1
+      - name: AB Bridge
+        start:
+          bar: 84
+          beat: 1
+      - name: B - Musical base
+        start:
+          bar: 92
+          beat: 1
+      - name: B - Melody
+        start:
+          bar: 100
+          beat: 1
+      - name: AB Bridge
+        start:
+          bar: 108
+          beat: 1
+      - name: B - Melody
+        start:
+          bar: 116
+          beat: 1
+      - name: AB Bridge
+        start:
+          bar: 124
+          beat: 1
+      - name: A - Melody
+        start:
+          bar: 132
+          beat: 1
+      - name: AB - Bridge
+        start:
+          bar: 140
+          beat: 1
+      - name: Part 2 to 1 bridge
+        start:
+          bar: 148
+          beat: 1
+    - name: Part 1 - Approach
+      regions:
+      - name: Part 1 rhythm + melody + hihat
+        start:
+          bar: 156
+          beat: 1
+      - name: Part 1 rhythm + melody
+        start:
+          bar: 164
+          beat: 1
+      - name: Part 1 melody + bass
+        start:
+          bar: 172
+          beat: 1
+      - name: Part 1 melody + bass + hihat
+        start:
+          bar: 180
+          beat: 1
+      - name: Part 1 to 2 bridge
+        start:
+          bar: 188
+          beat: 1
   regions:
   - name: Wind Intro
     start:
       bar: 1
       beat: 1
-    end:
-      bar: 4
-      beat: 1
   - name: Explosion
     start:
       bar: 4
-      beat: 1
-    end:
-      bar: 6
       beat: 1
   - name: Ping sound
     start:
       bar: 6
       beat: 1
-    end:
-      bar: 8
-      beat: 1
   - name: Musical base
     start:
       bar: 8
       beat: 1
-    end:
-      bar: 16
-      beat: 1
   - name: Melody
     start:
       bar: 16
-      beat: 1
-    end:
-      bar: 32
       beat: 1
   - name: Bass
     start:
       bar: 32
       beat: 1
-    end:
-      bar: 40
-      beat: 1
   - name: Hihat and full bass
     start:
       bar: 40
-      beat: 1
-    end:
-      bar: 48
       beat: 1
   - name: Bass syncopation
     start:
       bar: 48
       beat: 1
-    end:
-      bar: 56
-      beat: 1
   - name: Part 1 to 2 bridge
     start:
       bar: 56
-      beat: 1
-    end:
-      bar: 60
       beat: 1
   - name: A - Musical base
     start:
       bar: 60
       beat: 1
-    end:
-      bar: 76
-      beat: 1
   - name: Melody
     start:
       bar: 76
       beat: 1
-    end:
-      bar: 84
-      beat: 1
   - name: AB Bridge
     start:
       bar: 84
-      beat: 1
-    end:
-      bar: 92
       beat: 1
   - name: B - Musical base
     start:
       bar: 92
       beat: 1
-    end:
-      bar: 100
-      beat: 1
   - name: B - Melody
     start:
       bar: 100
-      beat: 1
-    end:
-      bar: 108
       beat: 1
   - name: AB Bridge
     start:
       bar: 108
       beat: 1
-    end:
-      bar: 116
-      beat: 1
   - name: B - Melody
     start:
       bar: 116
       beat: 1
-    end:
-      bar: 124
-      beat: 1
   - name: AB Bridge
     start:
       bar: 124
-      beat: 1
-    end:
-      bar: 132
       beat: 1
   - name: A - Melody
     start:
       bar: 132
       beat: 1
-    end:
-      bar: 140
-      beat: 1
   - name: AB - Bridge
     start:
       bar: 140
-      beat: 1
-    end:
-      bar: 148
       beat: 1
   - name: Part 2 to 1 bridge
     start:
       bar: 148
       beat: 1
-    end:
-      bar: 156
-      beat: 1
   - name: Part 1 rhythm + melody + hihat
     start:
       bar: 156
-      beat: 1
-    end:
-      bar: 164
       beat: 1
   - name: Part 1 rhythm + melody
     start:
       bar: 164
       beat: 1
-    end:
-      bar: 172
-      beat: 1
   - name: Part 1 melody + bass
     start:
       bar: 172
-      beat: 1
-    end:
-      bar: 180
       beat: 1
   - name: Part 1 melody + bass + hihat
     start:
       bar: 180
       beat: 1
-    end:
-      bar: 188
-      beat: 1
   - name: Part 1 to 2 bridge
     start:
       bar: 188
-      beat: 1
-    end:
-      bar: 192
       beat: 1
 --- !u!4 &1464147751
 Transform:
@@ -1094,6 +1139,17 @@ MonoBehaviour:
   fastForwardEnabled: 0
   fastForwardToBar: 187
   fastForwardSpeed: 3
+--- !u!114 &1464147754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1464147749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ae72c7e5e2138d4bb14574efb0c9bab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1875497754
 Prefab:
   m_ObjectHideFlags: 0

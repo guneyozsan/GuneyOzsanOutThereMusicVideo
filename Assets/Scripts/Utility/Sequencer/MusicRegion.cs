@@ -23,19 +23,37 @@ using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
+    [Serializable]
+    public struct Music
+    {
+        [SerializeField] private string name;
+        [SerializeField] private float bpm;
+        [SerializeField] private Measure measure;
+        [SerializeField] private MusicalTime length;
+        [SerializeField] private MusicPart[] parts;
 
+        public string Name { get { return name; } }
+        public float Bpm { get { return bpm; } }
+        public Measure Measure { get { return measure; } }
+        public MusicalTime Length { get { return length; } }
+        public MusicPart[] Parts { get { return parts; } }
+    }
+    [Serializable]
+    public struct MusicPart
+    {
+        [SerializeField] private string name;
+        [SerializeField] private MusicRegion[] regions;
+
+        public string Name { get { return name; } }
+        public MusicRegion[] Regions { get { return regions; } }
+    }
     [Serializable]
     public struct MusicRegion
     {
-        [SerializeField]
-        private string name;
-        [SerializeField]
-        private MusicalTime start;
-        [SerializeField]
-        private MusicalTime end;
+        [SerializeField] private string name;
+        [SerializeField] private MusicalTime start;
 
-        public MusicalTime Start { get { return start; } }
-        public MusicalTime End { get { return end; } }
         public string Name { get { return name; } }
+        public MusicalTime Start { get { return start; } }
     }
 }

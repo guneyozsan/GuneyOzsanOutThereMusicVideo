@@ -18,24 +18,18 @@
 // ---------------------------------------------------------------------
 
 using System;
+using UnityEngine;
 
 namespace PostIllusions.Audio.Music
 {
     /// <summary>
     /// Represents a musical measure (Example: 3/4, 4/4, 6/8...etc.).
     /// </summary>
+    [Serializable]
     public struct Measure
     {
-        /// <summary>
-        /// Construct a measure in standard musical format ("3/4", "4/4", "6/8"...etc.).
-        /// </summary>
-        /// <param name="measure">"3/4", "4/4", "6/8"...etc.</param>
-        public Measure(string measure) : this()
-        {
-            int slashIndex = measure.IndexOf("/", StringComparison.Ordinal);
-            BeatCount = int.Parse(measure.Substring(0, slashIndex));
-            BeatNoteValue = int.Parse(measure.Substring(slashIndex + 1, measure.Length - (slashIndex + 1)));
-        }
+        [SerializeField] private int beatCount;
+        [SerializeField] private int beatNoteValue;
 
         /// <summary>
         /// Construct a measure by explicitly defining count and noteValue.
@@ -44,19 +38,25 @@ namespace PostIllusions.Audio.Music
         /// <param name="beatNoteValue">Musical note value where 1 is a whole note. For example "4" in standard notation "3/4".</param>
         public Measure(int beatCount, int beatNoteValue) : this()
         {
-            BeatCount = beatCount;
-            BeatNoteValue = beatNoteValue;
+            this.beatCount = beatCount;
+            this.beatNoteValue = beatNoteValue;
         }
 
         /// <summary>
         /// Count of beats with <see cref="BeatNoteValue"/> in a single bar. For example "3" in standard notation "3/4".
         /// </summary>
-        public int BeatCount { get; private set; }
+        public int BeatCount
+        {
+            get { return beatCount; }
+        }
 
         /// <summary>
         /// Note value of the beat where 1 is a whole note. For example "4" in standard notation "3/4".
         /// </summary>
-        public int BeatNoteValue { get; private set; }
+        public int BeatNoteValue
+        {
+            get { return beatNoteValue; }
+        }
 
         public string GetMeasure()
         {

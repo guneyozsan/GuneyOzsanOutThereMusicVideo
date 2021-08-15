@@ -26,19 +26,20 @@ namespace PostIllusions.Audio.Sequencer
     [RequireComponent(typeof(PlaybackController))]
     public class Sequencer : MonoBehaviour
     {
-        [SerializeField] private MusicRegion[] regions;
+        [SerializeField] private Music music;
 
         private PlaybackController playbackController;
-        private Measure measure;
-        private MusicalAudioTime musicTime;
+        private MusicalAudioTime musicalTime;
         private bool isPlaying;
 
-        public static event Action<MusicalAudioTime> UpdateBeat;
+        public static event Action<MusicalAudioTime> BeatUpdated;
 
         private void Awake()
         {
             playbackController = GetComponent<PlaybackController>();
             playbackController.PlaybackStateSet += PlaybackController_PlaybackStateSet;
+
+            musicalTime = new MusicalAudioTime(music.Measure, music.Bpm);
         }
 
         private void OnDestroy()
@@ -53,14 +54,19 @@ namespace PostIllusions.Audio.Sequencer
                 return;
             }
 
-            musicTime.AddTime(Time.deltaTime);
-            SetCurrentRegion();
+            musicalTime.AddTime(Time.deltaTime);
+            UpdateCurrentRegion();
         }
 
-        private void SetCurrentRegion()
+        private void UpdateCurrentRegion()
         {
-            // TODO
-            throw new NotImplementedException();
+            foreach (MusicPart musicPart in music.Parts)
+            {
+                foreach (MusicRegion region in musicPart.Regions)
+                {
+                    //if (musicTime.TimeSeconds < region.End.Bar)
+                }
+            }
         }
 
         private void PlaybackController_PlaybackStateSet(PlaybackState playbackState)
@@ -77,7 +83,7 @@ namespace PostIllusions.Audio.Sequencer
                     Stop();
                     break;
                 default:
-                    throw new NotSupportedException(playbackState.ToString());
+                    throw new NotSupportedException(Enum.GetName(typeof(PlaybackState), playbackState));
             }
         }
 
@@ -94,44 +100,36 @@ namespace PostIllusions.Audio.Sequencer
         private void Stop()
         {
             isPlaying = false;
-            musicTime.ResetToBeginning();
+            musicalTime.SetTime(0f);
         }
 
         private void SetBeats()
         {
-            float currentBeatTime = ((musicTime.Bar - 1) * musicTime.Measure.BeatCount + musicTime.Beat) * musicTime.BeatDurationSeconds;
+            float currentBeatTime = ((musicalTime.Bar - 1) * musicalTime.Measure.BeatCount + musicalTime.Beat) * musicalTime.BeatDurationSeconds;
 
 #if UNITY_EDITOR
             // Adjust music time to playback speed.
-            currentBeatTime -= musicTime.BeatDurationSeconds * (1f - 1f / Time.timeScale);
+            currentBeatTime -= musicalTime.BeatDurationSeconds * (1f - 1f / Time.timeScale);
 #endif // UNITY_EDITOR
 
-            if (musicTime.TimeSeconds <= currentBeatTime)
+            if (musicalTime.TimeSeconds <= currentBeatTime)
             {
                 return;
             }
 
-            if (musicTime.Beat < musicTime.Measure.BeatCount)
-            {
-                musicTime.IncrementBeat();
-            }
-            else
-            {
-                musicTime.SetBeat(1);
-                musicTime.AddBar(1);
-            }
+            musicalTime.IncrementBeat();
 
 #if UNITY_EDITOR
             if (Time.timeScale != 1)
             {
                 // Adjust music time to playback speed.
-                musicTime.SetTime((currentBeatTime + musicTime.BeatDurationSeconds * (1f - 1f / Time.timeScale)));
+                musicalTime.SetTime((currentBeatTime + musicalTime.BeatDurationSeconds * (1f - 1f / Time.timeScale)));
             }
 #endif // UNITY_EDITOR
 
-            if (UpdateBeat != null)
+            if (BeatUpdated != null)
             {
-                UpdateBeat(musicTime);
+                BeatUpdated(musicalTime);
             }
         }
     }
