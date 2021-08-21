@@ -34,23 +34,21 @@ namespace PostIllusions.Audio.Music
         /// <summary>
         /// Creates a musical time with given measure.
         /// </summary>
-        public MusicalTime(Measure measure, int bar, int beat)
+        public MusicalTime(int bar, int beat)
         {
-            Measure = measure;
             this.bar = bar;
             this.beat = beat;
         }
 
-        public Measure Measure { get; protected set; }
         public int Bar { get { return bar; } }
         public int Beat { get { return beat; } }
 
         /// <summary>
         /// Increments beat number by 1.
         /// </summary>
-        public void IncrementBeat()
+        public void IncrementBeat(int beatsPerMeasure)
         {
-            beat = beat % Measure.BeatCount + 1;
+            beat = beat % beatsPerMeasure + 1;
             
             if (beat == 1)
             {

@@ -18,42 +18,26 @@
 // ---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using PostIllusions.Audio.Music;
 using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
+    [CreateAssetMenu(fileName = "SongMeta", menuName = "ScriptableObjects/SongMeta")]
     [Serializable]
-    public struct Music
+    public class SongMeta : ScriptableObject
     {
-        [SerializeField] private string name;
+        [SerializeField] private string songName;
         [SerializeField] private float bpm;
         [SerializeField] private Measure measure;
         [SerializeField] private MusicalTime length;
-        [SerializeField] private MusicPart[] parts;
+        [SerializeField] private List<SongPartMeta> parts;
 
-        public string Name { get { return name; } }
+        public string SongName { get { return songName; } }
         public float Bpm { get { return bpm; } }
         public Measure Measure { get { return measure; } }
         public MusicalTime Length { get { return length; } }
-        public MusicPart[] Parts { get { return parts; } }
-    }
-    [Serializable]
-    public struct MusicPart
-    {
-        [SerializeField] private string name;
-        [SerializeField] private MusicRegion[] regions;
-
-        public string Name { get { return name; } }
-        public MusicRegion[] Regions { get { return regions; } }
-    }
-    [Serializable]
-    public struct MusicRegion
-    {
-        [SerializeField] private string name;
-        [SerializeField] private MusicalTime start;
-
-        public string Name { get { return name; } }
-        public MusicalTime Start { get { return start; } }
+        public List<SongPartMeta> Parts { get { return parts; } }
     }
 }

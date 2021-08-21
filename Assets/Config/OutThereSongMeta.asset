@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7854a9f9e139baa40b1ef2931e3c81d1, type: 3}
+  m_Name: OutThereSongMeta
+  m_EditorClassIdentifier: Assembly-CSharp:PostIllusions.Audio.Sequencer:SongMeta
+  songName: OutThere
+  bpm: 66
+  measure:
+    beatCount: 4
+    beatNoteValue: 4
+  length:
+    bar: 192
+    beat: 0
+  parts:
+  - name: Intro
+    regions:
+    - name: Wind Intro
+      start:
+        bar: 1
+        beat: 1
+  - name: Part 1 - Approach (Intro)
+    regions:
+    - name: Explosion
+      start:
+        bar: 4
+        beat: 1
+    - name: Ping sound
+      start:
+        bar: 6
+        beat: 1
+    - name: Musical base
+      start:
+        bar: 8
+        beat: 1
+    - name: Melody
+      start:
+        bar: 16
+        beat: 1
+    - name: Bass
+      start:
+        bar: 32
+        beat: 1
+    - name: Hi-hat and full bass
+      start:
+        bar: 40
+        beat: 1
+    - name: Bass syncopation
+      start:
+        bar: 48
+        beat: 1
+    - name: Part 1 to 2 bridge
+      start:
+        bar: 56
+        beat: 1
+  - name: Part 2 - Probe
+    regions:
+    - name: A - Musical base
+      start:
+        bar: 60
+        beat: 1
+    - name: Melody
+      start:
+        bar: 76
+        beat: 1
+    - name: AB Bridge
+      start:
+        bar: 84
+        beat: 1
+    - name: B - Musical base
+      start:
+        bar: 92
+        beat: 1
+    - name: B - Melody
+      start:
+        bar: 100
+        beat: 1
+    - name: AB Bridge
+      start:
+        bar: 108
+        beat: 1
+    - name: B - Melody
+      start:
+        bar: 116
+        beat: 1
+    - name: AB Bridge
+      start:
+        bar: 124
+        beat: 1
+    - name: A - Melody
+      start:
+        bar: 132
+        beat: 1
+    - name: AB - Bridge
+      start:
+        bar: 140
+        beat: 1
+    - name: Part 2 to 1 bridge
+      start:
+        bar: 148
+        beat: 1
+  - name: Part 1 - Approach
+    regions:
+    - name: Part 1 rhythm + melody + hi-hat
+      start:
+        bar: 156
+        beat: 1
+    - name: Part 1 rhythm + melody
+      start:
+        bar: 164
+        beat: 1
+    - name: Part 1 melody + bass
+      start:
+        bar: 172
+        beat: 1
+    - name: Part 1 melody + bass + hi-hat
+      start:
+        bar: 180
+        beat: 1
+    - name: Part 1 to 2 bridge
+      start:
+        bar: 188
+        beat: 1

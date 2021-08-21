@@ -33,7 +33,7 @@ namespace PostIllusions.Audio.Music
         /// </summary>
         /// <param name="measure">Measure of the music (Example: 3/4, 4/4...etc.). Constant throughout the audio piece.</param>
         /// <param name="bpm">Bpm of the music. Constant throughout the audio piece.</param>
-        public MusicalAudioTime(Measure measure, float bpm) : base(measure, 1, 1)
+        public MusicalAudioTime(Measure measure, float bpm) : base(1, 1)
         {
             Bpm = bpm;
             TimeSeconds = 0f;

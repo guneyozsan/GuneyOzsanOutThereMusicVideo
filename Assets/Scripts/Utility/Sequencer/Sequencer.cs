@@ -26,8 +26,8 @@ namespace PostIllusions.Audio.Sequencer
     [RequireComponent(typeof(PlaybackController))]
     public class Sequencer : MonoBehaviour
     {
-        [SerializeField] private Music music;
-
+        [SerializeField] private SongMeta songMeta;
+        
         private PlaybackController playbackController;
         private MusicalAudioTime musicalTime;
         private bool isPlaying;
@@ -39,7 +39,7 @@ namespace PostIllusions.Audio.Sequencer
             playbackController = GetComponent<PlaybackController>();
             playbackController.PlaybackStateSet += PlaybackController_PlaybackStateSet;
 
-            musicalTime = new MusicalAudioTime(music.Measure, music.Bpm);
+            musicalTime = new MusicalAudioTime(songMeta.Measure, songMeta.Bpm);
         }
 
         private void OnDestroy()
@@ -60,9 +60,9 @@ namespace PostIllusions.Audio.Sequencer
 
         private void UpdateCurrentRegion()
         {
-            foreach (MusicPart musicPart in music.Parts)
+            foreach (SongPartMeta part in songMeta.Parts)
             {
-                foreach (MusicRegion region in musicPart.Regions)
+                foreach (SongRegionMeta region in part.Regions)
                 {
                     //if (musicTime.TimeSeconds < region.End.Bar)
                 }
@@ -105,7 +105,9 @@ namespace PostIllusions.Audio.Sequencer
 
         private void SetBeats()
         {
-            float currentBeatTime = ((musicalTime.Bar - 1) * musicalTime.Measure.BeatCount + musicalTime.Beat) * musicalTime.BeatDurationSeconds;
+            float currentBeatTime = ((musicalTime.Bar - 1) * songMeta.Measure.BeatCount + 
+            musicalTime
+            .Beat) * musicalTime.BeatDurationSeconds;
 
 #if UNITY_EDITOR
             // Adjust music time to playback speed.
@@ -117,7 +119,7 @@ namespace PostIllusions.Audio.Sequencer
                 return;
             }
 
-            musicalTime.IncrementBeat();
+            musicalTime.IncrementBeat(songMeta.Measure.BeatCount);
 
 #if UNITY_EDITOR
             if (Time.timeScale != 1)
