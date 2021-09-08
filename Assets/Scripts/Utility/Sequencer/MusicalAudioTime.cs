@@ -28,6 +28,8 @@ namespace PostIllusions.Audio.Music
     /// </summary>
     public class MusicalAudioTime : MusicalTime
     {
+        private float beatDurationSeconds;
+        
         /// <summary>
         /// Creates an AudioMusicTime object in time domain with a constant Measure and BPM.
         /// </summary>
@@ -36,7 +38,7 @@ namespace PostIllusions.Audio.Music
         public MusicalAudioTime(Measure measure, float bpm) : base(1, 1)
         {
             Bpm = bpm;
-            TimeSeconds = 0f;
+            Time = 0f;
         }
 
         /// <summary>
@@ -47,12 +49,24 @@ namespace PostIllusions.Audio.Music
         /// <summary>
         /// Current time of music in seconds.
         /// </summary>
-        public float TimeSeconds { get; private set; }
+        public float Time { get; private set; }
 
         /// <summary>
         /// Duration of a single beat in seconds.
         /// </summary>
-        public float BeatDurationSeconds { get { return 60f / Bpm; } }
+        public float BeatDuration
+        {
+            get
+            {
+                if (beatDurationSeconds > 0)
+                {
+                    return beatDurationSeconds;
+                }
+                
+                beatDurationSeconds = 60f / Bpm;
+                return beatDurationSeconds;
+            }
+        }
 
         /// <summary>
         /// Returns the bar number of the given audio time.
@@ -80,7 +94,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value">Time to add in seconds.</param>
         public void AddTime(float value)
         {
-            TimeSeconds += value;
+            Time += value;
         }
 
         /// <summary>
@@ -89,7 +103,7 @@ namespace PostIllusions.Audio.Music
         /// <param name="value">Time to set in seconds.</param>
         public void SetTime(float v)
         {
-            TimeSeconds = v;
+            Time = v;
         }
     }
 }

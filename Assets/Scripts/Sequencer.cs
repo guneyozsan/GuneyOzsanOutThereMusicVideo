@@ -19,8 +19,6 @@ using UnityEngine;
 
 public class Sequencer : MonoBehaviour
 {
-    private AudioSource music;
-    
     public static float Time { get; private set; }
 
 #if UNITY_EDITOR
@@ -59,9 +57,6 @@ public class Sequencer : MonoBehaviour
 
         loopToBar = 60;
 
-        music = GetComponent<AudioSource>();
-        music.time = 0f;
-        music.Play();
         Time = 0f;
 
         CurrentBar = 1;
@@ -71,34 +66,34 @@ public class Sequencer : MonoBehaviour
     void Update()
     {
         // Syncs time with music time.
-        if (UnityEngine.Time.frameCount != 1 && UnityEngine.Time.frameCount != 2)
-            Time += UnityEngine.Time.deltaTime;
+        //if (UnityEngine.Time.frameCount != 1 && UnityEngine.Time.frameCount != 2)
+        //    Time += UnityEngine.Time.deltaTime;
 
 #if UNITY_EDITOR
-        AdjustPlaybackSpeed();
+        //AdjustPlaybackSpeed();
         SetCurrentRegion();
 #endif // UNITY_EDITOR
 
-        SetBeats();
+        //SetBeats();
         LoopMusicTo(loopToBar);
     }
-
-#if UNITY_EDITOR
-    void AdjustPlaybackSpeed()
-    {
-        if (CurrentBar < SequencerEditorController.FastForwardToBar
-            && SequencerEditorController.FastForwardSpeed != 1)
-        {
-            music.volume = 0;
-            UnityEngine.Time.timeScale = SequencerEditorController.FastForwardSpeed;
-        }
-        else
-        {
-            music.volume = 1;
-            UnityEngine.Time.timeScale = SequencerEditorController.PlaybackSpeed;
-        }
-    }
-#endif // UNITY_EDITOR
+    
+// #if UNITY_EDITOR
+//     void AdjustPlaybackSpeed()
+//     {
+//         if (CurrentBar < SequencerEditorController.FastForwardToBar
+//             && SequencerEditorController.FastForwardSpeed != 1)
+//         {
+//             music.volume = 0;
+//             UnityEngine.Time.timeScale = SequencerEditorController.FastForwardSpeed;
+//         }
+//         else
+//         {
+//             music.volume = 1;
+//             UnityEngine.Time.timeScale = SequencerEditorController.PlaybackSpeed;
+//         }
+//     }
+// #endif // UNITY_EDITOR
 
 #if UNITY_EDITOR
     void SetCurrentRegion()
@@ -231,33 +226,33 @@ public class Sequencer : MonoBehaviour
     }
 #endif // UNITY_EDITOR
 
-    void SetBeats()
-    {
-        double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
-
-#if UNITY_EDITOR
-        timeOfCurrentBeat -= BeatDuration * (1 - 1/ UnityEngine.Time.timeScale);
-#endif // UNITY_EDITOR
-
-        if (Time > timeOfCurrentBeat)
-        {
-            if (CurrentBeat < 4)
-            {
-                CurrentBeat++;
-            }
-            else
-            {
-                CurrentBeat = 1;
-                CurrentBar++;
-            }
-
-#if UNITY_EDITOR
-            if (UnityEngine.Time.timeScale != 1)
-                Time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / UnityEngine.Time.timeScale));
-#endif // UNITY_EDITOR
-
-        }
-    }
+//     void SetBeats()
+//     {
+//         double timeOfCurrentBeat = ((CurrentBar - 1) * 4 + CurrentBeat) * BeatDuration;
+//
+// #if UNITY_EDITOR
+//         timeOfCurrentBeat -= BeatDuration * (1 - 1/ UnityEngine.Time.timeScale);
+// #endif // UNITY_EDITOR
+//
+//         if (Time > timeOfCurrentBeat)
+//         {
+//             if (CurrentBeat < 4)
+//             {
+//                 CurrentBeat++;
+//             }
+//             else
+//             {
+//                 CurrentBeat = 1;
+//                 CurrentBar++;
+//             }
+//
+// #if UNITY_EDITOR
+//             if (UnityEngine.Time.timeScale != 1)
+//                 Time = (float)(timeOfCurrentBeat + BeatDuration * (1 - 1 / UnityEngine.Time.timeScale));
+// #endif // UNITY_EDITOR
+//
+//         }
+//     }
 
     void LoopMusicTo(int loopToBar)
     {

@@ -23,98 +23,55 @@ using UnityEngine;
 
 namespace PostIllusions.Audio.Sequencer
 {
-    [RequireComponent(typeof(PlaybackController))]
     public class Sequencer : MonoBehaviour
     {
         [SerializeField] private SongMeta songMeta;
-        
-        private PlaybackController playbackController;
+
+        private AudioSource music;
         private MusicalAudioTime musicalTime;
-        private bool isPlaying;
 
         public static event Action<MusicalAudioTime> BeatUpdated;
 
         private void Awake()
         {
-            playbackController = GetComponent<PlaybackController>();
-            playbackController.PlaybackStateSet += PlaybackController_PlaybackStateSet;
-
             musicalTime = new MusicalAudioTime(songMeta.Measure, songMeta.Bpm);
-        }
 
-        private void OnDestroy()
-        {
-            playbackController.PlaybackStateSet -= PlaybackController_PlaybackStateSet;
+            // TODO: Ensure only one object exists in scene.
+            music = FindObjectOfType<AudioSource>();
+            music.time = 0f;
+            music.Play();
         }
 
         private void Update()
         {
-            if (!isPlaying)
-            {
-                return;
-            }
-
+            // TODO: Check if this is still necessary.
+            // Syncs time with music time.
+            if (Time.frameCount != 1 && Time.frameCount != 2)
+                Time += Time.deltaTime;
+            
+#if UNITY_EDITOR
+            AdjustPlaybackSpeed();
+#endif
+            
             musicalTime.AddTime(Time.deltaTime);
-            UpdateCurrentRegion();
+            SetBeats();
+            LoopMusicTo(songMeta.LoopTo);
         }
-
-        private void UpdateCurrentRegion()
-        {
-            foreach (SongPartMeta part in songMeta.Parts)
-            {
-                foreach (SongRegionMeta region in part.Regions)
-                {
-                    //if (musicTime.TimeSeconds < region.End.Bar)
-                }
-            }
-        }
-
-        private void PlaybackController_PlaybackStateSet(PlaybackState playbackState)
-        {
-            switch (playbackState)
-            {
-                case PlaybackState.Play:
-                    Play();
-                    break;
-                case PlaybackState.Pause:
-                    Pause();
-                    break;
-                case PlaybackState.Stop:
-                    Stop();
-                    break;
-                default:
-                    throw new NotSupportedException(Enum.GetName(typeof(PlaybackState), playbackState));
-            }
-        }
-
-        private void Play()
-        {
-            isPlaying = true;
-        }
-
-        private void Pause()
-        {
-            isPlaying = false;
-        }
-
-        private void Stop()
-        {
-            isPlaying = false;
-            musicalTime.SetTime(0f);
-        }
-
+        
         private void SetBeats()
         {
             float currentBeatTime = ((musicalTime.Bar - 1) * songMeta.Measure.BeatCount + 
-            musicalTime
-            .Beat) * musicalTime.BeatDurationSeconds;
+                musicalTime.Beat) * musicalTime.BeatDuration;
 
 #if UNITY_EDITOR
             // Adjust music time to playback speed.
-            currentBeatTime -= musicalTime.BeatDurationSeconds * (1f - 1f / Time.timeScale);
+            if (Time.timeScale != 1)
+            {
+                currentBeatTime -= musicalTime.BeatDuration * (1f - 1f / Time.timeScale);
+            }
 #endif // UNITY_EDITOR
 
-            if (musicalTime.TimeSeconds <= currentBeatTime)
+            if (musicalTime.Time <= currentBeatTime)
             {
                 return;
             }
@@ -122,10 +79,10 @@ namespace PostIllusions.Audio.Sequencer
             musicalTime.IncrementBeat(songMeta.Measure.BeatCount);
 
 #if UNITY_EDITOR
-            if (Time.timeScale != 1)
+            // Adjust music time to playback speed.
+            if (Time.timeScale != 1f)
             {
-                // Adjust music time to playback speed.
-                musicalTime.SetTime((currentBeatTime + musicalTime.BeatDurationSeconds * (1f - 1f / Time.timeScale)));
+                musicalTime.SetTime((currentBeatTime + musicalTime.BeatDuration * (1f - 1f / Time.timeScale)));
             }
 #endif // UNITY_EDITOR
 
@@ -134,5 +91,38 @@ namespace PostIllusions.Audio.Sequencer
                 BeatUpdated(musicalTime);
             }
         }
+
+        private void LoopMusicTo(MusicalTime loopToTime)
+        {
+            if (musicalTime.Time >= (songMeta.Length.Bar * songMeta.Measure.BeatCount + songMeta.Length.Beat) * musicalTime.BeatDuration)
+            {
+                music.time = ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat) * musicalTime.BeatDuration;
+                musicalTime.SetTime(music.time);
+                music.Play();
+                
+                CurrentBar = loopToBar;
+
+                CurrentBeat = 1;
+            }
+        }
+        
+#if UNITY_EDITOR
+        private void AdjustPlaybackSpeed()
+        {
+            // TODO: Ensure it does not break after looping.
+            if (musicalTime.Bar < SequencerEditorController.FastForwardToBar
+                && SequencerEditorController.FastForwardSpeed != 1f)
+            {
+                music.volume = 0;
+                Time.timeScale = SequencerEditorController.FastForwardSpeed;
+            }
+            else
+            {
+                music.volume = 1;
+                Time.timeScale = SequencerEditorController.PlaybackSpeed;
+            }
+        }
+#endif // UNITY_EDITOR
+
     }
 }
