@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Name: OutThereSongMeta
   m_EditorClassIdentifier: Assembly-CSharp:PostIllusions.Audio.Sequencer:SongMeta
   songName: OutThere
-  bpm: 66
+  bpm: 77
   measure:
     beatCount: 4
     beatNoteValue: 4
   length:
     bar: 192
     beat: 0
+  loopTo:
+    bar: 60
+    beat: 1
   parts:
   - name: Intro
     regions:

@@ -877,7 +877,6 @@ GameObject:
   - component: {fileID: 1464147750}
   - component: {fileID: 1464147752}
   - component: {fileID: 1464147753}
-  - component: {fileID: 1464147754}
   m_Layer: 0
   m_Name: Sequencer
   m_TagString: Untagged
@@ -937,17 +936,6 @@ MonoBehaviour:
   fastForwardEnabled: 0
   fastForwardToBar: 187
   fastForwardSpeed: 3
---- !u!114 &1464147754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1464147749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ae72c7e5e2138d4bb14574efb0c9bab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1875497754
 Prefab:
   m_ObjectHideFlags: 0

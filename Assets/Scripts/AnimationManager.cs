@@ -16,12 +16,17 @@
 // ---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using PostIllusions.Audio.Music;
+using PostIllusions.Audio.Sequencer;
 using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
     [SerializeField] private Planetesimal planetesimalPrefab;
     [SerializeField] private Camera mainCamera;
+    
+    private TwinGalaxyAnimation twinGalaxyAnimation;
+    private MusicalTime animationTime;
 
     private Title openingTitlesMusic;
     private Title openingTitlesBy;
@@ -31,11 +36,6 @@ public class AnimationManager : MonoBehaviour
     private Title partTwoTitlesPartNumber;
     private Title partTwoTitlesPartName;
 
-    private int currentBar;
-    private int currentBeat;
-
-    private TwinGalaxyAnimation twinGalaxyAnimation;
-
 #if UNITY_EDITOR
     private static List<GameObject> pilotObjects = new List<GameObject>();
     private float twinGalaxyTime;
@@ -43,6 +43,8 @@ public class AnimationManager : MonoBehaviour
 
     private void Awake()
     {
+        Sequencer.Updated += SequencerOnUpdated;
+        
         InitializeTitles();
         InstantiatePlanetesimals(planetesimalPrefab, 11 * Vector3.one,
             Vector3.one);
@@ -55,16 +57,11 @@ public class AnimationManager : MonoBehaviour
         twinGalaxyTime = 0f;
     }
 
-    private void Update()
+    private void SequencerOnUpdated()
     {
-        int currentSequencerBar = Sequencer.CurrentBar;
-        int currentSequencerBeat = Sequencer.CurrentBeat;
-        
-        UpdateTitleAnimations(currentSequencerBar);
-        UpdateGravityAnimations(currentSequencerBar, currentSequencerBeat);
-
-        currentBar = currentSequencerBar;
-        currentBeat = currentSequencerBeat;
+        UpdateTitleAnimations(Sequencer.MusicalTime);
+        UpdateGravityAnimations(Sequencer.MusicalTime);
+        animationTime = Sequencer.MusicalTime;
     }
 
     private static void SetForces(float charge, List<Vector3> centers)
@@ -132,7 +129,7 @@ public class AnimationManager : MonoBehaviour
         int periodBars, int initialBar)
     {
         int forceCount = charges.Count;
-        float currentBarInSlice = (float) (Sequencer.CurrentBar - initialBar) / periodBars;
+        float currentBarInSlice = (float) (Sequencer.MusicalTime.Bar - initialBar) / periodBars;
         
         for (int i = 0; i < forceCount; i++)
         {
@@ -228,110 +225,91 @@ public class AnimationManager : MonoBehaviour
         });
     }
 
-    private void UpdateTitleAnimations(int currentSequencerBar)
+    private void UpdateTitleAnimations(MusicalTime sequencerTime)
     {
-        switch (currentSequencerBar)
+        if (animationTime.Bar == sequencerTime.Bar)
+        {
+            return;
+        }
+
+        float barDuration = Sequencer.BarDuration;
+        
+        switch (sequencerTime.Bar)
         {
             case 4:
-                if (currentBar != currentSequencerBar)
-                {
-                    openingTitlesMusic.FormTitle(12f * Sequencer.BarDuration, 
-                        0.005f, true, false);
-                    SetForces(0f, Vector3.zero);
-                }
+                openingTitlesMusic.FormTitle(12f * barDuration, 
+                    0.005f, true, false);
+                SetForces(0f, Vector3.zero);
                 break;
-
             case 16:
-                if (currentBar != currentSequencerBar)
-                {
-                    openingTitlesMusic.SpreadTitle(10f, 0.8f * Sequencer.BarDuration,
-                        false, 0.001f);
-                    partOneTitlesPartNumber.FormTitle(14.25f * Sequencer.BarDuration,
-                        0.001f, true, true);
-                    partOneTitlesPartName.FormTitle(14.25f * Sequencer.BarDuration,
-                        0.001f, true, true);
-                }
+                openingTitlesMusic.SpreadTitle(10f, 0.8f * barDuration,
+                    false, 0.001f);
+                partOneTitlesPartNumber.FormTitle(14.25f * barDuration,
+                    0.001f, true, true);
+                partOneTitlesPartName.FormTitle(14.25f * barDuration,
+                    0.001f, true, true);
                 break;
-
             case 32:
-                if (currentBar != currentSequencerBar)
-                {
-                    partOneTitlesPartNumber.SpreadTitle(10f, 1f * Sequencer.BarDuration,
-                        false, 0.05f);
-                }
+                partOneTitlesPartNumber.SpreadTitle(10f, 1f * barDuration,
+                    false, 0.05f);
                 break;
-
             case 36:
-                if (currentBar != currentSequencerBar)
-                {
-                    partOneTitlesPartName.SpreadTitle(10f, 1f * Sequencer.BarDuration,
-                        false, 0.05f);
-                }
+                partOneTitlesPartName.SpreadTitle(10f, 1f * barDuration,
+                    false, 0.05f);
                 break;
-                
             case 57:
-                if (currentBar != currentSequencerBar)
-                {
-                    partTwoTitlesPartNumber.FormTitle(2f * Sequencer.BarDuration,
-                        0.007f, true, true);
-                    partTwoTitlesPartName.FormTitle(2f * Sequencer.BarDuration,
-                        0.014f, true, true);
-                }
+                partTwoTitlesPartNumber.FormTitle(2f * barDuration,
+                    0.007f, true, true);
+                partTwoTitlesPartName.FormTitle(2f * barDuration,
+                    0.014f, true, true);
                 break;
-
             case 61:
-                if (currentBar != currentSequencerBar)
-                {
-                    partTwoTitlesPartNumber.SpreadTitle(10f, .5f * Sequencer.BarDuration,
-                        false, 0.0025f);
-                    partTwoTitlesPartName.SpreadTitle(10f, .5f * Sequencer.BarDuration,
-                        false, 0.0025f);
-                }
+                partTwoTitlesPartNumber.SpreadTitle(10f, .5f * barDuration,
+                    false, 0.0025f);
+                partTwoTitlesPartName.SpreadTitle(10f, .5f * barDuration,
+                    false, 0.0025f);
                 break;
-
             case 100:
-                if (currentBar != currentSequencerBar)
-                {
-                    Planetesimal cameraPlanetesimal = Instantiate(planetesimalPrefab,
-                        mainCamera.transform.position, Quaternion.identity);
-                    Space.Planetesimals.Add(cameraPlanetesimal);
-                    mainCamera.transform.SetParent(cameraPlanetesimal.transform);
-                }
+                Planetesimal cameraPlanetesimal = Instantiate(planetesimalPrefab,
+                    mainCamera.transform.position, Quaternion.identity);
+                Space.Planetesimals.Add(cameraPlanetesimal);
+                mainCamera.transform.SetParent(cameraPlanetesimal.transform);
                 break;
         }
     }
 
-    private void UpdateGravityAnimations(int currentSequencerBar, int currentSequencerBeat)
+    private void UpdateGravityAnimations(MusicalTime sequencerTime)
     {
         const int firstBarOfSequence = 18;
         const int firstBarOfTwinGalaxy = 32;
         const int lastBarOfTwinGalaxy = 57;
-        bool firstTimeInBarAndBeat = currentBar != Sequencer.CurrentBar 
-                                     || currentBeat != Sequencer.CurrentBeat;
+        
+        bool firstTimeInBarAndBeat = animationTime.Bar != sequencerTime.Bar 
+                                     || animationTime.Beat != sequencerTime.Beat;
 
-        if (currentSequencerBar >= firstBarOfSequence
-            && currentSequencerBar < firstBarOfTwinGalaxy
-            && currentSequencerBeat == 1)
+        if (sequencerTime.Bar >= firstBarOfSequence
+            && sequencerTime.Bar < firstBarOfTwinGalaxy
+            && sequencerTime.Beat == 1)
         {
             SetForcePerBar(new[] { -65f, 0f }, new Vector3(0f, 0f, -17f),
                 2, firstBarOfSequence);
         }
-        else if (currentSequencerBar >= firstBarOfTwinGalaxy
-                 && currentSequencerBar < lastBarOfTwinGalaxy + 1)
+        else if (sequencerTime.Bar >= firstBarOfTwinGalaxy
+                 && sequencerTime.Bar < lastBarOfTwinGalaxy + 1)
         {
-            float animationDuration = Sequencer.BarDuration
-                                      * (lastBarOfTwinGalaxy - firstBarOfTwinGalaxy + 1);
+            float animationDuration =
+                Sequencer.BarDuration * (lastBarOfTwinGalaxy - firstBarOfTwinGalaxy + 1);
             SetForces(twinGalaxyAnimation.GetForces(twinGalaxyTime, animationDuration));
             twinGalaxyTime += Time.deltaTime;
         }
-        else if (currentSequencerBar >= lastBarOfTwinGalaxy && currentSequencerBar < 60)
+        else if (sequencerTime.Bar >= lastBarOfTwinGalaxy && sequencerTime.Bar < 60)
         {
             if (firstTimeInBarAndBeat)
             {
                 SetForces(-30f, Vector3.zero);
             }
         }
-        else if (currentSequencerBar >= 60 && currentSequencerBeat == 1)
+        else if (sequencerTime.Bar >= 60 && sequencerTime.Beat == 1)
         {
             if (firstTimeInBarAndBeat)
             {

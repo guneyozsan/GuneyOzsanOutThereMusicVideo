@@ -16,6 +16,7 @@
 // ---------------------------------------------------------------------
 
 using System;
+using PostIllusions.Audio.Sequencer;
 using UnityEngine;
 
 /// <summary>
@@ -32,11 +33,11 @@ public class SequencerEditorUi : MonoBehaviour
         {
             GUI.Label(
                 new Rect(10f, 10f, 200f, 100f),
-                "Bar:   " + Sequencer.CurrentBar + ":" + Sequencer.CurrentBeat
-                + "      Time:   " + (int)(Sequencer.Time * 1000f) + " ms" + Environment.NewLine
+                "Bar:   " + Sequencer.MusicalTime.Bar + ":" + Sequencer.MusicalTime.Beat
+                + "      Time:   " + (int)(Sequencer.Music.time * 1000f) + " ms" + Environment.NewLine
                 + "-------------------------------------------" + Environment.NewLine
-                + "Part:       " + Sequencer.CurrentPart + Environment.NewLine
-                + Sequencer.CurrentRegionDescription
+                //+ "Part:       " + SequencerOld.CurrentPart + Environment.NewLine
+                //+ SequencerOld.CurrentRegionDescription
             );
         }
     }

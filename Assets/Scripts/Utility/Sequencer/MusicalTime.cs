@@ -26,14 +26,11 @@ namespace PostIllusions.Audio.Music
     /// Represents a moment in music domain with given measure in terms of bars and beats.
     /// </summary>
     [Serializable]
-    public class MusicalTime
+    public struct MusicalTime
     {
         [SerializeField] private int bar;
         [SerializeField] private int beat;
 
-        /// <summary>
-        /// Creates a musical time with given measure.
-        /// </summary>
         public MusicalTime(int bar, int beat)
         {
             this.bar = bar;
@@ -43,44 +40,32 @@ namespace PostIllusions.Audio.Music
         public int Bar { get { return bar; } }
         public int Beat { get { return beat; } }
 
-        /// <summary>
-        /// Increments beat number by 1.
-        /// </summary>
-        public void IncrementBeat(int beatsPerMeasure)
-        {
-            beat = beat % beatsPerMeasure + 1;
-            
-            if (beat == 1)
-            {
-                bar += 1;
-            }
-        }
-
+        // TODO: Replace with <, =, > operator overloads.
         /// <summary>
         /// <para>Compares musical times down to Beat being the lowest resolution.</para>
         /// </summary>
-        /// <param name="musicalTime">Musical Time to compare.</param>
+        /// <param name="targetTime">Musical Time to compare.</param>
         /// <returns><para>Greater than zero: This instance time is larger.</para>
-        /// <para>Less than zero: Obj time is larger.</para>
+        /// <para>Less than zero: Target time is larger.</para>
         /// <para>Zero: Equal down to Beat.</para></returns>
-        public int CompareTo(MusicalTime musicalTime)
+        public int CompareTo(MusicalTime targetTime)
         {
-            if (bar > musicalTime.Bar)
+            if (bar > targetTime.Bar)
             {
                 return 1;
             }
 
-            if (bar < musicalTime.Bar)
+            if (bar < targetTime.Bar)
             {
                 return -1;
             }
 
-            if (beat > musicalTime.Beat)
+            if (beat > targetTime.Beat)
             {
                 return 1;
             }
 
-            if (beat < musicalTime.Beat)
+            if (beat < targetTime.Beat)
             {
                 return -1;
             }

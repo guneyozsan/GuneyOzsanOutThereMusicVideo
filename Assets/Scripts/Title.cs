@@ -77,17 +77,13 @@ public class Title
                         float gridOffsetX = gridCol * gridCellSize.x;
                         float gridPositionX = wordPosition.x + characterOffsetX + gridOffsetX;
 
-                        for (int subGridRow = 0; subGridRow < characterArgs.SubGridSize.y; 
-                            subGridRow++)
+                        for (int subGridRow = 0; subGridRow < characterArgs.SubGridSize.y; subGridRow++)
                         {
-                            for (int subGridCol = 0; subGridCol < characterArgs.SubGridSize.x;
-                                subGridCol++)
+                            for (int subGridCol = 0; subGridCol < characterArgs.SubGridSize.x; subGridCol++)
                             {
                                 var particlePosition = new Vector3(
-                                    gridPositionX
-                                        + subGridCol * characterArgs.SubGridCellSize.x,
-                                    gridPositionY
-                                        + subGridRow * characterArgs.SubGridCellSize.y,
+                                    gridPositionX + subGridCol * characterArgs.SubGridCellSize.x,
+                                    gridPositionY + subGridRow * characterArgs.SubGridCellSize.y,
                                     wordPosition.z);
 
                                 if (isRandomSelection)
@@ -101,8 +97,7 @@ public class Title
                                 }
 
                                 Planetesimal planetesimal = planetesimals[planetesimalIndex];
-                                planetesimal.MoveTo(particlePosition, formationDuration,
-                                    isSphericalLerp, 
+                                planetesimal.MoveTo(particlePosition, formationDuration, isSphericalLerp, 
                                     currentParticleCount * particleDelay);
                                 planetesimalsUsed.Add(planetesimal);
                                 currentParticleCount++;
