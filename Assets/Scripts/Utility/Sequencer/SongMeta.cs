@@ -31,14 +31,14 @@ namespace PostIllusions.Audio.Sequencer
         [SerializeField] private string songName;
         [SerializeField] private float bpm;
         [SerializeField] private Measure measure;
-        [SerializeField] private MusicalTime length;
+        [SerializeField] private MusicalTime loopAt;
         [SerializeField] private MusicalTime loopTo;
         [SerializeField] private List<SongPartMeta> parts;
 
         public string SongName { get { return songName; } }
         public float Bpm { get { return bpm; } }
         public Measure Measure { get { return measure; } }
-        public MusicalTime Length { get { return length; } }
+        public MusicalTime LoopAt { get { return loopAt; } }
         public MusicalTime LoopTo { get { return loopTo; } }
         public List<SongPartMeta> Parts { get { return parts; } }
     }

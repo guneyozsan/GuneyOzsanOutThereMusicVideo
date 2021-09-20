@@ -45,7 +45,7 @@ namespace PostIllusions.Audio.Sequencer
             BeatDuration = 60f / songMeta.Bpm;
             BarDuration = BeatDuration * songMeta.Measure.BeatCount;
                 
-            loopPointTime = (songMeta.Length.Bar * songMeta.Measure.BeatCount + songMeta.Length.Beat) * BeatDuration;
+            loopPointTime = (songMeta.LoopAt.Bar * songMeta.Measure.BeatCount + songMeta.LoopAt.Beat) * BeatDuration;
             
             // TODO: Ensure only one object exists in scene.
             Music = FindObjectOfType<AudioSource>();
@@ -68,6 +68,11 @@ namespace PostIllusions.Audio.Sequencer
 #endif
             UpdateMusicalTime();
             LoopMusicTo(songMeta.LoopTo);
+
+            if (MusicalTime.CompareTo(new MusicalTime(3, 1)) == 0)
+            {
+                Debug.LogWarning(Music.time);
+            }
             
             if (Updated != null)
             {
@@ -110,13 +115,16 @@ namespace PostIllusions.Audio.Sequencer
 
         private void LoopMusicTo(MusicalTime loopToTime)
         {
-            if (MusicalTime.CompareTo(songMeta.Length) <= 0)
+            if (MusicalTime.CompareTo(songMeta.LoopAt) < 0)
             {
                 return;
             }
 
-            Music.time = ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat) * BeatDuration;
+            Debug.LogWarning("From: " + Music.time + " to: " + ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat - 1f) * BeatDuration);
+            Music.time = ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat - 1f) * BeatDuration;
             MusicalTime = new MusicalTime(loopToTime.Bar, loopToTime.Beat);
+            Debug.LogWarning(" next: " + ((MusicalTime.Bar - 1) * songMeta.Measure.BeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration);
+            nextBeatTime = ((MusicalTime.Bar - 1) * songMeta.Measure.BeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration;
             // TODO: Check if this is necessary (i.e. if playback stops when music.time is updated.)
             Music.Play();
         }

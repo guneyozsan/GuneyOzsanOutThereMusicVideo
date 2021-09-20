@@ -16,9 +16,9 @@ MonoBehaviour:
   measure:
     beatCount: 4
     beatNoteValue: 4
-  length:
+  loopAt:
     bar: 192
-    beat: 0
+    beat: 1
   loopTo:
     bar: 60
     beat: 1
