@@ -933,9 +933,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playbackSpeed: 1
-  fastForwardEnabled: 0
-  fastForwardToBar: 187
-  fastForwardSpeed: 3
+  fastForwardEnabled: 1
+  fastForwardToBar: 30
+  fastForwardSpeed: 2
 --- !u!1001 &1875497754
 Prefab:
   m_ObjectHideFlags: 0

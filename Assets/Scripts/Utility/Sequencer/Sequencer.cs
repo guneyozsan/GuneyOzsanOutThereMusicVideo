@@ -27,12 +27,12 @@ namespace PostIllusions.Audio.Sequencer
     {
         public static float BarDuration;
         public static float BeatDuration;
+        public static int MeasureBeatCount;
 
         [SerializeField] private SongMeta songMeta;
 
         // TODO: Check if these needs to be double to keep sync in long runs.
         private float nextBeatTime;
-        private float loopPointTime;
 
         public static event Action Updated;
 
@@ -43,9 +43,8 @@ namespace PostIllusions.Audio.Sequencer
         private void Awake()
         {
             BeatDuration = 60f / songMeta.Bpm;
-            BarDuration = BeatDuration * songMeta.Measure.BeatCount;
-                
-            loopPointTime = (songMeta.LoopAt.Bar * songMeta.Measure.BeatCount + songMeta.LoopAt.Beat) * BeatDuration;
+            MeasureBeatCount = songMeta.Measure.BeatCount;
+            BarDuration = BeatDuration * MeasureBeatCount;
             
             // TODO: Ensure only one object exists in scene.
             Music = FindObjectOfType<AudioSource>();
@@ -66,13 +65,13 @@ namespace PostIllusions.Audio.Sequencer
             // TODO: Implement editor playback speed.
             //AdjustPlaybackSpeed();
 #endif
+            
+#if UNITY_EDITOR
+            AdjustPlaybackSpeed();
+#endif
+
             UpdateMusicalTime();
             LoopMusicTo(songMeta.LoopTo);
-
-            if (MusicalTime.CompareTo(new MusicalTime(3, 1)) == 0)
-            {
-                Debug.LogWarning(Music.time);
-            }
             
             if (Updated != null)
             {
@@ -82,69 +81,68 @@ namespace PostIllusions.Audio.Sequencer
         
         private void UpdateMusicalTime()
         {
-#if UNITY_EDITOR
-            // TODO: Playback speed
-            // Adjust music time to playback speed.
-            // if (Time.timeScale != 1)
-            // {
-            //     currentBeatTime -= BeatDuration * (1f - 1f / Time.timeScale);
-            // }
-#endif // UNITY_EDITOR
-
             if (Music.time < nextBeatTime)
             {
                 return;
             }
-
-            int measureBeatCount = songMeta.Measure.BeatCount;
+            
             int beat = MusicalTime.Beat + 1;
-            MusicalTime = beat > measureBeatCount ?
+            MusicalTime = beat > MeasureBeatCount ?
                 new MusicalTime(MusicalTime.Bar + 1, 1) :
                 new MusicalTime(MusicalTime.Bar, beat);
-            nextBeatTime = ((MusicalTime.Bar - 1) * measureBeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration;
-
-#if UNITY_EDITOR
-            // TODO: Playback speed.
-            // Adjust music time to playback speed.
-            // if (Time.timeScale != 1f)
-            // {
-            //     audioTime.SetTime((currentBeatTime + audioTime.BeatDuration * (1f - 1f / Time.timeScale)));
-            // }
-#endif // UNITY_EDITOR
+            nextBeatTime = ((MusicalTime.Bar - 1) * MeasureBeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration;
         }
 
-        private void LoopMusicTo(MusicalTime loopToTime)
+        private void LoopMusicTo(MusicalTime loopTo)
         {
             if (MusicalTime.CompareTo(songMeta.LoopAt) < 0)
             {
                 return;
             }
 
-            Debug.LogWarning("From: " + Music.time + " to: " + ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat - 1f) * BeatDuration);
-            Music.time = ((loopToTime.Bar - 1f) * songMeta.Measure.BeatCount + loopToTime.Beat - 1f) * BeatDuration;
-            MusicalTime = new MusicalTime(loopToTime.Bar, loopToTime.Beat);
-            Debug.LogWarning(" next: " + ((MusicalTime.Bar - 1) * songMeta.Measure.BeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration);
-            nextBeatTime = ((MusicalTime.Bar - 1) * songMeta.Measure.BeatCount + (MusicalTime.Beat - 1) + 1) * BeatDuration;
-            // TODO: Check if this is necessary (i.e. if playback stops when music.time is updated.)
-            Music.Play();
+            int loopToBar = loopTo.Bar;
+            int loopToBeat = loopTo.Beat;
+            
+            MusicalTime = new MusicalTime(loopToBar, loopToBeat);
+
+            float loopToTime = MusicalTimeToTime(loopToBar, loopToBeat, songMeta.Measure.BeatCount, BeatDuration);
+            Music.time = loopToTime;
+            nextBeatTime = loopToTime + BeatDuration;
         }
-        
+
+        private static float MusicalTimeToTime(int bar, int beat, int beatCount, float beatDuration)
+        {
+            return ((bar - 1f) * beatCount + beat - 1f) * beatDuration;
+        }
+
+        private static bool fastForwarding;
+
 #if UNITY_EDITOR
-        private void AdjustPlaybackSpeed()
+        private static void AdjustPlaybackSpeed()
         {
             // TODO: Ensure it does not break after looping.
-            if (MusicalTime.Bar < SequencerEditorController.FastForwardToBar
+            if (!fastForwarding 
+                && MusicalTime.Bar < SequencerEditorController.FastForwardToBar
                 && SequencerEditorController.FastForwardSpeed != 1f)
             {
-                Music.volume = 0;
+                fastForwarding = true;
+                Music.volume = 0.5f;
                 Time.timeScale = SequencerEditorController.FastForwardSpeed;
             }
-            else
+            
+            if (fastForwarding && MusicalTime.Bar == SequencerEditorController.FastForwardToBar)
             {
-                Music.volume = 1;
+                fastForwarding = false;
+                Music.time = MusicalTimeToTime(MusicalTime.Bar, 1, MeasureBeatCount, BeatDuration);
+                Music.volume = 1f;
                 Time.timeScale = SequencerEditorController.PlaybackSpeed;
             }
+
+            if (fastForwarding)
+            {
+                xMusic.time += Time.deltaTime * (Time.timeScale - 1f);
+            }
         }
-#endif // UNITY_EDITOR
+#endif
     }
 }

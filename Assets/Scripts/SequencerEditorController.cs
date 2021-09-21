@@ -35,7 +35,7 @@ public class SequencerEditorController : MonoBehaviour {
     public static float PlaybackSpeed { get; private set; }
 
     public static bool DoFastForward { get; private set; }
-    public static float FastForwardToBar { get; private set; }
+    public static int FastForwardToBar { get; private set; }
     public static float FastForwardSpeed { get; private set; }
 
     void Start()
